@@ -1,0 +1,71 @@
+{
+    "modules": [
+        {
+            "uName": "Input",
+            "params": [
+                {
+                    "name": "filename",
+                    "value": "prestack.sgy"
+                },
+                {
+                    "name": "key",
+                    "value": "FieldRecord"
+                },
+                {
+                    "name": "v1",
+                    "value": "1"
+                },
+                {
+                    "name": "v2",
+                    "value": "1"
+                }
+            ]
+        },
+        {
+            "uName": "Display",
+            "params": []
+        },
+        {
+            "uName": "sugain",
+            "params": [
+                {
+                    "name": "tpow",
+                    "value": 2
+                },
+                {
+                    "name": "agc",
+                    "value": 1
+                },
+                {
+                    "name": "gagc",
+                    "value": 0
+                },
+                {
+                    "name": "wagc",
+                    "value": 0.5
+                },
+                {
+                    "name": "pclip",
+                    "value": 0.9
+                }
+            ]
+        },
+        {
+            "uName": "Display",
+            "params": []
+        },
+        {
+            "uName": "suattribute",
+            "params": [
+                {
+                    "name": "mode",
+                    "value": "amp"
+                }
+            ]
+        },
+        {
+            "uName": "Display",
+            "params": []
+        }
+    ]
+}

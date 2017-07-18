@@ -1,0 +1,85 @@
+{
+    "modules": [
+        {
+            "uName": "Input",
+            "params": [
+                {
+                    "name": "filename",
+                    "value": "prestack.sgy"
+                },
+                {
+                    "name": "key",
+                    "value": "FieldRecord"
+                },
+                {
+                    "name": "v1",
+                    "value": null
+                },
+                {
+                    "name": "v2",
+                    "value": null
+                }
+            ]
+        },
+        {
+            "uName": "sufilter",
+            "params": [
+                {
+                    "name": "f1",
+                    "value": "10"
+                },
+                {
+                    "name": "f2",
+                    "value": "20"
+                },
+                {
+                    "name": "f3",
+                    "value": "40"
+                },
+                {
+                    "name": "f4",
+                    "value": "50"
+                }
+            ]
+        },
+        {
+            "uName": "Sort",
+            "params": [
+                {
+                    "name": "key",
+                    "value": "cdp"
+                }
+            ]
+        },
+        {
+            "uName": "Output",
+            "params": [
+                {
+                    "name": "filename",
+                    "value": "out.sgy"
+                }
+            ]
+        },
+        {
+            "uName": "SelectGather",
+            "params": [
+                {
+                    "name": "key",
+                    "value": "cdp"
+                },
+                {
+                    "name": "v1",
+                    "value": "3000"
+                },
+                {
+                    "name": "v2",
+                    "value": "3200"
+                }
+            ]
+        },
+        {
+            "uName": "Display",
+            "params": []
+        }
+    ]
+}
