@@ -24,7 +24,7 @@ Created on Fri Dec  2 07:04:11 2016
 import os
 
 
-debug = True
+debug = False
 handle_exceptions = not debug
 local_spark = debug
 local_remi = debug
@@ -33,10 +33,10 @@ def dprint (*kwargs):
     if debug:
         print (kwargs)
         
-#if debug:
-#	su_bin = os.environ["CWPROOT"] + "/bin/"
-#else:
-su_bin = '/home/cloudera/cwp/bin/'
+if debug:
+	su_bin = os.environ["CWPROOT"] + "/bin/"
+else:
+	su_bin = '/home/cloudera/cwp/bin/'
 
 plot_w = 600
 plot_h = 600
@@ -45,7 +45,7 @@ image_h = 20
 plot_label_size = 10
 axis_label = True
 
-external_ip = '192.158.29.162'
+external_ip = '35.195.193.113'
 websocket_port=8082
 if local_remi:
     remi = dict(debug=False, address='0.0.0.0', port=8081)

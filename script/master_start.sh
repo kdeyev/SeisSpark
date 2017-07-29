@@ -1,7 +1,5 @@
 #!/bin/sh
 
-gcsfuse kdeyev /mnt/gcs-bucket
-
 export HADOOP_HOME=/usr/lib/hadoop
 export CWPROOT=/usr/local/bin/cwp
 export JAVA_HOME=/usr
