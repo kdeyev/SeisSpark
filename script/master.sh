@@ -60,4 +60,5 @@ sudo tar xvf cwp.tar.gz
 
 # matplotlib
 sudo apt-get install libfreetype6-dev
+sudo pip install mpld3
 sudo pip install matplotlib

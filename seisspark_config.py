@@ -45,7 +45,7 @@ image_h = 20
 plot_label_size = 10
 axis_label = True
 
-external_ip = '35.195.193.113'
+external_ip = '35.195.79.128'
 websocket_port=8082
 if local_remi:
     remi = dict(debug=False, address='0.0.0.0', port=8081)
