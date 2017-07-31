@@ -1,6 +1,13 @@
 #!/bin/sh
 
 # how to use:
+#wget https://repo.continuum.io/archive/Anaconda2-4.4.0-Linux-x86_64.sh
+#chmod +x Anaconda2-4.4.0-Linux-x86_64.sh
+#./Anaconda2-4.4.0-Linux-x86_64.sh
+#
+#gsutil cp gs://kdeyev_europe_west1/remi-master.tar.gz .
+#tar xvf remi-master.tar.gz 
+#
 #gsutil cp gs://kdeyev_europe_west1/master.sh .
 #chmod +x master.sh
 #./master.sh
@@ -61,4 +68,5 @@ sudo tar xvf cwp.tar.gz
 # matplotlib
 sudo apt-get install libfreetype6-dev
 sudo pip install mpld3
+sudo pip install jinja2
 sudo pip install matplotlib

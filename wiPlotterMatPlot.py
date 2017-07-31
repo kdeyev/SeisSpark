@@ -40,6 +40,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 
 import matplotlib
+import mpld3
 matplotlib.rcParams.update({'font.size': 10})
 
 palette_names = ['viridis', 'inferno', 'plasma', 'magma',
@@ -91,9 +92,6 @@ class MatplotImage(gui.Widget):
         self.redraw()
         
     def repr(self, client, changed_widgets={}):
-        import mpld3
-
-
         return mpld3.fig_to_html(self._fig)
 
 #    def redraw(self):
