@@ -11,12 +11,12 @@ import stackData
 
 
 class PlotlyWidget(gui.Widget):
-    def __init__(self, name, 
-                 **kwargs):
-        super(PlotlyWidget, self).__init__(id=name, **kwargs)
+    def __init__(self, **kwargs):
         
-        self.name = name
-        self.data = stackData.data
+        self._id = str(id (self))
+        super(PlotlyWidget, self).__init__(id=self._id, **kwargs)
+        
+        self._data = stackData.data
  
         javascript_code = gui.Tag()
         javascript_code.type = 'script'
@@ -144,17 +144,17 @@ class PlotlyWidget(gui.Widget):
     			drawMatrix (PLOT, twoDArray );
     		});
             };
-            """% {'id': self.name}
+            """% {'id': self._id}
 		
         javascript_code.add_child('code',   # Add to Tag
                                   code % {'id': id(self), })
         self.add_child('javascript_code', javascript_code)   # Add to widget
 
     def get_refresh(self):
-        if self.data is None:
+        if self._data is None:
             return None, None
 
-        txt = json.dumps(self.data)
+        txt = json.dumps(self._data)
         headers = {'Content-type': 'text/plain'}
         return [txt, headers]
 
@@ -162,7 +162,7 @@ class MyApp(App):
     def __init__(self, *args):
         html_head = '<script src="https://cdn.plot.ly/plotly-latest.min.js">'
         html_head += '</script>'
-        self.data = stackData.data
+        self._data = stackData.data
         super(MyApp, self).__init__(*args, html_head=html_head)
 
     def main(self):
@@ -173,10 +173,10 @@ class MyApp(App):
 
         plotContainer = gui.Widget()
 
-        self.plt1 = PlotlyWidget('plot1')
+        self.plt1 = PlotlyWidget()
         plotContainer.append(self.plt1)
 
-        self.plt2 = PlotlyWidget('plot2')
+        self.plt2 = PlotlyWidget()
         plotContainer.append(self.plt2)
         
         bt1 = gui.Button('Start', width=200, height=30)
@@ -205,15 +205,13 @@ class MyApp(App):
     def on_button_pressed1(self, widget):        
         cmd = """
             updateData('%(id)s');
-        """%{'id' : self.plt1.name}
-        print(cmd)
+        """%{'id' : self.plt1._id}
         self.execute_javascript(cmd)
         
     def on_button_pressed2(self, widget):        
         cmd = """
             updateData('%(id)s');
-        """%{'id' : self.plt2.name}
-        print(cmd)
+        """%{'id' : self.plt2._id}
         self.execute_javascript(cmd)
 
 if __name__ == "__main__":
