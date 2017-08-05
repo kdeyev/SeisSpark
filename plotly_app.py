@@ -42,12 +42,8 @@ class PlotlyWidget(gui.Widget):
     
     		Plotly.newPlot(PLOT, [], layout, config);
       
-          var updateData = function (id) {      
-    		var PLOT = document.getElementById(id);
-    		var url = id + "/get_refresh";
-    		Plotly.d3.json(url,
-    		function(error, twoDArray) {
-    			var data = [];
+              var drawWiggle = function (PLOT, twoDArray) {
+                    var data = [];
     			
     			var step = 1;
     			var gain = 1;
@@ -112,6 +108,40 @@ class PlotlyWidget(gui.Widget):
     			};
     
     			Plotly.newPlot(PLOT, data, layout, config);
+               };
+               
+               var drawMatrix = function (PLOT, twoDArray) {
+                   	var stack = 
+			  {
+				z: twoDArray,
+				type: 'heatmap',
+				transpose : true,
+				zsmooth : 'best',
+				zauto : false,
+				zmin : -zmax,
+				zmax : zmax,
+				colorscale : [[0, 'rgb(0,0,255)'], [0.5, 'rgb(255,255,255)'], [1, 'rgb(255,0,0)']],
+				//colorbar : {symmetric: true,}
+			};
+   
+    			var layout = {
+    				title: 'very first version of Wiggle',
+    				xaxis: {title: 'CMP'},
+    			  yaxis: {title: 'Time', autorange: 'reversed',},
+    			  showlegend: false,
+    			};
+    
+    			Plotly.newPlot(PLOT, [stack], layout, config);
+               };
+               
+               
+      
+          var updateData = function (id) {      
+    		var PLOT = document.getElementById(id);
+    		var url = id + "/get_refresh";
+    		Plotly.d3.json(url,
+    		function(error, twoDArray) {
+    			drawMatrix (PLOT, twoDArray );
     		});
             };
             """% {'id': self.name}
@@ -154,7 +184,7 @@ class MyApp(App):
         bt1.style['background-color'] = 'green'
 
         # setting the listener for the onclick event of the button
-        bt1.set_on_click_listener(self.on_button_pressed1, ctrl)
+        bt1.set_on_click_listener(self.on_button_pressed1)
         ctrl.append(bt1)
         
         bt2 = gui.Button('Start', width=200, height=30)
@@ -162,7 +192,7 @@ class MyApp(App):
         bt2.style['background-color'] = 'green'
 
         # setting the listener for the onclick event of the button
-        bt2.set_on_click_listener(self.on_button_pressed2, ctrl)
+        bt2.set_on_click_listener(self.on_button_pressed2)
         ctrl.append(bt2)
 
         # returning the root widget
@@ -172,17 +202,18 @@ class MyApp(App):
         return wid
 
     # listener function
-    def on_button_pressed1(self, widget, settings):        
+    def on_button_pressed1(self, widget):        
         cmd = """
-            updateData("plot1");
-        """
+            updateData('%(id)s');
+        """%{'id' : self.plt1.name}
+        print(cmd)
         self.execute_javascript(cmd)
         
-        # listener function
-    def on_button_pressed2(self, widget, settings):        
+    def on_button_pressed2(self, widget):        
         cmd = """
-            updateData("plot2");
-        """
+            updateData('%(id)s');
+        """%{'id' : self.plt2.name}
+        print(cmd)
         self.execute_javascript(cmd)
 
 if __name__ == "__main__":
