@@ -172,9 +172,13 @@ class SeisSpark(App):
 
     def __init__(self, *args):
         editor_res_path = os.path.join(os.path.dirname(__file__), 'res')
+        
+        html_head = '<script src="https://cdn.plot.ly/plotly-latest.js">'
+        html_head += '</script>'
+        
         self.projectPathFilename = ''
-        super(SeisSpark, self).__init__(
-            *args, static_file_path=editor_res_path)
+        super(SeisSpark, self).__init__(static_file_path=editor_res_path, html_head=html_head,
+            *args)
 
     def main(self):
         self.projectConfiguration = ProjectConfigurationDialog(

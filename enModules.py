@@ -30,6 +30,8 @@ import segypy
 from seisspark_config import dprint
 
 from pyspark import SparkContext, SparkConf
+import stackData
+
 
 #######
 # Spark
@@ -181,7 +183,9 @@ class DisplayModule (BaseModule):
 
         data, header = seisspark.prepareRDDtoDraw(rdd, 1000) # no more that 1000 traces
         if self._appInstance != None:
-            self._mplw.setData(data, header)
+            dprint ('self._mplw.setData(data, header)')
+            self._mplw.setData(stackData.data, header)
+#            self._appInstance.setData(self._mplw, stackData.data, header)
         return rdd
 
 

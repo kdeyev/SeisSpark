@@ -66,7 +66,7 @@ palette_names = ['viridis', 'inferno', 'plasma', 'magma',
 class MatplotImage(gui.Widget):
     ax = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
         super(MatplotImage, self).__init__( **kwargs)
 
         self._params = enParam.Params([
@@ -83,6 +83,8 @@ class MatplotImage(gui.Widget):
 
         self._data = None
         self._header = None
+        
+        self._name = name
 
 #        self._fig = Figure(figsize=(40, 30))
         self.__createFigure()
@@ -117,6 +119,7 @@ class MatplotImage(gui.Widget):
 #        pass
     
     def setData(self, data, header):
+        dprint ("matplot setData")  
         self._data = data
         self._header = header
         
@@ -202,6 +205,9 @@ class MatplotImage(gui.Widget):
         self._ax.imshow(self._data, palette, aspect='auto', vmin = -maxval, vmax = maxval)       
 
     def __createFigure (self):
+        dprint ('plot_w', seisspark_config.plot_w, 'plot_h', seisspark_config.plot_h)
+        dprint ('image_w', seisspark_config.image_w, 'image_h', seisspark_config.image_h)
+        
         self._fig = Figure(figsize=(seisspark_config.image_w, seisspark_config.image_h))
         self._ax = self._fig.add_subplot(111)
         self._fig.gca().invert_yaxis()
@@ -251,6 +257,7 @@ class MatplotImage(gui.Widget):
 #
 #        plt.xticks(range(len(label_x)), label_x)
 #        self._fig.yticks(range(len(label_z)), label_z)
+#        plt.savefig ('images/' + self._name + '.png')
         self.redraw()
 #        dprint ("End __redraw")
 
@@ -272,8 +279,8 @@ class wiPlotter(gui.VBox):
         self.style['align-items'] = "flex-start"
         self.style['justify-content'] = "flex-start"
         self.style['margin'] = "10px"
-
-        self._mpl = MatplotImage(width=seisspark_config.plot_w, height=seisspark_config.plot_h)
+        
+        self._mpl = MatplotImage(name, width=seisspark_config.plot_w, height=seisspark_config.plot_h)
 #        self._mpl.style['margin'] = '10px'
         self._mpl._ax.set_title(name)
 
