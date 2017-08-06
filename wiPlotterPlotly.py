@@ -9,6 +9,7 @@ import remi.gui as gui
 import json
 import numpy
 import enParam
+import math
 
 palette_names = ['viridis', 'inferno', 'plasma', 'magma',
                  'Blues', 'BuGn', 'BuPu',
@@ -66,7 +67,7 @@ class wiPlotter(gui.Widget):
 
           var layout = {
     				title: 'run calculation',
-				xaxis: {title: 'CMP'},
+				xaxis: {title: 'Trace'},
     			  yaxis: {title: 'Time', autorange: 'reversed',},
     			  showlegend: false,
     			};
@@ -131,7 +132,7 @@ class wiPlotter(gui.Widget):
     			}
     			var layout = {
     				title: name,
-    				xaxis: {title: 'CMP'},
+    				xaxis: {title: 'Trace'},
     			  yaxis: {title: 'Time', autorange: 'reversed',},
     			  showlegend: false,
     			};
@@ -155,7 +156,7 @@ class wiPlotter(gui.Widget):
    
     			var layout = {
     				title: name,
-    				xaxis: {title: 'CMP'},
+    				xaxis: {title: 'Trace'},
     			  yaxis: {title: 'Time', autorange: 'reversed',},
     			  showlegend: false,
     			};
@@ -188,13 +189,22 @@ class wiPlotter(gui.Widget):
         if self._data is None:
             return None, None
 
+        d = self._data.transpose().tolist()
+        if len (d) > 100:
+            d1 = d
+            step = int(math.floor(len (d)/100))
+            d = []
+            for i in range(0, len(d1), step):
+                d.append(d1[i])
+                
+        
         max_val = 0
         for x in numpy.nditer(self._data):
             max_val = max (max_val, abs (x))
             
         max_val= max_val/10.
 #        print ('redraw', max_val)
-        tosend = {'d': self._data.transpose().tolist(),
+        tosend = {'d': d,
                   'n': self._name,
                   'm': max_val}
 

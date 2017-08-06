@@ -25,7 +25,6 @@ Created on Mon Nov 14 13:35:29 2016
 import remi.gui as gui
 
 #import seisspark
-import seisspark_config
 from seisspark_config import dprint
 
 #import wiPlotterMatPlot
