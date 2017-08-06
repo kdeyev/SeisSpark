@@ -64,9 +64,3 @@ cd ~
 sudo gsutil cp gs://kdeyev_europe_west1/cwp.tar.gz /usr/local/bin/
 cd /usr/local/bin
 sudo tar xvf cwp.tar.gz 
-
-# matplotlib
-sudo apt-get install libfreetype6-dev
-sudo pip install mpld3
-sudo pip install jinja2
-sudo pip install matplotlib
