@@ -57,6 +57,10 @@ class wiPlotter(gui.Widget):
 		
         code = """
             var PLOT = document.getElementById('%(id)s');
+            
+            PLOT.style.height = '%(h)s';
+            //PLOT.style.width = '%(w)s';
+            
             var config = {
     			modeBarButtonsToRemove : ["sendDataToCloud", ],
     			displaylogo: false,
@@ -179,7 +183,7 @@ class wiPlotter(gui.Widget):
             };
             
             updateData ('%(id)s');
-            """% {'id': self._id}
+            """% {'id': self._id, 'w': '1000px', 'h': '95%%'}
 		
         javascript_code.add_child('code',   # Add to Tag
                                   code % {'id': id(self), })
