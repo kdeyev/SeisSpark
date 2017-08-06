@@ -36,7 +36,7 @@ def dprint (*kwargs):
 if debug:
 	su_bin = '/home/cloudera/cwp/bin/'
 else:
-	su_bin = '/usr/local/bin/'
+	su_bin = '/usr/local/bin/cwp/bin/'
 
 plot_w = 600
 plot_h = 600
