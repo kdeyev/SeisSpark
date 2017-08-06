@@ -24,7 +24,7 @@ Created on Fri Dec  2 07:04:11 2016
 import os
 
 
-debug = True
+debug = False
 handle_exceptions = not debug
 local_spark = debug
 local_remi = debug
@@ -36,7 +36,7 @@ def dprint (*kwargs):
 if debug:
 	su_bin = '/home/cloudera/cwp/bin/'
 else:
-	su_bin = '/usr/local/bin/cwp/bin/'
+	su_bin = '/usr/local/bin/'
 
 plot_w = 600
 plot_h = 600
