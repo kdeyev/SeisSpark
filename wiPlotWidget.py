@@ -29,6 +29,7 @@ import seisspark_config
 from seisspark_config import dprint
 
 import wiPlotterMatPlot
+import wiPlotterPlotly
 
 class PlotsWidget (gui.HBox):
 
@@ -44,9 +45,11 @@ class PlotsWidget (gui.HBox):
         self.style['justify-content'] = 'space-between'
 
         self._appInstance = appInstance
+        
 
     def createPlot(self, name):
-        mplw = wiPlotterMatPlot.wiPlotter(name)
+#        mplw = wiPlotterMatPlot.wiPlotter(name)
+        mplw = wiPlotterPlotly.wiPlotter(self._appInstance, name)
 #        mplw.attributes['editor_constructor'] = constructor
 #        mplw.attributes['editor_varname'] = variableName
 #        mplw.attributes['editor_tag_type'] = 'widget'
@@ -96,11 +99,11 @@ class PlotsWidget (gui.HBox):
     def __remove_box_shadow_selected_widget(plot):
         if plot == None:
             return
-        if 'box-shadow' in plot.style.keys():
-            del plot.style['box-shadow']
+#        if 'box-shadow' in plot.style.keys():
+#            del plot.style['box-shadow']
 
     @staticmethod
     def __set_box_shadow_selected_widget(plot):
         if plot == None:
             return
-        plot.style['box-shadow'] = '0 0 10px rgb(33,150,243)'
+#        plot.style['box-shadow'] = '0 0 10px rgb(33,150,243)'
