@@ -34,8 +34,8 @@ class wiPlotter(gui.Widget):
     def __init__(self, appInstance, name, **kwargs):
         
         self._params = enParam.Params([
-                                       enParam.Param(bool, 'density', False),
-                                       enParam.Param(bool, 'wiggle', True),
+                                       enParam.Param(bool, 'density', True),
+                                       enParam.Param(bool, 'wiggle', False),
                                        enParam.Param(float, 'percent', 0.9, add = {'min': 0, 'max': 1}),
                                        enParam.Param(float, 'gain', 1),
                                        enParam.Param('dropdown', 'palette', 'Greys', group = 'density', add = {'possible_values': palette_names}),

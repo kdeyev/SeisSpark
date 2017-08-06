@@ -290,13 +290,13 @@ class SeisSpark(App):
 #        m2.append(m22)
 
         m3 = gui.MenuItem('Config', width=200, height='100%')
+        m4 = gui.MenuItem('Spark', width=200, height='100%')
 
         menu.append(m1)
 #        menu.append(m2)
         menu.append(m3)
+        menu.append(m4)
         
-        menu.append(gui.Link('http://' + seisspark_config.external_ip+':8088','Spark'))
-
         self.menubar.append(menu)
 
 
@@ -314,6 +314,7 @@ class SeisSpark(App):
 #        m22.set_on_click_listener(self.menu_paste_selection_clicked)
 
         m3.set_on_click_listener(self.menu_project_config_clicked)
+        m4.set_on_click_listener(self.menu_spark_clicked)
         
     def new_job (self):
         self.projectPathFilename = ''
@@ -342,6 +343,16 @@ class SeisSpark(App):
             self.fileSaveAsDialog.show()
         else:
             self.save_job(self.projectPathFilename)
+            
+    def menu_spark_clicked(self, widget):
+        cmd = """
+            window.open('%(url)s', '_blank');
+            """%{'url' : 'http://' + seisspark_config.external_ip+':8088'}
+
+#        print ('redraw', cmd)
+        self.execute_javascript(cmd)
+        
+        
 
     def on_saveas_dialog_confirm(self, widget, path):
         dprint ('on_saveas_dialog_confirm', path)

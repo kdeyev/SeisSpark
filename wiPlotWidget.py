@@ -28,7 +28,7 @@ import remi.gui as gui
 import seisspark_config
 from seisspark_config import dprint
 
-import wiPlotterMatPlot
+#import wiPlotterMatPlot
 import wiPlotterPlotly
 
 class PlotsWidget (gui.HBox):
