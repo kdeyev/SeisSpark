@@ -24,11 +24,6 @@ RUN apt-get update && apt-get install -y \
        && echo exit 0 > /root/cwp/src/chkroot.sh \
        && CWPROOT=/root/cwp PATH=$PATH:/root/cwp/bin make -C /root/cwp/src install xtinstall' \
     && rm -rf /root/cwp/src \
-    && apt-get remove -y \
-       build-essential \
-       libx11-dev \
-       libxt-dev \
-       curl \
     && rm -rf /var/lib/apt/lists \
     && apt-get autoremove -y \
     && apt-get autoclean -y

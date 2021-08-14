@@ -1,3 +1,2 @@
-segypy
 pyspark
 obspy
