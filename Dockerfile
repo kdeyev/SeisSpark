@@ -1,22 +1,14 @@
-FROM phusion/baseimage:0.9.17
-MAINTAINER Marius Storm-Olsen <mstormo@gmail.no>
+FROM centos:7
 
 LABEL Description="Seismic Unix on a proper Ubuntu 14.04 LTS base"
 
 # Use /data as the persistant storage for seismic
 VOLUME ["/data"]
 
-# ADD cwp_su_all_44R19.tgz /root/
-# RUN mkdir /root/cwp
-# RUN mv /root/src /root/cwp/src
-
 # Download Seismic Unix, build it, and clean up tools and build artifacts
 # Also try to strip down the image as much as possible by purging APT caches
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libx11-dev \
-    libxt6 libxt-dev \
-    && curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s/LZpzc8jMzbWG9BZ/download?path=%2F&files=cwp_su_all_44R19.tgz" \
+RUN yum install -y curl make gcc 
+RUN curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s/LZpzc8jMzbWG9BZ/download?path=%2F&files=cwp_su_all_44R19.tgz" \
     && mkdir /root/cwp \
     && tar zxf /root/cwp_su_all_44R19.tgz -C /root/cwp \
     && rm /root/cwp_su_all_44R19.tgz \
@@ -24,16 +16,8 @@ RUN apt-get update && apt-get install -y \
        'echo exit 0 > /root/cwp/src/license.sh \
        && echo exit 0 > /root/cwp/src/mailhome.sh \
        && echo exit 0 > /root/cwp/src/chkroot.sh \
-       && CWPROOT=/root/cwp PATH=$PATH:/root/cwp/bin make -C /root/cwp/src install xtinstall' \
-    && rm -rf /root/cwp/src \
-    && apt-get remove -y \
-       build-essential \
-       libx11-dev \
-       libxt-dev \
-       curl \
-    && rm -rf /var/lib/apt/lists \
-    && apt-get autoremove -y \
-    && apt-get autoclean -y
+       && CWPROOT=/root/cwp PATH=$PATH:/root/cwp/bin make -C /root/cwp/src install' \
+    && rm -rf /root/cwp/src 
 
 # Add trampoline which will sett CWPROOT for each command being called
 COPY trampoline.sh /root/cwp/trampoline.sh
