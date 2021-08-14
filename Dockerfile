@@ -1,4 +1,4 @@
-FROM centos:7
+FROM parana/spark
 
 LABEL Description="Seismic Unix on a proper Ubuntu 14.04 LTS base"
 
@@ -7,8 +7,8 @@ VOLUME ["/data"]
 
 # Download Seismic Unix, build it, and clean up tools and build artifacts
 # Also try to strip down the image as much as possible by purging APT caches
-RUN yum install -y curl make gcc 
-RUN curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s/LZpzc8jMzbWG9BZ/download?path=%2F&files=cwp_su_all_44R19.tgz" \
+RUN yum install -y curl make gcc \
+    && curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s/LZpzc8jMzbWG9BZ/download?path=%2F&files=cwp_su_all_44R19.tgz" \
     && mkdir /root/cwp \
     && tar zxf /root/cwp_su_all_44R19.tgz -C /root/cwp \
     && rm /root/cwp_su_all_44R19.tgz \
@@ -17,7 +17,9 @@ RUN curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s
        && echo exit 0 > /root/cwp/src/mailhome.sh \
        && echo exit 0 > /root/cwp/src/chkroot.sh \
        && CWPROOT=/root/cwp PATH=$PATH:/root/cwp/bin make -C /root/cwp/src install' \
-    && rm -rf /root/cwp/src 
+    && rm -rf /root/cwp/src \
+    && yum remove -y make gcc \
+    && yum clean all
 
 # Add trampoline which will sett CWPROOT for each command being called
 COPY trampoline.sh /root/cwp/trampoline.sh
@@ -33,4 +35,9 @@ RUN cd /usr/local/bin/ \
          ln -s /root/cwp/trampoline.sh `basename $f`; \
        done
 
+COPY bootstrap.sh /root/bootstrap.sh
+RUN chmod 755 /root/bootstrap.sh
+
+
 ENTRYPOINT ["/bin/sh"]
+CMD [ "/root/bootstrap.sh" ]
