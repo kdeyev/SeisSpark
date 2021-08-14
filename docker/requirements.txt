@@ -1,0 +1,3 @@
+segypy
+pyspark
+obspy
