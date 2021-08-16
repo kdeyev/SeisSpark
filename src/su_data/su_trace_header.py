@@ -1,5 +1,5 @@
-from encoding import get_value
-from segy_trace_header import SEGYTraceHeaderEntry, SEGY_TRACE_HEADER_ENTRYS, SEGYTraceHeaderEntryName
+from .encoding import get_value
+from .segy_trace_header import SEGYTraceHeaderEntry, SEGY_TRACE_HEADER_ENTRYS, SEGYTraceHeaderEntryName
 
 NS_ENTRY: SEGYTraceHeaderEntry = SEGY_TRACE_HEADER_ENTRYS[SEGYTraceHeaderEntryName.ns]
 
