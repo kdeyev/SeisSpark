@@ -1,7 +1,7 @@
-from typing import Dict
-from dataclasses import dataclass # Remove after porting to Python >= 3.7
-
+from dataclasses import dataclass  # Remove after porting to Python >= 3.7
 from enum import Enum
+from typing import Dict
+
 
 class SEGYTraceHeaderEntryType(Enum):
     int16 = 1
@@ -23,10 +23,10 @@ class SEGYTraceHeaderEntryName(Enum):
     cdp = 20
     cdpTrace = 24
     TraceIdenitifactionCode = 28  # 'int16'); % 28
-    
-    NSummedTraces = 30 # 'int16'); % 30
-    NStackedTraces = 32 # 'int16'); % 32
-    DataUse = 34 # 'int16'); % 34
+
+    NSummedTraces = 30  # 'int16'); % 30
+    NStackedTraces = 32  # 'int16'); % 32
+    DataUse = 34  # 'int16'); % 34
     offset = 36  # 'int32');             %36
     ReceiverGroupElevation = 40  # 'int32');             %40
     SourceSurfaceElevation = 44  # 'int32');             %44
@@ -35,87 +35,89 @@ class SEGYTraceHeaderEntryName(Enum):
     SourceDatumElevation = 56  # 'int32');             %56
     SourceWaterDepth = 60  # 'int32');  %60
     GroupWaterDepth = 64  # 'int32');  %64
-    ElevationScalar = 68 # 'int16');  %68
-    SourceGroupScalar = 70 # 'int16');  %70
+    ElevationScalar = 68  # 'int16');  %68
+    SourceGroupScalar = 70  # 'int16');  %70
     SourceX = 72  # 'int32');  %72
     SourceY = 76  # 'int32');  %76
     GroupX = 80  # 'int32');  %80
     GroupY = 84  # 'int32');  %84
-    CoordinateUnits = 88 # 'int16');  %88
-    WeatheringVelocity = 90 # 'int16');  %90
-    SubWeatheringVelocity = 92 # 'int16');  %92
-    SourceUpholeTime = 94 # 'int16');  %94
-    GroupUpholeTime = 96 # 'int16');  %96
-    SourceStaticCorrection = 98 # 'int16');  %98
-    GroupStaticCorrection = 100 # 'int16');  %100
-    TotalStaticApplied = 102 # 'int16');  %102
-    LagTimeA = 104 # 'int16');  %104
-    LagTimeB = 106 # 'int16');  %106
-    DelayRecordingTime = 108 # 'int16');  %108
-    MuteTimeStart = 110 # 'int16');  %110
-    MuteTimeEND = 112 # 'int16');  %112
+    CoordinateUnits = 88  # 'int16');  %88
+    WeatheringVelocity = 90  # 'int16');  %90
+    SubWeatheringVelocity = 92  # 'int16');  %92
+    SourceUpholeTime = 94  # 'int16');  %94
+    GroupUpholeTime = 96  # 'int16');  %96
+    SourceStaticCorrection = 98  # 'int16');  %98
+    GroupStaticCorrection = 100  # 'int16');  %100
+    TotalStaticApplied = 102  # 'int16');  %102
+    LagTimeA = 104  # 'int16');  %104
+    LagTimeB = 106  # 'int16');  %106
+    DelayRecordingTime = 108  # 'int16');  %108
+    MuteTimeStart = 110  # 'int16');  %110
+    MuteTimeEND = 112  # 'int16');  %112
     ns = 114  # 'uint16');  %114
     dt = 116  # 'uint16');  %116
-    GainType = 119 # 'int16');  %118
-    InstrumentGainConstant = 120 # 'int16');  %120
-    InstrumentInitialGain = 122 # 'int16');  %%122
-    Correlated = 124 # 'int16');  %124
-    
-    SweepFrequenceStart = 126 # 'int16');  %126
-    SweepFrequenceEnd = 128 # 'int16');  %128
-    SweepLength = 130 # 'int16');  %130
-    SweepType = 132 # 'int16');  %132
+    GainType = 119  # 'int16');  %118
+    InstrumentGainConstant = 120  # 'int16');  %120
+    InstrumentInitialGain = 122  # 'int16');  %%122
+    Correlated = 124  # 'int16');  %124
 
-    SweepTraceTaperLengthStart = 134 # 'int16');  %134
-    SweepTraceTaperLengthEnd = 136 # 'int16');  %136
-    TaperType = 138 # 'int16');  %138
+    SweepFrequenceStart = 126  # 'int16');  %126
+    SweepFrequenceEnd = 128  # 'int16');  %128
+    SweepLength = 130  # 'int16');  %130
+    SweepType = 132  # 'int16');  %132
 
-    AliasFilterFrequency = 140 # 'int16');  %140
-    AliasFilterSlope = 142 # 'int16');  %142
-    NotchFilterFrequency = 144 # 'int16');  %144
-    NotchFilterSlope = 146 # 'int16');  %146
-    LowCutFrequency = 148 # 'int16');  %148
-    HighCutFrequency = 150 # 'int16');  %150
-    LowCutSlope = 152 # 'int16');  %152
-    HighCutSlope = 154 # 'int16');  %154
-    YearDataRecorded = 156 # 'int16');  %156
-    DayOfYear = 158 # 'int16');  %158
-    HourOfDay = 160 # 'int16');  %160
-    MinuteOfHour = 162 # 'int16');  %162
-    SecondOfMinute = 164 # 'int16');  %164
-    TimeBaseCode = 166 # 'int16');  %166
-    TraceWeightningFactor = 168 # 'int16');  %170
-    GeophoneGroupNumberRoll1 = 170 # 'int16');  %172
-    GeophoneGroupNumberFirstTraceOrigField = 172 # 'int16');  %174
-    GeophoneGroupNumberLastTraceOrigField = 174 # 'int16');  %176
-    GapSize = 176 # 'int16');  %178
-    OverTravel = 178 # 'int16');  %178
+    SweepTraceTaperLengthStart = 134  # 'int16');  %134
+    SweepTraceTaperLengthEnd = 136  # 'int16');  %136
+    TaperType = 138  # 'int16');  %138
+
+    AliasFilterFrequency = 140  # 'int16');  %140
+    AliasFilterSlope = 142  # 'int16');  %142
+    NotchFilterFrequency = 144  # 'int16');  %144
+    NotchFilterSlope = 146  # 'int16');  %146
+    LowCutFrequency = 148  # 'int16');  %148
+    HighCutFrequency = 150  # 'int16');  %150
+    LowCutSlope = 152  # 'int16');  %152
+    HighCutSlope = 154  # 'int16');  %154
+    YearDataRecorded = 156  # 'int16');  %156
+    DayOfYear = 158  # 'int16');  %158
+    HourOfDay = 160  # 'int16');  %160
+    MinuteOfHour = 162  # 'int16');  %162
+    SecondOfMinute = 164  # 'int16');  %164
+    TimeBaseCode = 166  # 'int16');  %166
+    TraceWeightningFactor = 168  # 'int16');  %170
+    GeophoneGroupNumberRoll1 = 170  # 'int16');  %172
+    GeophoneGroupNumberFirstTraceOrigField = 172  # 'int16');  %174
+    GeophoneGroupNumberLastTraceOrigField = 174  # 'int16');  %176
+    GapSize = 176  # 'int16');  %178
+    OverTravel = 178  # 'int16');  %178
     cdpX = 180  # 'int32');  %180
     cdpY = 184  # 'int32');  %184
     Inline3D = 188  # 'int32');  %188
     Crossline3D = 192  # 'int32');  %192
     ShotPoint = 192  # 'int32');  %196
-    ShotPointScalar = 200 # 'int16');  %200
-    TraceValueMeasurementUnit = 202 # 'int16');  %202
+    ShotPointScalar = 200  # 'int16');  %200
+    TraceValueMeasurementUnit = 202  # 'int16');  %202
     TransductionConstantMantissa = 204  # 'int32');  %204
-    TransductionConstantPower = 208 # 'int16'); %208
-    TransductionUnit = 210 # 'int16');  %210
-    TraceIdentifier = 212 # 'int16');  %212
-    ScalarTraceHeader = 214 # 'int16');  %214
-    SourceType = 216 # 'int16');  %216
+    TransductionConstantPower = 208  # 'int16'); %208
+    TransductionUnit = 210  # 'int16');  %210
+    TraceIdentifier = 212  # 'int16');  %212
+    ScalarTraceHeader = 214  # 'int16');  %214
+    SourceType = 216  # 'int16');  %216
 
     SourceEnergyDirectionMantissa = 218  # 'int32');  %218
-    SourceEnergyDirectionExponent = 222 # 'int16');  %222
+    SourceEnergyDirectionExponent = 222  # 'int16');  %222
     SourceMeasurementMantissa = 224  # 'int32');  %224
-    SourceMeasurementExponent = 228 # 'int16');  %228
-    SourceMeasurementUnit = 230 # 'int16');  %230
+    SourceMeasurementExponent = 228  # 'int16');  %228
+    SourceMeasurementUnit = 230  # 'int16');  %230
     UnassignedInt1 = 232  # 'int32');  %232
     UnassignedInt2 = 236  # 'int32');  %236
+
 
 @dataclass
 class SEGYTraceHeaderEntry:
     position: int
     type: SEGYTraceHeaderEntryType
+
 
 SEGY_TRACE_HEADER_ENTRIES: Dict[SEGYTraceHeaderEntryName, SEGYTraceHeaderEntry] = {}
 

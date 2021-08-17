@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.6"
+
+[packages]
+pyspark = "*"
+dataclasses = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+coverage = "*" # https://coverage.readthedocs.io
+pre-commit = "*"
+mypy = "*"
+flake8 = "*"
+autoflake = "*"
+black = "*"
+pylint = "*"
+
+
+[pipenv]
+allow_prereleases = true
+
+#[scripts]

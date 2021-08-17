@@ -1,0 +1,5 @@
+[flake8]
+max-line-length=200
+# max-complexity=10
+# E203 whitespace before ':' - conflics with black
+ignore = E203

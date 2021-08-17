@@ -1,6 +1,8 @@
+import pyspark
+
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
 from su_rdd.kv_operations import AssignTraceHeaderKey, ConvertToFlatList
-import pyspark
+
 # class RDD_SetKeyByHeader:
 
 #     def __init__(self, THN):
@@ -16,12 +18,13 @@ import pyspark
 #     def __init__(self, THN):
 #         self._sk = RDD_SetKeyByHeader(THN)
 
+
 def convert_to_flat_map(rdd: pyspark.RDD) -> pyspark.RDD:
     return rdd.flatMap(ConvertToFlatList().operation)
+
 
 def group_by_trace_header(rdd: pyspark.RDD, header_entry: SEGYTraceHeaderEntry) -> pyspark.RDD:
     rdd = convert_to_flat_map(rdd)
     rdd = rdd.map(AssignTraceHeaderKey(header_entry).operation)
     rdd = rdd.groupByKey().mapValues(list)
     return rdd
-

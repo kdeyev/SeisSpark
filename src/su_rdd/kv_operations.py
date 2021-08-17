@@ -1,16 +1,15 @@
-
-
 from typing import Any, List, Tuple
 
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
 from su_data.su_gather import SUGather
 from su_data.su_trace import SUTrace
-from su_data.su_trace_header import SUTraceHeader, get_header_value
+from su_data.su_trace_header import get_header_value
+
 
 class ConvertToFlatList:
     def operation(self, key_trace: Tuple[Any, bytes]) -> Tuple[Any, bytes]:
         if type(key_trace) != tuple:
-             raise Exception(f"Wrong key_trace type {type(key_trace)}")
+            raise Exception(f"Wrong key_trace type {type(key_trace)}")
 
         value = key_trace[1]
         if type(value) is list:
@@ -34,6 +33,7 @@ class AssignTraceHeaderKey:
 
         return (header_value, trace_buffer)
 
+
 def gather_from_rdd_key_value(key_value: Tuple[Any, List[bytes]]) -> SUGather:
     if type(key_value) != tuple and type(key_value[1]) != list:
         raise Exception(f"Wrong key_trace type {type(key_value)}")
@@ -42,8 +42,10 @@ def gather_from_rdd_key_value(key_value: Tuple[Any, List[bytes]]) -> SUGather:
     traces = [SUTrace(buffer) for buffer in buffers]
     return SUGather(key, traces)
 
+
 def rdd_key_value_from_gather(gather: SUGather) -> Tuple[Any, List[bytes]]:
     return (gather.key, [trace.buffer for trace in gather.traces])
+
 
 def rdd_flat_key_value_from_gather(gather: SUGather) -> Tuple[Any, List[bytes]]:
     return [(None, trace.buffer) for trace in gather.traces]

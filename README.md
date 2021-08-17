@@ -6,7 +6,7 @@
 The system runs calculation suing the Apache Spark framework.
 
 # Seismic operations
-The system run Seismic Unix operations wrapped py Python. 
+The system run Seismic Unix operations wrapped py Python.
 The Seismic Unix operations can be run in pipeline where the piping is build by sequence of Spark RDDs (Python pySpark).
 
 # Web Interface

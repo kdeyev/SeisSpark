@@ -1,0 +1,95 @@
+#=============================================================================
+# <copyright>
+# Copyright (c) 2021 Bluware Inc. All rights reserved.
+#
+# All rights are reserved. Reproduction or transmission in whole or in part, in
+# any form or by any means, electronic, mechanical or otherwise, is prohibited
+# without the prior written permission of the copyright owner.
+# </copyright>
+#=============================================================================
+
+default_language_version:
+  python: python3.6
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      #- id: detect-aws-credentials
+      - id: check-added-large-files
+      - id: check-json
+      #- id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-executables-have-shebangs
+      - id: debug-statements
+      - id: check-merge-conflict
+
+#   - repo: https://github.com/awebdeveloper/pre-commit-prettier
+#     rev: "" # Use the sha or tag you want to point at
+#     hooks:
+#       - id: prettier
+#         args: [] #list of args like '--single-quote', '--jsx-bracket-same-line', '--print-width 120', '--no-bracket-spacing'
+#         additional_dependencies: ["prettier@2.1.2"]
+
+  - repo: local
+    hooks:
+      - id: autoflake
+        name: autoflake
+        stages: [commit]
+        language: system
+        args:
+          - --in-place
+          - --remove-unused-variables
+          - --remove-all-unused-imports
+          - --expand-star-imports
+        entry: pipenv run autoflake
+        types: [python]
+      - id: isort
+        name: isort
+        stages: [commit]
+        language: system
+        entry: pipenv run isort
+        types: [python]
+      - id: black
+        name: black
+        stages: [commit]
+        language: system
+        entry: pipenv run black
+        types: [python]
+      - id: flake8
+        name: flake8
+        stages: [commit]
+        language: system
+        entry: pipenv run flake8
+        types: [python]
+      - id: mypy
+        name: mypy
+        stages: [commit]
+        language: system
+        entry: pipenv run mypy
+        types: [python]
+        require_serial: true
+      # - id: pytest
+      #   name: pytest
+      #   stages: [commit]
+      #   language: system
+      #   entry: pipenv run pytest -s tests/pytests/unit-tests
+      #   types: [python]
+      #   pass_filenames: false
+      # - id: pytest-cov
+      #   name: pytest
+      #   stages: [push]
+      #   language: system
+      #   entry: pipenv run pytest --cov --cov-fail-under=100
+      #   types: [python]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v1.25.0
+    hooks:
+    -   id: pyupgrade
+        args: [--py36-plus]
+
+  -   repo: https://github.com/ikamensh/flynt/
+      rev: 4c65a4d0f18e824d5d60913b4aec3cb291fafd9b
+      hooks:
+      -   id: flynt
