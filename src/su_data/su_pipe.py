@@ -9,7 +9,7 @@ from .su_trace import SUTrace
 def concatenate_traces(traces: List[SUTrace]) -> bytes:
     out = bytes()
     for trace in traces:
-        out += trace.data
+        out += trace.buffer
     return out
 
 def su_process_pipe(args: List[str], traces: List[SUTrace]) -> List[SUTrace]:
@@ -21,7 +21,7 @@ def su_process_pipe(args: List[str], traces: List[SUTrace]) -> List[SUTrace]:
     out, err = p.communicate(input=in_data)
     if err: 
         raise Exception(f"su_process_pipe: {err}")
-    out_data_array = bytearray(out)
+    out_data_array = bytes(out)
     
     out_trace_header = SUTraceHeader(out_data_array)
     ns = out_trace_header.num_samples

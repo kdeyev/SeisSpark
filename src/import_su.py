@@ -8,9 +8,8 @@ output_traces = su_process_pipe(["suplane"], [])
 
 output_traces = su_process_pipe(["sufilter", "f1=10,f2=20,f3=30,f4-40"], output_traces)
 
-
 for trace in output_traces:
-    print(trace.data)
+    print(trace.body)
 # from obspy.io.segy.segy import iread_segy, iread_su
 
 # def su_to_array(filename: str) -> List[Any]:

@@ -4,11 +4,11 @@ from .segy_trace_header import SEGYTraceHeaderEntry, SEGY_TRACE_HEADER_ENTRYS, S
 NS_ENTRY: SEGYTraceHeaderEntry = SEGY_TRACE_HEADER_ENTRYS[SEGYTraceHeaderEntryName.ns]
 
 class SUTraceHeader:
-    def __init__(self, data: bytes) -> None:
-        self.data = data
+    def __init__(self, buffer: bytes) -> None:
+        self.buffer = buffer
 
     def get_header_value(self, entry: SEGYTraceHeaderEntry):
-        return get_value(data=self.data, index=entry.position, type=entry.type)
+        return get_value(self.buffer, index=entry.position, type=entry.type)
 
     @property 
     def num_samples(self) -> int: 
