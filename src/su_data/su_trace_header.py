@@ -1,8 +1,8 @@
 from typing import Any
 from .encoding import get_value
-from .segy_trace_header import SEGYTraceHeaderEntry, SEGY_TRACE_HEADER_ENTRYS, SEGYTraceHeaderEntryName
+from .segy_trace_header import SEGYTraceHeaderEntry, SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
 
-NS_ENTRY: SEGYTraceHeaderEntry = SEGY_TRACE_HEADER_ENTRYS[SEGYTraceHeaderEntryName.ns]
+NS_ENTRY: SEGYTraceHeaderEntry = SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.ns]
 
 class SUTraceHeader:
     def __init__(self, buffer: bytes) -> None:

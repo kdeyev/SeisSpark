@@ -1,9 +1,12 @@
 from typing import Any, List
 import pyspark
-from su_data.segy_trace_header import SEGYTraceHeaderEntry, SEGYTraceHeaderEntryName, SEGY_TRACE_HEADER_ENTRYS
+from su_data.segy_trace_header import SEGYTraceHeaderEntry, SEGYTraceHeaderEntryName, SEGY_TRACE_HEADER_ENTRIES
+from su_data.su_gather import SUGather
 
 from su_data.su_pipe import su_process_pipe
 from pyspark.sql import SparkSession
+from su_data.su_trace import SUTrace
+from su_rdd.kv_operations import gather_from_rdd_key_value
 
 from su_rdd.rdd_operations import group_by_trace_header
 
@@ -25,10 +28,29 @@ spark_reader        = spark_sess.read
 spark_streamReader  = spark_sess.readStream
 spark_ctxt.setLogLevel("WARN")
 
-output_traces = su_process_pipe(["suplane"], [])
+gather_count_to_produce = 10
+trace_count_per_gather = 5
 
-rdd = spark_ctxt.parallelize([(None, trace.buffer) for trace in output_traces])
-print(rdd.first())
+traces = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
+input_gather = SUGather(traces=traces)
 
-rdd = group_by_trace_header(rdd, SEGY_TRACE_HEADER_ENTRYS[SEGYTraceHeaderEntryName.cdp])
-print(rdd.count())
+header_entries  = input_gather.get_header_entry_values(SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.FieldRecord])
+expected = []
+for gather_num in range(1, gather_count_to_produce+1):
+    expected += [gather_num]*trace_count_per_gather
+assert header_entries == expected
+
+# Create an RDD from in memory buffers
+rdd = spark_ctxt.parallelize([(None, trace.buffer) for trace in traces])
+
+# Group traces by ffid
+rdd = group_by_trace_header(rdd, SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.FieldRecord])
+assert rdd.count() == gather_count_to_produce
+
+# Get the first gather
+first_gather = gather_from_rdd_key_value(rdd.first())
+assert first_gather.trace_count == trace_count_per_gather
+
+# 
+header_entries  = first_gather.get_header_entry_values(SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.TraceNumber])
+assert header_entries == list(trace_num for trace_num in range(1, trace_count_per_gather+1))

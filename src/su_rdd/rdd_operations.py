@@ -24,3 +24,4 @@ def group_by_trace_header(rdd: pyspark.RDD, header_entry: SEGYTraceHeaderEntry) 
     rdd = rdd.map(AssignTraceHeaderKey(header_entry).operation)
     rdd = rdd.groupByKey().mapValues(list)
     return rdd
+
