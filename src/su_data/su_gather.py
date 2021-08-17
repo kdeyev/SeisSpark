@@ -15,4 +15,4 @@ class SUGather:
 
     
     def get_header_entry_values(self, header_entry: SEGYTraceHeaderEntry) -> List[Any]:
-        return list([trace.get_header_value(header_entry) for trace in self.traces])
+        return [trace.get_header_value(header_entry) for trace in self.traces]

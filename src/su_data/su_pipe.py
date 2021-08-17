@@ -6,18 +6,18 @@ from .su_trace_header import SUTraceHeader
 
 from .su_trace import SUTrace
 
-def concatenate_traces(traces: List[SUTrace]) -> bytes:
+def concatenate_buffers(buffers: List[bytes]) -> bytes:
     out = bytes()
-    for trace in traces:
-        out += trace.buffer
+    for buffer in buffers:
+        out += buffer
     return out
 
-def su_process_pipe(args: List[str], traces: List[SUTrace]) -> List[SUTrace]:
+def su_process_pipe(args: List[str], buffers: List[bytes]) -> List[bytes]:
     # if self._p == None:
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
     # simplest communication
-    in_data = concatenate_traces(traces)
+    in_data = concatenate_buffers(buffers)
     out, err = p.communicate(input=in_data)
     if err: 
         raise Exception(f"su_process_pipe: {err}")
@@ -30,10 +30,9 @@ def su_process_pipe(args: List[str], traces: List[SUTrace]) -> List[SUTrace]:
     trace_count = int (len(out_data_array)/trace_len)
     assert (trace_len*trace_count == len(out_data_array))
 
-    out_traces: List[SUTrace] = []
+    out_buffers: List[bytes] = []
     for i in range(trace_count):
-        trace_data = out_data_array[i*trace_len:(i+1)*trace_len]
-        trace = SUTrace(trace_data)
-        out_traces.append(trace)
+        buffer = out_data_array[i*trace_len:(i+1)*trace_len]
+        out_buffers.append(buffer)
     
-    return out_traces
+    return out_buffers
