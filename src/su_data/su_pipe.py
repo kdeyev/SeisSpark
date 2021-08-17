@@ -2,7 +2,7 @@ import subprocess
 
 from typing import List
 
-from su_data.su_trace_header import SUTraceHeader
+from .su_trace_header import SUTraceHeader
 
 from .su_trace import SUTrace
 
