@@ -2,6 +2,7 @@ from typing import Any, List, Tuple
 
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
 from su_data.su_gather import SUGather
+from su_data.su_pipe import su_process_pipe
 from su_data.su_trace import SUTrace
 from su_data.su_trace_header import get_header_value
 
@@ -32,6 +33,21 @@ class AssignTraceHeaderKey:
         header_value = get_header_value(trace_buffer, self.header_entry)
 
         return (header_value, trace_buffer)
+
+
+class SUProcess:
+    def __init__(self, su_xecutable: str, parameters: List[str] = []):
+        self.su_xecutable = su_xecutable
+        self.parameters = parameters
+
+    def operation(self, key_trace: Tuple[Any, List[bytes]]) -> Tuple[Any, List[bytes]]:
+        if type(key_trace) != tuple and type(key_trace[1]) != list:
+            raise Exception(f"Wrong key_trace type {type(key_trace)}")
+
+        trace_buffers: List[bytes] = key_trace[1]
+        output_buffers = su_process_pipe([self.su_xecutable, *self.parameters], trace_buffers)
+
+        return (None, output_buffers)
 
 
 def gather_from_rdd_key_value(key_value: Tuple[Any, List[bytes]]) -> SUGather:

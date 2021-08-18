@@ -1,7 +1,9 @@
+from typing import List
+
 import pyspark
 
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
-from su_rdd.kv_operations import AssignTraceHeaderKey, ConvertToFlatList
+from su_rdd.kv_operations import AssignTraceHeaderKey, ConvertToFlatList, SUProcess
 
 # class RDD_SetKeyByHeader:
 
@@ -27,4 +29,9 @@ def group_by_trace_header(rdd: pyspark.RDD, header_entry: SEGYTraceHeaderEntry) 
     rdd = convert_to_flat_map(rdd)
     rdd = rdd.map(AssignTraceHeaderKey(header_entry).operation)
     rdd = rdd.groupByKey().mapValues(list)
+    return rdd
+
+
+def su_process_rdd(rdd: pyspark.RDD, su_xecutable: str, parameters: List[str] = []) -> pyspark.RDD:
+    rdd = rdd.map(SUProcess(su_xecutable, parameters).operation)
     return rdd

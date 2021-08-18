@@ -9,6 +9,8 @@ python_version = "3.6"
 [packages]
 pyspark = "*"
 dataclasses = "*"
+pydantic = "*"
+numpy = "*"
 
 [dev-packages]
 pytest = "*"
@@ -21,8 +23,6 @@ autoflake = "*"
 black = "*"
 pylint = "*"
 
-
 [pipenv]
 allow_prereleases = true
-
 #[scripts]
