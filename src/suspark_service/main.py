@@ -15,7 +15,7 @@ from fastapi import FastAPI
 
 import suspark_service.routers.pipelines as pipelines
 
-defaults = {"port": 8080}
+defaults = {"port": 8081}
 
 p = configargparse.ArgParser()
 p.add("-c", "--config-file", is_config_file=True, help="config file path")

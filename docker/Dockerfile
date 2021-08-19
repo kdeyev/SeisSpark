@@ -48,7 +48,7 @@ RUN chmod 755 /root/bootstrap.sh
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN apt-get install -y git
+RUN apt-get update && apt-get install -y git
 RUN pip install pipenv
 RUN git clone https://github.com/kdeyev/SeisSpark.git
 
