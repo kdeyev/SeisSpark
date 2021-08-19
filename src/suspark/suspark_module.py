@@ -1,19 +1,25 @@
-from typing import Any, List, Optional, Type, cast
+import uuid
+from typing import Any, Dict, List, Optional, Type, cast
 
 import pydantic
 import pyspark
 
-from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntry, SEGYTraceHeaderEntryName
+from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
 from su_data.su_pipe import su_process_pipe
-from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_flat_key_value_from_gather, rdd_key_value_from_gather
+from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_key_value_from_gather
 from su_rdd.rdd_operations import group_by_trace_header, su_process_rdd
 
 
 class BaseModule:
     def __init__(self, paramsModel: Type[pydantic.BaseModel], params: Optional[pydantic.BaseModel] = None) -> None:
+        self._id = str(uuid.uuid4())
         self._paramsModel = paramsModel
         self._params = params
         self._rdd: Optional[pyspark.RDD] = None
+
+    @property
+    def id(self) -> str:
+        return self._id
 
     @property
     def rdd(self) -> pyspark.RDD:
@@ -21,7 +27,7 @@ class BaseModule:
             raise Exception("RDD is not initialized")
         return self._rdd
 
-    def invalidateRDD(self) -> None:
+    def invalidate_rdd(self) -> None:
         self._rdd = None
 
     @property
@@ -38,6 +44,9 @@ class BaseModule:
         if type(params) != self._paramsModel:
             raise Exception("Wrong parameters type")
         self._params = params
+
+    def set_json_parameters(self, json: Dict[str, Any]) -> None:
+        self._params = self._paramsModel(**json)
 
     def _init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
         raise Exception("Not implemented")
