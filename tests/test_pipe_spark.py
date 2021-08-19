@@ -6,29 +6,11 @@ from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_flat_key_value_from_gather, rdd_key_value_from_gather
 from su_rdd.rdd_operations import group_by_trace_header, su_process_rdd
 
-spark_conf = pyspark.SparkConf()
-# spark_conf.setAll([
-#     ('spark.master', ),
-#     ('spark.app.name', 'myApp'),
-#     ('spark.submit.deployMode', 'client'),
-#     ('spark.ui.showConsoleProgress', 'true'),
-#     ('spark.eventLog.enabled', 'false'),
-#     ('spark.logConf', 'false'),
-#     ('spark.driver.bindAddress', 'vps00'),
-#     ('spark.driver.host', 'vps00'),
-# ])
-
-spark_sess = SparkSession.builder.config(conf=spark_conf).getOrCreate()
-spark_ctxt = spark_sess.sparkContext
-spark_reader = spark_sess.read
-spark_streamReader = spark_sess.readStream
-spark_ctxt.setLogLevel("WARN")
-
 gather_count_to_produce = 10
 trace_count_per_gather = 5
 
 
-def test_rdd_key_value_from_gather():
+def test_rdd_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
 
     buffers = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
     input_gather = gather_from_rdd_key_value((None, buffers))
@@ -55,7 +37,7 @@ def test_rdd_key_value_from_gather():
     assert header_entries == list(trace_num for trace_num in range(1, trace_count_per_gather + 1))
 
 
-def test_rdd_flat_key_value_from_gather():
+def test_rdd_flat_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
     buffers = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
     input_gather = gather_from_rdd_key_value((None, buffers))
 
@@ -88,6 +70,3 @@ def test_rdd_flat_key_value_from_gather():
 
     first_gather = gather_from_rdd_key_value(rdd.first())
     print(first_gather.traces[0].buffer)
-
-
-test_rdd_flat_key_value_from_gather()

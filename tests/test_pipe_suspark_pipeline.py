@@ -5,30 +5,9 @@ from su_rdd.kv_operations import gather_from_rdd_key_value
 from suspark.suspark_modules_factory import ModulesFactory, register_module_types
 from suspark.suspark_pipeline import Pipeline
 
-spark_conf = pyspark.SparkConf()
-# spark_conf.setAll([
-#     ('spark.master', ),
-#     ('spark.app.name', 'myApp'),
-#     ('spark.submit.deployMode', 'client'),
-#     ('spark.ui.showConsoleProgress', 'true'),
-#     ('spark.eventLog.enabled', 'false'),
-#     ('spark.logConf', 'false'),
-#     ('spark.driver.bindAddress', 'vps00'),
-#     ('spark.driver.host', 'vps00'),
-# ])
 
-spark_sess = SparkSession.builder.config(conf=spark_conf).getOrCreate()
-spark_ctxt = spark_sess.sparkContext
-spark_reader = spark_sess.read
-spark_streamReader = spark_sess.readStream
-spark_ctxt.setLogLevel("WARN")
-
-factory = ModulesFactory()
-register_module_types(factory)
-
-
-def test1():
-    pipeline = Pipeline(spark_ctxt, factory)
+def test_build_and_run_pipeline1(spark_ctxt: pyspark.SparkContext, modules_factory: ModulesFactory):
+    pipeline = Pipeline(spark_ctxt, modules_factory)
     suimp2d_id = pipeline.add_module("SUimp2d")
     pipeline.add_module("SUsort")
     sufilter_id = pipeline.add_module("SUfilter")
@@ -46,8 +25,8 @@ def test1():
     print(first_gather.traces[0].buffer)
 
 
-def test2():
-    pipeline = Pipeline(spark_ctxt, factory)
+def test_build_and_run_pipeline2(spark_ctxt: pyspark.SparkContext, modules_factory: ModulesFactory):
+    pipeline = Pipeline(spark_ctxt, modules_factory)
     suimp2d_id = pipeline.add_module("SUimp2d")
     sufilter_id = pipeline.add_module("SUfilter")
     pipeline.add_module("SUsort", suimp2d_id)
@@ -63,6 +42,3 @@ def test2():
 
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)
-
-
-test2()
