@@ -11,6 +11,9 @@ pyspark = "*"
 dataclasses = "*"
 pydantic = "*"
 numpy = "*"
+configargparse = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 pytest = "*"

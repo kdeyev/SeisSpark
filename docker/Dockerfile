@@ -45,6 +45,8 @@ RUN cd /usr/local/bin/ \
 COPY bootstrap.sh /root/bootstrap.sh
 RUN chmod 755 /root/bootstrap.sh
 
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 ENTRYPOINT ["/bin/sh"]
 CMD [ "/root/bootstrap.sh" ]

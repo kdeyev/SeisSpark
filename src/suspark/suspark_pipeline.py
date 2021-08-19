@@ -31,7 +31,7 @@ class BaseModuleList(collections.MutableSequence):
             del self._l[i]
         elif type(i) is str:
             item = self._d[i]
-            j = any(self._l[j].id == i for j in range(self._l))
+            j = any(self._l[j].id == i for j in range(len(self._l)))
             return self.l[j]
         else:
             raise Exception(f"Wrong key type {type(i)}")
@@ -50,7 +50,16 @@ class BaseModuleList(collections.MutableSequence):
         else:
             raise Exception(f"Wrong key type {type(i)}")
 
-    def __str__(self):
+    def find_index(self, i: str) -> int:
+        if type(i) is str:
+            j = next(j for j in range(len(self._l)) if self._l[j].id == i)
+            if j is None:
+                raise ValueError()
+            return j
+        else:
+            raise Exception(f"Wrong key type {type(i)}")
+
+    def __str__(self) -> str:
         return str(self._l)
 
 
@@ -58,13 +67,18 @@ class Pipeline:
     def __init__(self, spark_ctxt: pyspark.SparkContext, factory: ModulesFactory) -> None:
         self._factory = factory
         self._spark_ctxt = spark_ctxt
-        self._modules_pipeline: List[BaseModule] = []
         self._modules = BaseModuleList()
 
-    def add_module(self, module_type: str) -> str:
+    def add_module(self, module_type: str, prev_module_id: Optional[str] = None) -> str:
+        index: Optional[int] = None
+        if prev_module_id:
+            index = self._modules.find_index(prev_module_id) + 1
+
         module = self._factory.create_module(module_type)
-        self._modules_pipeline.append(module)
-        self._modules.append(module)
+        if index is not None:
+            self._modules.insert(index, module)
+        else:
+            self._modules.append(module)
         self._init_rdd()
         return module.id
 
@@ -76,6 +90,9 @@ class Pipeline:
     def get_module_w(self, module_id: str) -> Generator[BaseModule, None, None]:
         yield self._modules[module_id]
         self._init_rdd()
+
+    def delete_module(self, module_id: str) -> None:
+        del self._modules[module_id]
 
     def _init_rdd(self) -> None:
         rdd: Optional[pyspark.RDD] = None
