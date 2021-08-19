@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /usr/local/spark/sbin
+cd /opt/bitnami/spark/sbin
 ./start-master.sh # starting org.apache.spark.deploy.master.Master, logging to /usr/local/spark/logs/
 ps -ef | grep java
 ls -lAt /usr/local/spark/logs

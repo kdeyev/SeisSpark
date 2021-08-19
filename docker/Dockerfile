@@ -42,16 +42,17 @@ RUN cd /usr/local/bin/ \
          ln -s /root/cwp/trampoline.sh `basename $f`; \
        done
 
-COPY bootstrap.sh /root/bootstrap.sh
-RUN chmod 755 /root/bootstrap.sh
-
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+ENV PYTHONPATH=/root/SeisSpark
 
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git dos2unix
 RUN pip install pipenv
 RUN git clone https://github.com/kdeyev/SeisSpark.git
 
+COPY bootstrap.sh /root/bootstrap.sh
+RUN dos2unix /root/bootstrap.sh
+RUN chmod 755 /root/bootstrap.sh
 
 ENTRYPOINT ["/bin/sh"]
 CMD [ "/root/bootstrap.sh" ]
