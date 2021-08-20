@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 
 from suspark.suspark_modules_factory import ModulesFactory
 
@@ -7,7 +7,12 @@ def init_router(factory: ModulesFactory) -> APIRouter:
     router = APIRouter()
 
     @router.get("/modules", tags=["modules"])
-    async def get_modules():
-        return [{"username": "Rick"}, {"username": "Morty"}]
+    def get_modules():
+        return factory.get_module_types()
+
+    @router.get("/modules/{module_type}", tags=["modules"])
+    def get_module_schema(module_type: str = Path(...)):
+        schema = factory.get_module_params_json_schema(module_type)
+        return schema
 
     return router

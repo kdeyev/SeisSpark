@@ -11,6 +11,8 @@ class ModulesFactory:
         return self._factory[module_type]()
 
     def register_module_type(self, module_type: str, module: Type[BaseModule]) -> None:
+        if " " in module_type:
+            raise Exception("Module type should not incluse ' '")
         if module_type in self._factory:
             raise KeyError(f"Module type {module_type} has been registered alread")
         self._factory[module_type] = module
@@ -19,7 +21,9 @@ class ModulesFactory:
         return list(self._factory.keys())
 
     def get_module_params_json_schema(self, module_type: str) -> Any:
-        return self._factory[module_type].json_schema
+        # FIXME: get module schema without building the module
+        module = self._factory[module_type]()
+        return module.json_schema
 
 
 def register_module_types(factory: ModulesFactory) -> None:

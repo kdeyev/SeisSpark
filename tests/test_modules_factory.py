@@ -13,4 +13,7 @@ def test_modules_factory() -> None:
     with pytest.raises(KeyError):
         factory.register_module_type("SUfilter", SUfilter)
 
+    with pytest.raises(Exception):
+        factory.register_module_type("SU filter", SUfilter)
+
     assert factory.get_module_types() == ["SUfilter", "SUimp2d"]

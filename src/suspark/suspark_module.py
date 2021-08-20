@@ -1,3 +1,4 @@
+import json
 import uuid
 from typing import Any, Dict, List, Optional, Type, cast
 
@@ -32,7 +33,7 @@ class BaseModule:
 
     @property
     def json_schema(self) -> Any:
-        return SUimp2d.SUimp2dParams.schema_json()
+        return json.loads(self._paramsModel.schema_json())
 
     @property
     def parameters(self) -> Any:
