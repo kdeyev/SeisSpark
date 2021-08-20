@@ -1,9 +1,6 @@
-import pyspark
-from pyspark.sql import SparkSession
-
 from su_rdd.kv_operations import gather_from_rdd_key_value
 from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory, register_module_types
+from suspark.suspark_modules_factory import ModulesFactory
 from suspark.suspark_pipeline import Pipeline
 
 

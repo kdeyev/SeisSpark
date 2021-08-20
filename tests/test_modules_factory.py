@@ -1,7 +1,7 @@
 import pytest
 
-from suspark.suspark_module import SUfilter, SUimp2d, SUsort
-from suspark.suspark_modules_factory import ModulesFactory, register_module_types
+from suspark.suspark_module import SUfilter, SUimp2d
+from suspark.suspark_modules_factory import ModulesFactory
 
 
 def test_modules_factory() -> None:

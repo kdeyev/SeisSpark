@@ -14,13 +14,13 @@ services:
   #     - '8080:8080'
   seisspark-worker-1:
     image: seisspark
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     command: /bin/bash
   seisspark-dev:
     image: seisspark-dev
-    build: 
+    build:
       context: .
       dockerfile: dev.Dockerfile
     environment:

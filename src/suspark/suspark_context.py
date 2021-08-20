@@ -1,5 +1,4 @@
 import pyspark
-import pytest
 from pyspark.sql import SparkSession
 
 
@@ -20,8 +19,8 @@ class SusparkContext:
 
         spark_sess = SparkSession.builder.config(conf=spark_conf).getOrCreate()
         spark_ctxt = spark_sess.sparkContext
-        spark_reader = spark_sess.read
-        spark_streamReader = spark_sess.readStream
+        spark_sess.read
+        spark_sess.readStream
         spark_ctxt.setLogLevel("WARN")
 
         self._spark_ctxt = spark_ctxt

@@ -1,9 +1,6 @@
-import pytest
-
 from suspark.pipeline_repository import PiplineRepository
 from suspark.suspark_context import SusparkContext
-from suspark.suspark_module import SUfilter, SUimp2d, SUsort
-from suspark.suspark_modules_factory import ModulesFactory, register_module_types
+from suspark.suspark_modules_factory import ModulesFactory
 
 
 def test_pipeline_registry(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:

@@ -1,8 +1,6 @@
 import uuid
 from typing import Dict, List, Tuple
 
-import pyspark
-
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_modules_factory import ModulesFactory
 from suspark.suspark_pipeline import Pipeline

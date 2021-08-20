@@ -1,6 +1,4 @@
-import pyspark
 import pytest
-from pyspark.sql import SparkSession
 
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_modules_factory import ModulesFactory, register_module_types

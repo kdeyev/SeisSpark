@@ -1,6 +1,3 @@
-import pyspark
-from pyspark.sql import SparkSession
-
 from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
 from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_flat_key_value_from_gather, rdd_key_value_from_gather
