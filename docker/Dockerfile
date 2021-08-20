@@ -11,6 +11,7 @@ USER root
 # Download Seismic Unix, build it, and clean up tools and build artifacts
 # Also try to strip down the image as much as possible by purging APT caches
 RUN apt-get update && apt-get install -y \
+    dos2unix \
     build-essential \
     libx11-dev \
     libxt6 libxt-dev \
@@ -30,6 +31,7 @@ RUN apt-get update && apt-get install -y \
 
 # Add trampoline which will sett CWPROOT for each command being called
 COPY trampoline.sh /root/cwp/trampoline.sh
+RUN dos2unix /root/cwp/trampoline.sh
 RUN chmod 755 /root/cwp/trampoline.sh
 
 # Symlink the trampoline script for every command in SU to /usr/local/bin
@@ -41,17 +43,3 @@ RUN cd /usr/local/bin/ \
     && for f in /root/cwp/bin/*; do \
          ln -s /root/cwp/trampoline.sh `basename $f`; \
        done
-
-COPY bootstrap.sh /root/bootstrap.sh
-RUN chmod 755 /root/bootstrap.sh
-
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
-
-RUN apt-get update && apt-get install -y git
-RUN pip install pipenv
-RUN git clone https://github.com/kdeyev/SeisSpark.git
-
-
-ENTRYPOINT ["/bin/sh"]
-CMD [ "/root/bootstrap.sh" ]
