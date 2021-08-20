@@ -9,6 +9,7 @@ from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeader
 from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_key_value_from_gather
 from su_rdd.rdd_operations import group_by_trace_header, su_process_rdd
+from suspark.suspark_context import SusparkContext
 
 
 class BaseModule:
@@ -49,11 +50,11 @@ class BaseModule:
     def set_json_parameters(self, json: Dict[str, Any]) -> None:
         self._params = self._paramsModel(**json)
 
-    def _init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
         raise Exception("Not implemented")
 
-    def init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> None:
-        self._rdd = self._init_rdd(spark_ctxt, input_rdd)
+    def init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> None:
+        self._rdd = self._init_rdd(suspark_context, input_rdd)
 
 
 class SUimp2d(BaseModule):
@@ -68,7 +69,7 @@ class SUimp2d(BaseModule):
     def suimp2d_params(self) -> "SUimp2d.SUimp2dParams":
         return cast(SUimp2d.SUimp2dParams, self.parameters)
 
-    def _init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
         if input_rdd:
             raise Exception("input RDD is not used")
         gather_count_to_produce = self.suimp2d_params.nshot
@@ -84,7 +85,7 @@ class SUimp2d(BaseModule):
         assert header_entries == expected
 
         # Create an RDD from in memory buffers
-        rdd = spark_ctxt.parallelize([rdd_key_value_from_gather(input_gather)])
+        rdd = suspark_context.context.parallelize([rdd_key_value_from_gather(input_gather)])
         return rdd
 
 
@@ -99,7 +100,7 @@ class SUsort(BaseModule):
     def susort_params(self) -> "SUsort.SUsortParams":
         return cast(SUsort.SUsortParams, self.parameters)
 
-    def _init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
         if not input_rdd:
             raise Exception("input RDD should be specified")
         key: SEGYTraceHeaderEntryName = self.susort_params.key
@@ -125,7 +126,7 @@ class SUfilter(BaseModule):
     def sufilter_params(self) -> SUFilterParams:
         return cast(SUFilterParams, self.parameters)
 
-    def _init_rdd(self, spark_ctxt: pyspark.SparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
         if not input_rdd:
             raise Exception("input RDD should be specified")
         # key: SEGYTraceHeaderEntryName = self.sufilter_params.key

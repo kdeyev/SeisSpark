@@ -4,6 +4,7 @@ from typing import Dict, Generator, List, Optional, Union
 
 import pyspark
 
+from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
 from suspark.suspark_modules_factory import ModulesFactory
 
@@ -64,9 +65,9 @@ class BaseModuleList(collections.MutableSequence):
 
 
 class Pipeline:
-    def __init__(self, spark_ctxt: pyspark.SparkContext, factory: ModulesFactory) -> None:
-        self._factory = factory
-        self._spark_ctxt = spark_ctxt
+    def __init__(self, suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
+        self._modules_factory = modules_factory
+        self._suspark_context = suspark_context
         self._modules = BaseModuleList()
 
     def add_module(self, module_type: str, prev_module_id: Optional[str] = None) -> str:
@@ -74,7 +75,7 @@ class Pipeline:
         if prev_module_id:
             index = self._modules.find_index(prev_module_id) + 1
 
-        module = self._factory.create_module(module_type)
+        module = self._modules_factory.create_module(module_type)
         if index is not None:
             self._modules.insert(index, module)
         else:
@@ -97,5 +98,5 @@ class Pipeline:
     def _init_rdd(self) -> None:
         rdd: Optional[pyspark.RDD] = None
         for module in self._modules:
-            module.init_rdd(self._spark_ctxt, rdd)
+            module.init_rdd(self._suspark_context, rdd)
             rdd = module.rdd

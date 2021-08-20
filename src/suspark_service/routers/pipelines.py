@@ -1,11 +1,21 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
+
+from suspark.pipeline_repository import PiplineRepository
 
 
-def init_router() -> APIRouter:
+def init_router(pipeline_repository: PiplineRepository) -> APIRouter:
     router = APIRouter()
 
-    @router.get("/users/", tags=["users"])
-    async def read_users():
-        return [{"username": "Rick"}, {"username": "Morty"}]
+    @router.get("/pipelines", tags=["pipelines"])
+    def get_pipelines():
+        pass
+
+    @router.get("/pipelines/{pipeline_id}", tags=["pipelines"])
+    def get_pipeline(pipeline_id: str = Path(...)):
+        pass
+
+    @router.get("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
+    def get_pipeline(pipeline_id: str = Path(...)):
+        pass
 
     return router

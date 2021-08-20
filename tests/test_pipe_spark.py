@@ -5,12 +5,13 @@ from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeader
 from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import gather_from_rdd_key_value, rdd_flat_key_value_from_gather, rdd_key_value_from_gather
 from su_rdd.rdd_operations import group_by_trace_header, su_process_rdd
+from suspark.suspark_context import SusparkContext
 
 gather_count_to_produce = 10
 trace_count_per_gather = 5
 
 
-def test_rdd_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
+def test_rdd_key_value_from_gather(suspark_context: SusparkContext):
 
     buffers = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
     input_gather = gather_from_rdd_key_value((None, buffers))
@@ -22,7 +23,7 @@ def test_rdd_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
     assert header_entries == expected
 
     # Create an RDD from in memory buffers
-    rdd = spark_ctxt.parallelize([rdd_key_value_from_gather(input_gather)])
+    rdd = suspark_context.context.parallelize([rdd_key_value_from_gather(input_gather)])
 
     # Create an RDD from in-memory gather
     rdd = group_by_trace_header(rdd, SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.FieldRecord])
@@ -37,7 +38,7 @@ def test_rdd_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
     assert header_entries == list(trace_num for trace_num in range(1, trace_count_per_gather + 1))
 
 
-def test_rdd_flat_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
+def test_rdd_flat_key_value_from_gather(suspark_context: SusparkContext):
     buffers = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
     input_gather = gather_from_rdd_key_value((None, buffers))
 
@@ -48,7 +49,7 @@ def test_rdd_flat_key_value_from_gather(spark_ctxt: pyspark.SparkContext):
     assert header_entries == expected
 
     # Create an RDD from in-memory gather
-    rdd = spark_ctxt.parallelize(rdd_flat_key_value_from_gather(input_gather))
+    rdd = suspark_context.context.parallelize(rdd_flat_key_value_from_gather(input_gather))
 
     # Group traces by ffid
     rdd = group_by_trace_header(rdd, SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.FieldRecord])

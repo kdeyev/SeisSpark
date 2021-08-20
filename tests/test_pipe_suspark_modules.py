@@ -2,10 +2,11 @@ import pyspark
 from pyspark.sql import SparkSession
 
 from su_rdd.kv_operations import gather_from_rdd_key_value
+from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import SUfilter, SUimp2d, SUsort
 
 
-def test_build_and_run_modules(spark_ctxt: pyspark.SparkContext):
+def test_build_and_run_modules(suspark_context: SusparkContext):
     gather_count_to_produce = 10
     trace_count_per_gather = 5
 
@@ -17,9 +18,9 @@ def test_build_and_run_modules(spark_ctxt: pyspark.SparkContext):
     filter_schema = filter.json_schema
     print(filter_schema)
 
-    input_module.init_rdd(spark_ctxt, None)
-    sort.init_rdd(spark_ctxt, input_module.rdd)
-    filter.init_rdd(spark_ctxt, sort.rdd)
+    input_module.init_rdd(suspark_context, None)
+    sort.init_rdd(suspark_context, input_module.rdd)
+    filter.init_rdd(suspark_context, sort.rdd)
 
     first_gather = gather_from_rdd_key_value(filter.rdd.first())
     assert len(first_gather.traces) == trace_count_per_gather

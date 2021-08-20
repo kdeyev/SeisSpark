@@ -15,6 +15,8 @@ from fastapi import FastAPI
 
 import suspark_service.routers.modules as modules
 import suspark_service.routers.pipelines as pipelines
+from suspark.pipeline_repository import PiplineRepository
+from suspark.suspark_context import SusparkContext
 from suspark.suspark_modules_factory import ModulesFactory, register_module_types
 
 defaults = {"port": 9091}
@@ -29,8 +31,10 @@ options = p.parse_args()
 
 
 app = FastAPI()
-factory = ModulesFactory()
-register_module_types(factory)
+modules_factory = ModulesFactory()
+suspark_context = SusparkContext()
+pipeline_repository = PiplineRepository(suspark_context=suspark_context, modules_factory=modules_factory)
+register_module_types(modules_factory)
 
 if options.allow_remote:
     host = "0.0.0.0"
@@ -42,7 +46,7 @@ else:
 # async def startup() -> None:
 #     await db_handler.connect()
 
-app.include_router(pipelines.init_router())
-app.include_router(modules.init_router(factory))
+app.include_router(pipelines.init_router(pipeline_repository=pipeline_repository))
+app.include_router(modules.init_router(modules_factory=modules_factory))
 
 uvicorn.run(app, host=host, port=options.port)
