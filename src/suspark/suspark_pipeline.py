@@ -1,6 +1,6 @@
 import collections
 from contextlib import contextmanager
-from typing import Dict, Generator, List, Optional, Union
+from typing import Dict, Generator, Iterator, List, Optional, Union
 
 import pyspark
 
@@ -44,7 +44,7 @@ class BaseModuleList(collections.MutableSequence):
         else:
             raise Exception(f"Wrong key type {type(i)}")
 
-    def insert(self, i: int, v: BaseModule):
+    def insert(self, i: int, v: BaseModule) -> None:
         if type(i) is int:
             self._l.insert(i, v)
             self._d[v.id] = v
@@ -69,6 +69,10 @@ class Pipeline:
         self._modules_factory = modules_factory
         self._suspark_context = suspark_context
         self._modules = BaseModuleList()
+
+    def modules(self) -> Iterator[BaseModule]:
+        for module in self._modules:
+            yield module
 
     def add_module(self, module_type: str, prev_module_id: Optional[str] = None) -> str:
         index: Optional[int] = None
