@@ -24,11 +24,3 @@ class ModulesFactory:
         # FIXME: get module schema without building the module
         module = self._factory[module_type]()
         return module.json_schema
-
-
-def register_module_types(factory: ModulesFactory) -> None:
-    from suspark.suspark_module import SUfilter, SUimp2d, SUsort
-
-    factory.register_module_type("SUfilter", SUfilter)
-    factory.register_module_type("SUsort", SUsort)
-    factory.register_module_type("SUimp2d", SUimp2d)

@@ -1,6 +1,8 @@
 from su_rdd.kv_operations import gather_from_rdd_key_value
 from suspark.suspark_context import SusparkContext
-from suspark.suspark_module import SUfilter, SUimp2d, SUsort
+from suspark_modules.sufilter import SUfilter
+from suspark_modules.suimp2d import SUimp2d, SUimp2dParams
+from suspark_modules.susort import SUsort
 
 
 def test_build_and_run_modules(suspark_context: SusparkContext):
@@ -8,7 +10,7 @@ def test_build_and_run_modules(suspark_context: SusparkContext):
     trace_count_per_gather = 5
 
     input_module = SUimp2d()
-    input_module.set_paramters(SUimp2d.SUimp2dParams(nshot=gather_count_to_produce, nrec=trace_count_per_gather))
+    input_module.set_paramters(SUimp2dParams(nshot=gather_count_to_produce, nrec=trace_count_per_gather))
     sort = SUsort()
     filter = SUfilter()
 

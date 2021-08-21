@@ -1,19 +1,6 @@
 from typing import List
 
 import pydantic
-import pytest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
-
-from suspark_service.suspark_service_app import create_suspark_service_app
-
-
-@pytest.fixture()
-def suspark_service_client() -> TestClient:
-
-    app = create_suspark_service_app()
-    client = TestClient(app)
-    return client
 
 
 def test_suspark_service_modules(suspark_service_client) -> None:

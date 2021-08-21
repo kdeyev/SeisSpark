@@ -11,13 +11,11 @@
 
 import configargparse
 import uvicorn
-from fastapi import FastAPI
 
-import suspark_service.routers.modules as modules
-import suspark_service.routers.pipelines as pipelines
 from suspark.pipeline_repository import PiplineRepository
 from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory, register_module_types
+from suspark.suspark_modules_factory import ModulesFactory
+from suspark_modules.suspark_test_modules import register_test_modules
 from suspark_service.suspark_service_app import create_suspark_service_app
 
 defaults = {"port": 9091}
@@ -30,8 +28,13 @@ p.add("--allow-remote", action="store_true")
 p.set_defaults(**defaults)
 options = p.parse_args()
 
+modules_factory = ModulesFactory()
+register_test_modules(modules_factory)
 
-app = create_suspark_service_app()
+suspark_context = SusparkContext()
+pipeline_repository = PiplineRepository(suspark_context=suspark_context, modules_factory=modules_factory)
+
+app = create_suspark_service_app(modules_factory=modules_factory, pipeline_repository=pipeline_repository)
 
 if options.allow_remote:
     host = "0.0.0.0"
