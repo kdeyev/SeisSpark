@@ -1,7 +1,7 @@
 import MaterialTable, { Action, MaterialTableProps, Icons, Query, QueryResult } from "material-table";
 import { PipelineInfo } from '../services/suspark';
-import {PipelinesService} from '../services/suspark/services/PipelinesService';
-import {CreatePipelineRequest} from '../services/suspark/models/CreatePipelineRequest';
+import { PipelinesService } from '../services/suspark/services/PipelinesService';
+import { CreatePipelineRequest } from '../services/suspark/models/CreatePipelineRequest';
 
 import React, { forwardRef, RefObject } from "react";
 
@@ -53,6 +53,7 @@ interface State {
 }
 
 interface Props {
+    onSelectPipeline: (pipelineID: string) => void;
 }
 
 class PipelineTable extends React.Component<Props, State> {
@@ -66,97 +67,78 @@ class PipelineTable extends React.Component<Props, State> {
 
     onRawSelected = (data: PipelineInfo | undefined) => {
         if (data) {
-            // this.props.onSelectWorkflowInstance(data.workflowInstanceID);
+            this.props.onSelectPipeline(data.id);
         }
     }
-    
+
     queryData = (query: Query<PipelineInfo>): Promise<QueryResult<PipelineInfo>> => {
         return new Promise((resolve, reject) => {
             PipelinesService.getPipelinesApiV1PipelinesGet()
-            .then((pipelines: Array<PipelineInfo>) => {               
-                resolve({
-                    data: pipelines,
-                    page: query.page,
-                    totalCount: pipelines.length,
+                .then((pipelines: Array<PipelineInfo>) => {
+                    resolve({
+                        data: pipelines,
+                        page: query.page,
+                        totalCount: pipelines.length,
+                    });
+                })
+                .catch((error: string) => {
+                    console.error(error)
+                    reject()
                 });
-            })
-            .catch((error: string) => {
-                console.error(error)
-                reject()
-            });
         });
     };
     public render() {
         return (
-      <MaterialTable
-        title="Pipelines"
-        onRowClick={(event, rowData) => this.onRawSelected(rowData)}
+            <MaterialTable
+                title="Pipelines"
+                onRowClick={(event, rowData) => this.onRawSelected(rowData)}
 
-        icons={tableIcons}
-        columns={[
-          {
-            title: 'Pipeline Name',
-            field: 'name',
-            // render: rowData => (
-            //   <img
-            //     style={{ height: 36, borderRadius: '50%' }}
-            //     src={rowData.avatar}
-            //   />
-            // ),
-          },
-          { title: 'Id', field: 'id', editable: "never"  },
-        ]}
-        data={this.queryData}
-        editable={{
-            onRowAdd: (newData) =>
-                new Promise((resolve, reject) => {
-                    let request = {name: newData.name} as CreatePipelineRequest;
+                icons={tableIcons}
+                columns={[
+                    {
+                        title: 'Pipeline Name',
+                        field: 'name',
+                        // render: rowData => (
+                        //   <img
+                        //     style={{ height: 36, borderRadius: '50%' }}
+                        //     src={rowData.avatar}
+                        //   />
+                        // ),
+                    },
+                    { title: 'Id', field: 'id', editable: "never" },
+                ]}
+                data={this.queryData}
+                editable={{
+                    onRowAdd: (newData) =>
+                        new Promise((resolve, reject) => {
+                            let request = { name: newData.name } as CreatePipelineRequest;
 
-                    PipelinesService.createPipelinesApiV1PipelinesPost(request)
-                        .then((pipelineInfo: PipelineInfo) => {
-                            resolve(pipelineInfo);
-                            // this.onRawSelected(workflowInstance);
-                        })
-                        .catch((error: string) => {
-                            console.error(error);
-                            // this.showMessage(
-                            //     "Cannot create workflow instance:" + error,
-                            //     NotificationSeverity.Error,
-                            // );
-                            reject();
-                        });
-                }),
-            // onRowUpdate: (newData, oldData) =>
-            //     new Promise((resolve, reject) => {
-            //         WorkflowBuilderUpdateWorkflowInstance(newData.workflowInstanceID, newData.workflowName)
-            //             .then(() => {
-            //                 resolve();
-            //             })
-            //             .catch((error: string) => {
-            //                 this.showMessage(
-            //                     "Cannot update workflow instance:" + error,
-            //                     NotificationSeverity.Error,
-            //                 );
-            //                 resolve();
-            //             });
-            //     }),
-            onRowDelete: (oldData) =>
-                new Promise((resolve, reject) => {
-                    PipelinesService.deletePipelineApiV1PipelinesPipelineIdDelete(oldData.id)
-                        .then((some: any) => {
-                            resolve(some);
-                        })
-                        .catch((error: string) => {
-                            console.error(error);
-                            // this.showMessage(
-                            //     "Cannot delete workflow instance:" + error,
-                            //     NotificationSeverity.Error,
-                            // );
-                            reject();
-                        });
-                }),
-        }}
-        tableRef={this.ref}
+                            PipelinesService.createPipelinesApiV1PipelinesPost(request)
+                                .then((pipelineInfo: PipelineInfo) => {
+                                    resolve(pipelineInfo);
+                                    this.onRawSelected(pipelineInfo);
+                                })
+                                .catch((error: string) => {
+                                    console.error(error);
+                                    reject();
+                                });
+                        }),
+                    // onRowUpdate: (newData, oldData) =>
+                    //     new Promise((resolve, reject) => {
+                    //     }),
+                    onRowDelete: (oldData) =>
+                        new Promise((resolve, reject) => {
+                            PipelinesService.deletePipelineApiV1PipelinesPipelineIdDelete(oldData.id)
+                                .then((some: any) => {
+                                    resolve(some);
+                                })
+                                .catch((error: string) => {
+                                    console.error(error);
+                                    reject();
+                                });
+                        }),
+                }}
+                tableRef={this.ref}
                 actions={[
                     {
                         icon: () => <Refresh />,
@@ -169,10 +151,10 @@ class PipelineTable extends React.Component<Props, State> {
                         },
                     },
                 ]}
-      />
-    )
+            />
+        )
     }
-  }
+}
 
 
-  export default PipelineTable;
+export default PipelineTable;
