@@ -3,16 +3,19 @@
 /* eslint-disable */
 import type { CreateModuleRequest } from '../models/CreateModuleRequest';
 import type { CreatePipelineRequest } from '../models/CreatePipelineRequest';
+import type { ModuleDescription } from '../models/ModuleDescription';
+import type { ModuleInfo } from '../models/ModuleInfo';
+import type { PipelineInfo } from '../models/PipelineInfo';
 import { request as __request } from '../core/request';
 
 export class PipelinesService {
 
     /**
      * Get Pipelines
-     * @returns any Successful Response
+     * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
-    public static async getPipelinesApiV1PipelinesGet(): Promise<any> {
+    public static async getPipelinesApiV1PipelinesGet(): Promise<Array<PipelineInfo>> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/pipelines`,
@@ -23,12 +26,12 @@ export class PipelinesService {
     /**
      * Create Pipelines
      * @param requestBody 
-     * @returns any Successful Response
+     * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
     public static async createPipelinesApiV1PipelinesPost(
 requestBody: CreatePipelineRequest,
-): Promise<any> {
+): Promise<PipelineInfo> {
         const result = await __request({
             method: 'POST',
             path: `/api/v1/pipelines`,
@@ -43,12 +46,12 @@ requestBody: CreatePipelineRequest,
     /**
      * Get Pipeline
      * @param pipelineId 
-     * @returns any Successful Response
+     * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
     public static async getPipelineApiV1PipelinesPipelineIdGet(
 pipelineId: string,
-): Promise<any> {
+): Promise<PipelineInfo> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/pipelines/${pipelineId}`,
@@ -81,12 +84,12 @@ pipelineId: string,
     /**
      * Get Pipeline Modules
      * @param pipelineId 
-     * @returns any Successful Response
+     * @returns ModuleInfo Successful Response
      * @throws ApiError
      */
     public static async getPipelineModulesApiV1PipelinesPipelineIdModulesGet(
 pipelineId: string,
-): Promise<any> {
+): Promise<Array<ModuleInfo>> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/pipelines/${pipelineId}/modules`,
@@ -101,13 +104,13 @@ pipelineId: string,
      * Create Pipeline Modules
      * @param pipelineId 
      * @param requestBody 
-     * @returns any Successful Response
+     * @returns ModuleDescription Successful Response
      * @throws ApiError
      */
     public static async createPipelineModulesApiV1PipelinesPipelineIdModulesPost(
 pipelineId: string,
 requestBody: CreateModuleRequest,
-): Promise<any> {
+): Promise<ModuleDescription> {
         const result = await __request({
             method: 'POST',
             path: `/api/v1/pipelines/${pipelineId}/modules`,
