@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run Service",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/suspark_service/main.py",
+            // "console": "integratedTerminal",
+            // "args": [
+            //     "--config-file", "${workspaceFolder}/src/suspark_service/suspark_service.cfg",
+            // ],
+            "env": {
+                "PYTHONASYNCIODEBUG": "1",
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",

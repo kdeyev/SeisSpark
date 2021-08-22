@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 
 from suspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
 from suspark.suspark_module import BaseModule
+from suspark_service.inferring_router import InferringRouter
 
 
 class CreatePipelineRequest(pydantic.BaseModel):
@@ -35,8 +36,8 @@ class CreateModuleRequest(pydantic.BaseModel):
     name: Optional[str] = None
 
 
-def init_router(pipeline_repository: PiplineRepository) -> APIRouter:
-    router = APIRouter()
+def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
+    router = InferringRouter()
 
     @router.get("/pipelines", tags=["pipelines"])
     def get_pipelines() -> List[PipelineInfo]:
