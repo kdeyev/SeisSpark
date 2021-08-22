@@ -32,18 +32,19 @@
   ],
   "vscode-coverage-highlighter.defaultState": "disable",
   // JS
-  "files.exclude": {
-    "disco/launcher/ui/node_modules/": true
+  "[javascript]": {
+    "editor.formatOnSave": true
   },
   "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.formatOnSave": true
   },
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
   },
-  "prettier.printWidth": 120,
+  "prettier.tslintIntegration": true,
+  "prettier.eslintIntegration": true,
+  "prettier.jsxSingleQuote": false,
+  "prettier.singleQuote": true,
   // "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
   "multiCommand.commands": [
     {
