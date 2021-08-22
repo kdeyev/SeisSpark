@@ -1,8 +1,10 @@
 import collections
+import uuid
 from contextlib import contextmanager
 from typing import Dict, Generator, Iterator, List, Optional, Union
 
 import pyspark
+from pydantic.main import BaseModel
 
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -74,27 +76,23 @@ class Pipeline:
         for module in self._modules:
             yield module
 
-    def add_module(self, module_type: str, prev_module_id: Optional[str] = None) -> str:
+    def add_module(self, module_type: str, name: Optional[str] = None, prev_module_id: Optional[str] = None) -> BaseModule:
         index: Optional[int] = None
         if prev_module_id:
             index = self._modules.find_index(prev_module_id) + 1
 
-        module = self._modules_factory.create_module(module_type)
+        id: str = str(uuid.uuid4())
+
+        module = self._modules_factory.create_module(module_type, id, name if name else module_type)
         if index is not None:
             self._modules.insert(index, module)
         else:
             self._modules.append(module)
         self._init_rdd()
-        return module.id
+        return module
 
-    @contextmanager
-    def get_module_r(self, module_id: str) -> Generator[BaseModule, None, None]:
-        yield self._modules[module_id]
-
-    @contextmanager
-    def get_module_w(self, module_id: str) -> Generator[BaseModule, None, None]:
-        yield self._modules[module_id]
-        self._init_rdd()
+    def get_module(self, module_id: str) -> BaseModule:
+        return self._modules[module_id]
 
     def delete_module(self, module_id: str) -> None:
         del self._modules[module_id]

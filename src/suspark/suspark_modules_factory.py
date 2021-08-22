@@ -7,8 +7,8 @@ class ModulesFactory:
     def __init__(self) -> None:
         self._factory: Dict[str, Type[BaseModule]] = {}
 
-    def create_module(self, module_type: str) -> BaseModule:
-        return self._factory[module_type]()
+    def create_module(self, module_type: str, id: str, name: str) -> BaseModule:
+        return self._factory[module_type](id=id, name=name)
 
     def register_module_type(self, module_type: str, module: Type[BaseModule]) -> None:
         if " " in module_type:
@@ -22,5 +22,5 @@ class ModulesFactory:
 
     def get_module_params_json_schema(self, module_type: str) -> Any:
         # FIXME: get module schema without building the module
-        module = self._factory[module_type]()
-        return module.json_schema
+        module = self._factory[module_type](id="dummy", name="dummy")
+        return module.params_schema

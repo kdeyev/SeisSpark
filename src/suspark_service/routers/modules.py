@@ -14,7 +14,6 @@ def init_router(modules_factory: ModulesFactory) -> APIRouter:
 
     @router.get("/modules/{module_type}", tags=["modules"])
     def get_module_schema(module_type: str = Path(...)):
-        schema = modules_factory.get_module_params_json_schema(module_type)
-        return schema
+        return modules_factory.get_module_params_json_schema(module_type)
 
     return router
