@@ -65,13 +65,13 @@ class PipelineTable extends React.Component<Props, State> {
         // this.loadModules();
     }
 
-    onRawSelected = (data: PipelineInfo | undefined) => {
+    private onRawSelected (data: PipelineInfo | undefined)  {
         if (data) {
             this.props.onSelectPipeline(data.id);
         }
     }
 
-    queryData = (query: Query<PipelineInfo>): Promise<QueryResult<PipelineInfo>> => {
+    private queryData (query: Query<PipelineInfo>): Promise<QueryResult<PipelineInfo>>  {
         return new Promise((resolve, reject) => {
             PipelinesService.getPipelinesApiV1PipelinesGet()
                 .then((pipelines: Array<PipelineInfo>) => {

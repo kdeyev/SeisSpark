@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import ListModules from './components/ListModules';
+import PipelineEditor from './components/PipelineEditor';
 import PipelineTable from './components/PipelineTable';
 import {OpenAPI} from './services/suspark/core/OpenAPI'
 
@@ -29,7 +29,7 @@ class App extends React.Component<Props, State> {
     const urlParams = new URLSearchParams(window.location.search);
     const pipelineID = urlParams.get("pipelineID");
     if (pipelineID) {
-      return (<ListModules/>);
+      return (<PipelineEditor/>);
     }
     else {
       return (
