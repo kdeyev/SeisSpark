@@ -7,10 +7,10 @@ export class ModulesService {
 
     /**
      * Get Modules
-     * @returns any Successful Response
+     * @returns string Successful Response
      * @throws ApiError
      */
-    public static async getModulesApiV1ModulesGet(): Promise<any> {
+    public static async getModulesApiV1ModulesGet(): Promise<Array<string>> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/modules`,
