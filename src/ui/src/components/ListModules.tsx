@@ -40,7 +40,9 @@ class ListModules extends React.Component<Props, State> {
                             <ImageIcon />
                         </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+                        <ListItemText primary={moduleType} 
+                        //secondary="Jan 9, 2014" 
+                        />
                     </ListItem>
                 ))}
             </List>
