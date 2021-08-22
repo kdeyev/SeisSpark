@@ -16,8 +16,8 @@ class SUimp2dParams(pydantic.BaseModel):
 
 
 class SUimp2d(BaseModule):
-    def __init__(self) -> None:
-        super().__init__(SUimp2dParams, SUimp2dParams())
+    def __init__(self, id: str, name: str) -> None:
+        super().__init__(id=id, name=name, paramsModel=SUimp2dParams, params=SUimp2dParams())
 
     @property
     def suimp2d_params(self) -> SUimp2dParams:

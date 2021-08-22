@@ -9,8 +9,9 @@ from suspark.suspark_context import SusparkContext
 
 
 class BaseModule:
-    def __init__(self, paramsModel: Type[pydantic.BaseModel], params: Optional[pydantic.BaseModel] = None) -> None:
-        self._id = str(uuid.uuid4())
+    def __init__(self, id: str, name: str, paramsModel: Type[pydantic.BaseModel], params: Optional[pydantic.BaseModel] = None) -> None:
+        self._id = id  # str(uuid.uuid4())
+        self._name = name
         self._paramsModel = paramsModel
         self._params = params
         self._rdd: Optional[pyspark.RDD] = None
@@ -18,6 +19,10 @@ class BaseModule:
     @property
     def id(self) -> str:
         return self._id
+
+    @property
+    def name(self) -> str:
+        return self._name
 
     @property
     def rdd(self) -> pyspark.RDD:
@@ -29,7 +34,7 @@ class BaseModule:
         self._rdd = None
 
     @property
-    def json_schema(self) -> Any:
+    def params_schema(self) -> Any:
         return json.loads(self._paramsModel.schema_json())
 
     @property
