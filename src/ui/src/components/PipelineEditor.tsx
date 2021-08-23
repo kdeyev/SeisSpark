@@ -25,6 +25,7 @@ import {
 import { CreateModuleRequest } from '../services/suspark/models/CreateModuleRequest'
 import { ModuleDescription } from '../services/suspark/models/ModuleDescription'
 import { ModuleInfo } from '../services/suspark/models/ModuleInfo'
+import { MoveModuleRequest } from '../services/suspark/models/MoveModuleRequest'
 import { ModulesService } from '../services/suspark/services/ModulesService'
 import { PipelinesService } from '../services/suspark/services/PipelinesService'
 
@@ -73,6 +74,19 @@ class PipelineEditor extends React.Component<Props, State> {
       })
   }
 
+  onModuleDelete = (moduleId: string) => {
+    PipelinesService.deletePipelineModuleApiV1PipelinesPipelineIdModulesModuleIdDelete(
+      this.props.pipelineID,
+      moduleId
+    )
+      .then(() => {
+        this.loadModules()
+      })
+      .catch((error: string) => {
+        console.error(error)
+      })
+  }
+
   onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const { source, destination } = result
 
@@ -94,7 +108,7 @@ class PipelineEditor extends React.Component<Props, State> {
             name: moduleType,
             prev_module_id: prevModuleID,
           } as CreateModuleRequest
-          PipelinesService.createPipelineModulesApiV1PipelinesPipelineIdModulesPost(
+          PipelinesService.createPipelineModuleApiV1PipelinesPipelineIdModulesPost(
             this.props.pipelineID,
             request
           )
@@ -111,6 +125,33 @@ class PipelineEditor extends React.Component<Props, State> {
         break
       case 'pipeline':
         if (destination.droppableId == 'pipeline') {
+          let prevModuleID = undefined
+          if (destination.index > source.index) {
+            prevModuleID = this.state.modules[destination.index].id
+          } else if (destination.index < source.index) {
+            if (destination.index > 0) {
+              prevModuleID = this.state.modules[destination.index - 1].id
+            }
+          } else {
+            return
+          }
+          const moduleID = this.state.modules[source.index].id
+
+          const request = {
+            module_id: moduleID,
+            prev_module_id: prevModuleID,
+          } as MoveModuleRequest
+
+          PipelinesService.movePipelineModuleApiV1PipelinesPipelineIdModulesPut(
+            this.props.pipelineID,
+            request
+          )
+            .then((moduleDescription: ModuleDescription) => {
+              this.loadModules()
+            })
+            .catch((error: string) => {
+              console.error(error)
+            })
         } else {
           console.error('wrong drop destination')
         }
@@ -184,7 +225,11 @@ class PipelineEditor extends React.Component<Props, State> {
                               //secondary="Jan 9, 2014"
                             />
                             <ListItemSecondaryAction>
-                              <IconButton edge="end" aria-label="delete">
+                              <IconButton
+                                edge="end"
+                                aria-label="delete"
+                                onClick={(event: any) => this.onModuleDelete(moduleInfo.id)}
+                              >
                                 <DeleteIcon />
                               </IconButton>
                             </ListItemSecondaryAction>
