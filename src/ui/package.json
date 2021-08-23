@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^2.0.4",
     "openapi-typescript": "^4.0.2",
     "openapi-typescript-codegen": "^0.9.3",
     "tslint": "^6.1.3",

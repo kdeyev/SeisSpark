@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import { request as __request } from '../core/request';
 import type { CreateModuleRequest } from '../models/CreateModuleRequest';
 import type { CreatePipelineRequest } from '../models/CreatePipelineRequest';
 import type { ModuleDescription } from '../models/ModuleDescription';
 import type { ModuleInfo } from '../models/ModuleInfo';
 import type { PipelineInfo } from '../models/PipelineInfo';
-import { request as __request } from '../core/request';
 
 export class PipelinesService {
 
@@ -14,7 +14,7 @@ export class PipelinesService {
      * Get Pipelines
      * @returns PipelineInfo Successful Response
      * @throws ApiError
-     */
+     */ 
     public static async getPipelinesApiV1PipelinesGet(): Promise<Array<PipelineInfo>> {
         const result = await __request({
             method: 'GET',
@@ -96,7 +96,7 @@ pipelineId: string,
             errors: {
                 422: `Validation Error`,
             },
-        });
+        }); 
         return result.body;
     }
 
