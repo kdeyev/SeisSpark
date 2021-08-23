@@ -3,7 +3,6 @@ import React from 'react'
 import './App.css'
 import PipelineEditor from './components/PipelineEditor'
 import PipelineTable from './components/PipelineTable'
-import logo from './logo.svg'
 import { OpenAPI } from './services/suspark/core/OpenAPI'
 
 // FIXME: remove before release

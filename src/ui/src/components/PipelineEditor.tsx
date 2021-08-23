@@ -1,10 +1,9 @@
 import {
+  IconButton,
   List,
   ListItem,
-  ListItemText,
-  ListItemIcon,
-  IconButton,
   ListItemSecondaryAction,
+  ListItemText,
 } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Drawer from '@material-ui/core/Drawer'
@@ -12,18 +11,15 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Paper from '@material-ui/core/Paper'
 import RootRef from '@material-ui/core/RootRef'
 import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
-import ImageIcon from '@material-ui/icons/Image'
-import InboxIcon from '@material-ui/icons/Inbox'
 import React from 'react'
 import {
   DragDropContext,
-  Droppable,
   Draggable,
-  DropResult,
-  ResponderProvided,
+  Droppable,
   DroppableProvided,
   DroppableStateSnapshot,
+  DropResult,
+  ResponderProvided,
 } from 'react-beautiful-dnd'
 
 import { CreateModuleRequest } from '../services/suspark/models/CreateModuleRequest'

@@ -4,7 +4,6 @@ import Check from '@material-ui/icons/Check'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import ChevronRight from '@material-ui/icons/ChevronRight'
 import Clear from '@material-ui/icons/Clear'
-import CreateIcon from '@material-ui/icons/Create'
 import DeleteOutline from '@material-ui/icons/DeleteOutline'
 import Edit from '@material-ui/icons/Edit'
 import FilterList from '@material-ui/icons/FilterList'
@@ -15,14 +14,8 @@ import Remove from '@material-ui/icons/Remove'
 import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
-import MaterialTable, {
-  Action,
-  MaterialTableProps,
-  Icons,
-  Query,
-  QueryResult,
-} from 'material-table'
-import React, { forwardRef, RefObject } from 'react'
+import MaterialTable, { Icons, Query, QueryResult } from 'material-table'
+import React, { forwardRef } from 'react'
 
 import { PipelineInfo } from '../services/suspark'
 import { CreatePipelineRequest } from '../services/suspark/models/CreatePipelineRequest'
