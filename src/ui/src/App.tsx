@@ -29,7 +29,9 @@ class App extends React.Component<Props, State> {
     const urlParams = new URLSearchParams(window.location.search);
     const pipelineID = urlParams.get("pipelineID");
     if (pipelineID) {
-      return (<PipelineEditor/>);
+      return (<PipelineEditor
+        pipelineID={pipelineID}
+        />);
     }
     else {
       return (

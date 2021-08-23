@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper'
 import ImageIcon from '@material-ui/icons/Image';
 import {ModulesService} from '../services/suspark/services/ModulesService';
+import {PipelinesService} from '../services/suspark/services/PipelinesService';
+
 import {
     List,
     ListItem,
@@ -18,7 +20,12 @@ import {
   import InboxIcon from "@material-ui/icons/Inbox";
   import EditIcon from "@material-ui/icons/Edit";
   import {ModuleInfo} from '../services/suspark/models/ModuleInfo';
-  
+  import Drawer from '@material-ui/core/Drawer';
+  import {CreateModuleRequest} from '../services/suspark/models/CreateModuleRequest';
+  import {ModuleDescription} from '../services/suspark/models/ModuleDescription';
+
+
+
   const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
     // styles we need to apply on draggables
     ...draggableStyle,
@@ -34,15 +41,17 @@ import {
 }
 
 interface Props {
+    pipelineID: string
 }
 
 class PipelineEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {moduleTypes: [], modules: []}
+        this.loadModuleTypes();
         this.loadModules();
     }
-    private loadModules() {
+    private loadModuleTypes() {
         ModulesService.getModulesApiV1ModulesGet()
             .then((moduleTypes: Array<string>) => {
                 this.setState({moduleTypes: moduleTypes})
@@ -52,7 +61,18 @@ class PipelineEditor extends React.Component<Props, State> {
             });
     }
  
-    private onDragEnd(result: DropResult, provided: ResponderProvided) {
+    loadModules = () => {
+        PipelinesService.getPipelineModulesApiV1PipelinesPipelineIdModulesGet(this.props.pipelineID)
+            .then((modules: Array<ModuleInfo>) => {
+                this.setState({modules: modules})
+            })
+            .catch((error: string) => {
+                console.error(error);
+            });
+    }
+ 
+
+    onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         const { source, destination } = result;
 
         // dropped outside the list
@@ -62,18 +82,44 @@ class PipelineEditor extends React.Component<Props, State> {
 
         switch (source.droppableId) {
             case "moduleTypes":
-                this.setState({});
+                if (destination.droppableId == "pipeline") {
+                    const moduleType = this.state.moduleTypes[source.index];
+                    let prevModuleID = undefined;
+                    if (destination.index > 0) {
+                        prevModuleID = this.state.modules[destination.index-1].id;
+                    }
+                    const request = {module_type:moduleType, name: moduleType, prev_module_id: prevModuleID} as CreateModuleRequest;
+                    PipelinesService.createPipelineModulesApiV1PipelinesPipelineIdModulesPost(this.props.pipelineID, request).then((moduleDescription: ModuleDescription) => {
+                        this.loadModules();
+                    })
+                    .catch((error: string) => {
+                        console.error(error);
+                    });
+                } else {
+                    console.error("wrong drop destination")
+                }
+                // this.setState({});
             break;
             case "pipeline":
-                this.setState({});
+                if (destination.droppableId == "pipeline") {
+                } else {
+                    console.error("wrong drop destination")
+                }
             break;
         }
     }
 
     public render() {
         return (
+            <Drawer
+            variant="persistent"
+            anchor="left"
+            open={true}
+            
+        >
+        
         <DragDropContext onDragEnd={this.onDragEnd}>
-            <Droppable droppableId="moduleTypes">
+            <Droppable droppableId="moduleTypes" isDropDisabled={true}>
             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                 <RootRef rootRef={provided.innerRef}>
                 <List>
@@ -132,7 +178,7 @@ class PipelineEditor extends React.Component<Props, State> {
                                     {/* <ImageIcon /> */}
                                 </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText primary={moduleInfo} 
+                                <ListItemText primary={moduleInfo.name} 
                                 //secondary="Jan 9, 2014" 
                                 />
                             </ListItem>
@@ -147,7 +193,7 @@ class PipelineEditor extends React.Component<Props, State> {
             </Paper>
             
         </DragDropContext>
-                
+        </Drawer>
         );
     }
 }
