@@ -34,8 +34,9 @@ class BaseModuleList(collections.MutableSequence):
             del self._l[i]
         elif type(i) is str:
             item = self._d[i]
-            j = any(self._l[j].id == i for j in range(len(self._l)))
-            return self.l[j]
+            j = next(j for j in range(len(self._l)) if self._l[j].id == i)
+            del self._d[i]
+            del self._l[j]
         else:
             raise Exception(f"Wrong key type {type(i)}")
 
@@ -90,6 +91,18 @@ class Pipeline:
             self._modules.append(module)
         self._init_rdd()
         return module
+
+    def move_module(self, module_id: str, prev_module_id: Optional[str] = None) -> None:
+        if module_id == prev_module_id:
+            raise Exception("module_id == prev_module_id")
+        module = self._modules[module_id]
+        del self._modules[module_id]
+        index = 0
+        if prev_module_id:
+            index = self._modules.find_index(prev_module_id) + 1
+
+        self._modules.insert(index, module)
+        self._init_rdd()
 
     def get_module(self, module_id: str) -> BaseModule:
         return self._modules[module_id]

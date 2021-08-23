@@ -37,6 +37,11 @@ class CreateModuleRequest(pydantic.BaseModel):
     prev_module_id: Optional[str] = None
 
 
+class MoveModuleRequest(pydantic.BaseModel):
+    module_id: str
+    prev_module_id: Optional[str] = None
+
+
 def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
     router = InferringRouter()
 
@@ -71,7 +76,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         return pipeline_modules
 
     @router.post("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
-    def create_pipeline_modules(
+    def create_pipeline_module(
         pipeline_id: str = Path(...),
         module_request: CreateModuleRequest = Body(...),
     ) -> ModuleDescription:
@@ -82,5 +87,23 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
             name=module.name,
             params_schema=module.params_schema,
         )
+
+    @router.put("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
+    def move_pipeline_module(
+        pipeline_id: str = Path(...),
+        module_request: MoveModuleRequest = Body(...),
+    ) -> ModuleDescription:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        item.pipeline.move_module(module_id=module_request.module_id, prev_module_id=module_request.prev_module_id)
+        return JSONResponse({"status": "Ok"})
+
+    @router.delete("/pipelines/{pipeline_id}/modules/{module_id}", tags=["pipelines"])
+    def delete_pipeline_module(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        item.pipeline.delete_module(module_id=module_id)
+        return JSONResponse({"status": "Ok"})
 
     return router
