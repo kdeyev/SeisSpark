@@ -1,45 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import PipelineEditor from './components/PipelineEditor';
-import PipelineTable from './components/PipelineTable';
-import {OpenAPI} from './services/suspark/core/OpenAPI'
+import React from 'react'
+
+import './App.css'
+import PipelineEditor from './components/PipelineEditor'
+import PipelineTable from './components/PipelineTable'
+import logo from './logo.svg'
+import { OpenAPI } from './services/suspark/core/OpenAPI'
 
 // FIXME: remove before release
-OpenAPI.BASE = 'http://localhost:9091';
+OpenAPI.BASE = 'http://localhost:9091'
 
-interface State {
+interface State {}
 
-}
-
-interface Props {
-}
+interface Props {}
 
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
   }
 
   private onSelectPipeline(pipelineID: string) {
-      window.location.hash = "";
-      window.location.search = "?pipelineID=" + pipelineID;
-  }  
+    window.location.hash = ''
+    window.location.search = '?pipelineID=' + pipelineID
+  }
 
   public render() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pipelineID = urlParams.get("pipelineID");
+    const urlParams = new URLSearchParams(window.location.search)
+    const pipelineID = urlParams.get('pipelineID')
     if (pipelineID) {
-      return (<PipelineEditor
-        pipelineID={pipelineID}
-        />);
+      return <PipelineEditor pipelineID={pipelineID} />
+    } else {
+      return <PipelineTable onSelectPipeline={this.onSelectPipeline} />
     }
-    else {
-      return (
-      <PipelineTable onSelectPipeline={this.onSelectPipeline}/>
-    );
-      }
   }
 }
 
-
-export default App;
+export default App
