@@ -166,4 +166,46 @@ moduleId: string,
         return result.body;
     }
 
+    /**
+     * Get Pipeline Module Parameters
+     * @param pipelineId 
+     * @param moduleId 
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static async getPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersGet(
+pipelineId: string,
+moduleId: string,
+): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/parameters`,
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * Get Pipeline Module Data
+     * @param pipelineId 
+     * @param moduleId 
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static async getPipelineModuleDataApiV1PipelinesPipelineIdModulesModuleIdDataGet(
+pipelineId: string,
+moduleId: string,
+): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/data`,
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+        return result.body;
+    }
+
 }
