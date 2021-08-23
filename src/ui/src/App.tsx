@@ -1,8 +1,8 @@
 import React from 'react'
 
 import './App.css'
-import PipelineEditor from './components/PipelineEditor'
 import PipelineTable from './components/PipelineTable'
+import PipelineView from './components/PipelineView'
 import { OpenAPI } from './services/suspark/core/OpenAPI'
 
 // FIXME: remove before release
@@ -26,7 +26,7 @@ class App extends React.Component<Props, State> {
     const urlParams = new URLSearchParams(window.location.search)
     const pipelineID = urlParams.get('pipelineID')
     if (pipelineID) {
-      return <PipelineEditor pipelineID={pipelineID} />
+      return <PipelineView pipelineID={pipelineID} />
     } else {
       return <PipelineTable onSelectPipeline={this.onSelectPipeline} />
     }
