@@ -34,6 +34,7 @@ class PipelineDescription(PipelineInfo):
 class CreateModuleRequest(pydantic.BaseModel):
     module_type: str
     name: Optional[str] = None
+    prev_module_id: Optional[str] = None
 
 
 def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
@@ -75,7 +76,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         module_request: CreateModuleRequest = Body(...),
     ) -> ModuleDescription:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        module: BaseModule = item.pipeline.add_module(module_type=module_request.module_type, name=module_request.name)
+        module: BaseModule = item.pipeline.add_module(module_type=module_request.module_type, name=module_request.name, prev_module_id=module_request.prev_module_id)
         return ModuleDescription(
             id=module.id,
             name=module.name,
