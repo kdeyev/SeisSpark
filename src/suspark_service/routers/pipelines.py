@@ -5,6 +5,7 @@ import pydantic
 from fastapi import APIRouter, Body, Path
 from fastapi.responses import JSONResponse
 
+from su_rdd.kv_operations import gather_from_rdd_key_value
 from suspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
 from suspark.suspark_module import BaseModule
 from suspark_service.inferring_router import InferringRouter
@@ -105,5 +106,25 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
         item.pipeline.delete_module(module_id=module_id)
         return JSONResponse({"status": "Ok"})
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/parameters", tags=["pipelines"])
+    def get_pipeline_module_parameters(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        return JSONResponse(module.parameters.dict())
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/data", tags=["pipelines"])
+    def get_pipeline_module_data(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        first_gather = gather_from_rdd_key_value(module.rdd.first())
+        gather_data = first_gather.get_data_array()
+        return JSONResponse(gather_data)
 
     return router

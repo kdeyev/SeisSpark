@@ -12,4 +12,4 @@ class SUTrace(SUTraceHeader):
 
     @property
     def body(self) -> List[float]:
-        return get_values(self.buffer, index=240, type=SEGYTraceHeaderEntryType.ibm, number=self.num_samples)
+        return get_values(self.buffer, index=240, type=SEGYTraceHeaderEntryType.ibm, number=self.num_samples)[0]
