@@ -109,6 +109,7 @@ class Pipeline:
 
     def delete_module(self, module_id: str) -> None:
         del self._modules[module_id]
+        self._init_rdd()
 
     def _init_rdd(self) -> None:
         rdd: Optional[pyspark.RDD] = None

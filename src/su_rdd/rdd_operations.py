@@ -37,20 +37,12 @@ def su_process_rdd(rdd: pyspark.RDD, su_xecutable: str, parameters: List[str] = 
     return rdd
 
 
-def su_process_rdd_simple(rdd: pyspark.RDD, su_xecutable: str, parameters: List[str] = []) -> pyspark.RDD:
-    """
-    Apply a function to each value of a pair RDD without changing the key.
-    """
-    rdd = rdd.map(SUProcess(su_xecutable, parameters).operation)
-    return rdd
-
-
 def get_gather_keys(rdd: pyspark.RDD) -> List[int]:
     keys = rdd.keys().collect()
     keys.sort()
     return keys
 
 
-def get_gather_by_key(rdd: pyspark.RDD, key: int):
+def get_gather_by_key(rdd: pyspark.RDD, key: int) -> List[bytes]:
     value = rdd.lookup(key)[0]
     return value
