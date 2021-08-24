@@ -8,7 +8,7 @@ def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
     id = pipeline_repository.add_pipeline(name="Demo")
     item = pipeline_repository.get_pipeline(id)
     suimp2d = item.pipeline.add_module("SUimp2d")
-    suimp2d.set_paramters(SUimp2dParams(nshot=50, nrer=50))
+    suimp2d.set_paramters(SUimp2dParams(nshot=50, nrec=50))
     sucdp = item.pipeline.add_module("SUcdp")
     sort = item.pipeline.add_module("SUsort")
     sort.set_paramters(SUsortParams(key=SEGYTraceHeaderEntryName.cdp))
@@ -16,3 +16,4 @@ def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
     sustack = item.pipeline.add_module("SUstack")
     sort = item.pipeline.add_module("SUsort")
     sort.set_paramters(SUsortParams(key=SEGYTraceHeaderEntryName.Crossline3D))
+    filter = item.pipeline.add_module("SUfilter")
