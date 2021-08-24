@@ -6,7 +6,6 @@ import {
   ListItemText,
 } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
-import Drawer from '@material-ui/core/Drawer'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Paper from '@material-ui/core/Paper'
 import RootRef from '@material-ui/core/RootRef'
@@ -169,44 +168,89 @@ class PipelineEditor extends React.Component<Props, State> {
 
   public render() {
     return (
-      <Drawer variant="persistent" anchor="left" open={true}>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <Droppable droppableId="moduleTypes" isDropDisabled={true}>
-            {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-              <RootRef rootRef={provided.innerRef}>
-                <List>
-                  {this.state.moduleTypes.map((moduleType, index) => (
-                    <Draggable key={moduleType} draggableId={moduleType} index={index}>
-                      {(provided, snapshot) => (
-                        <div>
-                          <ListItem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
+      //   <Drawer variant="persistent" anchor="left" open={true}>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId="moduleTypes" isDropDisabled={true}>
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+            <RootRef rootRef={provided.innerRef}>
+              <List>
+                {this.state.moduleTypes.map((moduleType, index) => (
+                  <Draggable key={moduleType} draggableId={moduleType} index={index}>
+                    {(provided, snapshot) => (
+                      <div>
+                        <ListItem
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ListItemAvatar>
+                            <Avatar>{<ExtensionIcon />}</Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={moduleType}
+                            //secondary="Jan 9, 2014"
+                          />
+                        </ListItem>
+                        {snapshot.isDragging && (
+                          <ListItem>
                             <ListItemAvatar>
-                              <Avatar>{<ExtensionIcon />}</Avatar>
+                              <Avatar>
+                                {' '}
+                                <ExtensionIcon />
+                              </Avatar>
                             </ListItemAvatar>
                             <ListItemText
                               primary={moduleType}
                               //secondary="Jan 9, 2014"
                             />
                           </ListItem>
-                          {snapshot.isDragging && (
-                            <ListItem>
-                              <ListItemAvatar>
-                                <Avatar>
-                                  {' '}
-                                  <ExtensionIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={moduleType}
-                                //secondary="Jan 9, 2014"
-                              />
-                            </ListItem>
-                          )}
-                        </div>
+                        )}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </List>
+            </RootRef>
+          )}
+        </Droppable>
+        <Paper>
+          <Droppable droppableId="pipeline">
+            {(provided, snapshot) => (
+              <RootRef rootRef={provided.innerRef}>
+                <List>
+                  {this.state.modules.map((moduleInfo, index) => (
+                    <Draggable key={moduleInfo.id} draggableId={moduleInfo.id} index={index}>
+                      {(provided, snapshot) => (
+                        <ListItem
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ListItemAvatar>
+                            <Avatar>{<MemoryIcon />}</Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={moduleInfo.name}
+                            //secondary="Jan 9, 2014"
+                          />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              aria-label="delete"
+                              onClick={(event: any) => this.onModuleDelete(moduleInfo.id)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                            <IconButton
+                              edge="end"
+                              aria-label="show"
+                              onClick={(event: any) => this.onModuleShow(moduleInfo.id)}
+                            >
+                              <ShowChartIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
                       )}
                     </Draggable>
                   ))}
@@ -215,54 +259,9 @@ class PipelineEditor extends React.Component<Props, State> {
               </RootRef>
             )}
           </Droppable>
-          <Paper>
-            <Droppable droppableId="pipeline">
-              {(provided, snapshot) => (
-                <RootRef rootRef={provided.innerRef}>
-                  <List>
-                    {this.state.modules.map((moduleInfo, index) => (
-                      <Draggable key={moduleInfo.id} draggableId={moduleInfo.id} index={index}>
-                        {(provided, snapshot) => (
-                          <ListItem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <ListItemAvatar>
-                              <Avatar>{<MemoryIcon />}</Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={moduleInfo.name}
-                              //secondary="Jan 9, 2014"
-                            />
-                            <ListItemSecondaryAction>
-                              <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={(event: any) => this.onModuleDelete(moduleInfo.id)}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                              <IconButton
-                                edge="end"
-                                aria-label="show"
-                                onClick={(event: any) => this.onModuleShow(moduleInfo.id)}
-                              >
-                                <ShowChartIcon />
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItem>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </List>
-                </RootRef>
-              )}
-            </Droppable>
-          </Paper>
-        </DragDropContext>
-      </Drawer>
+        </Paper>
+      </DragDropContext>
+      //   </Drawer>
     )
   }
 }
