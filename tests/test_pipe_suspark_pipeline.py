@@ -1,4 +1,4 @@
-from su_rdd.kv_operations import gather_from_rdd_key_value
+from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_modules_factory import ModulesFactory
 from suspark.suspark_pipeline import Pipeline
@@ -21,7 +21,7 @@ def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factor
     pipeline._init_rdd()
 
     sufilter = pipeline.get_module(sufilter.id)
-    first_gather = gather_from_rdd_key_value(sufilter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(sufilter.rdd.first())
 
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)
@@ -44,7 +44,7 @@ def test_build_and_run_pipeline2(suspark_context: SusparkContext, modules_factor
     pipeline._init_rdd()
 
     sufilter = pipeline.get_module(sufilter.id)
-    first_gather = gather_from_rdd_key_value(sufilter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(sufilter.rdd.first())
 
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)

@@ -1,6 +1,6 @@
 from os import name
 
-from su_rdd.kv_operations import gather_from_rdd_key_value
+from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from suspark.suspark_context import SusparkContext
 from suspark_modules.sufilter import SUfilter
 from suspark_modules.suimp2d import SUimp2d, SUimp2dParams
@@ -23,6 +23,6 @@ def test_build_and_run_modules(suspark_context: SusparkContext):
     sort.init_rdd(suspark_context, input_module.rdd)
     filter.init_rdd(suspark_context, sort.rdd)
 
-    first_gather = gather_from_rdd_key_value(filter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(filter.rdd.first())
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)

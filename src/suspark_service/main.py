@@ -1,13 +1,4 @@
-# =============================================================================
-# <copyright>
-# Copyright (c) 2021 Bluware Inc. All rights reserved.
-#
-# All rights are reserved. Reproduction or transmission in whole or in part, in
-# any form or by any means, electronic, mechanical or otherwise, is prohibited
-# without the prior written permission of the copyright owner.
-# </copyright>
-# =============================================================================
-
+import os
 
 import configargparse
 import uvicorn
@@ -17,7 +8,10 @@ from suspark.pipeline_repository import PiplineRepository
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_modules_factory import ModulesFactory
 from suspark_modules.suspark_test_modules import register_test_modules
+from suspark_service.default_pipeline import create_default_pipeline
 from suspark_service.suspark_service_app import create_suspark_service_app
+
+os.environ["PYTHONHASHSEED"] = str(232)
 
 # from fastapi.staticfiles import StaticFiles
 
@@ -37,7 +31,7 @@ register_test_modules(modules_factory)
 
 suspark_context = SusparkContext()
 pipeline_repository = PiplineRepository(suspark_context=suspark_context, modules_factory=modules_factory)
-
+create_default_pipeline(pipeline_repository)
 app = create_suspark_service_app(modules_factory=modules_factory, pipeline_repository=pipeline_repository)
 
 # app.mount("/", StaticFiles(directory="src/ui/dist", html=True), name="static")

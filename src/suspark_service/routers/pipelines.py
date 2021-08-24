@@ -5,7 +5,8 @@ import pydantic
 from fastapi import APIRouter, Body, Path
 from fastapi.responses import JSONResponse
 
-from su_rdd.kv_operations import gather_from_rdd_key_value
+from su_rdd.kv_operations import GatherTuple, gather_from_rdd_gather_tuple
+from su_rdd.rdd_operations import get_gather_by_key, get_gather_keys
 from suspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
 from suspark.suspark_module import BaseModule
 from suspark_service.inferring_router import InferringRouter
@@ -116,14 +117,48 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         module: BaseModule = item.pipeline.get_module(module_id=module_id)
         return JSONResponse(module.parameters.dict())
 
-    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/data", tags=["pipelines"])
-    def get_pipeline_module_data(
+    @router.put("/pipelines/{pipeline_id}/modules/{module_id}/parameters", tags=["pipelines"])
+    def set_pipeline_module_parameters(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+        parameters: Dict[str, Any] = Body(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        module.set_json_parameters(parameters)
+        # FIXME:
+        item.pipeline._init_rdd()
+        return JSONResponse(module.parameters.dict())
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/schema", tags=["pipelines"])
+    def get_pipeline_module_schema(
         pipeline_id: str = Path(...),
         module_id: str = Path(...),
     ) -> JSONResponse:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
         module: BaseModule = item.pipeline.get_module(module_id=module_id)
-        first_gather = gather_from_rdd_key_value(module.rdd.first())
+        return JSONResponse(module.params_schema)
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/keys", tags=["pipelines"])
+    def get_pipeline_module_data_info(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        keys = get_gather_keys(module.rdd)
+        return JSONResponse(keys)
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/data/{key}", tags=["pipelines"])
+    def get_pipeline_module_data(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+        key: int = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        value = get_gather_by_key(module.rdd, key)
+        first_gather = gather_from_rdd_gather_tuple(GatherTuple(key, value))
         gather_data = first_gather.get_data_array()
         return JSONResponse(gather_data)
 
