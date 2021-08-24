@@ -116,6 +116,28 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         module: BaseModule = item.pipeline.get_module(module_id=module_id)
         return JSONResponse(module.parameters.dict())
 
+    @router.put("/pipelines/{pipeline_id}/modules/{module_id}/parameters", tags=["pipelines"])
+    def set_pipeline_module_parameters(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+        parameters: Dict[str, Any] = Body(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        module.set_json_parameters(parameters)
+        # FIXME:
+        item.pipeline._init_rdd()
+        return JSONResponse(module.parameters.dict())
+
+    @router.get("/pipelines/{pipeline_id}/modules/{module_id}/schema", tags=["pipelines"])
+    def get_pipeline_module_schema(
+        pipeline_id: str = Path(...),
+        module_id: str = Path(...),
+    ) -> JSONResponse:
+        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+        module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        return JSONResponse(module.params_schema)
+
     @router.get("/pipelines/{pipeline_id}/modules/{module_id}/data", tags=["pipelines"])
     def get_pipeline_module_data(
         pipeline_id: str = Path(...),
