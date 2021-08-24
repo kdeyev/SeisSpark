@@ -3,7 +3,7 @@ from typing import List, Optional, cast
 import pydantic
 import pyspark
 
-from su_rdd.rdd_operations import su_process_rdd
+from su_rdd.rdd_operations import su_process_rdd_simple
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
 
@@ -30,5 +30,5 @@ class SUfilter(BaseModule):
             raise Exception("input RDD should be specified")
         # key: SEGYTraceHeaderEntryName = self.sufilter_params.key
 
-        rdd = su_process_rdd(input_rdd, "sufilter", ["f1=10,f2=20,f3=30,f4-40"])
+        rdd = su_process_rdd_simple(input_rdd, "sufilter", ["f1=10,f2=20,f3=30,f4-40"])
         return rdd

@@ -6,7 +6,7 @@ from .su_trace import SUTrace
 
 
 class SUGather:
-    def __init__(self, key: Any = None, traces: List[SUTrace] = []) -> None:
+    def __init__(self, key: int, traces: List[SUTrace] = []) -> None:
         self.key = key
         self.traces: List[SUTrace] = traces
 
