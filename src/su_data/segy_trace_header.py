@@ -93,7 +93,7 @@ class SEGYTraceHeaderEntryName(str, Enum):
     cdpX = "cdpX"
     cdpY = "cdpY"
     Inline3D = "Inline3D"
-    Crossline3D = "192"
+    Crossline3D = "Crossline3D"
     ShotPoint = "ShotPoint"
     ShotPointScalar = "ShotPointScalar"
     TraceValueMeasurementUnit = "TraceValueMeasurementUnit"
