@@ -23,6 +23,8 @@ class PipelineView extends React.Component<Props, State> {
     this.setState({ pipelineIDToShow: pipelineID, moduleIDToShow: moduleID })
   }
 
+  onModuleParametersChange = (pipelineID: string, moduleID: string) => {}
+
   public render() {
     return (
       <div>
@@ -30,6 +32,7 @@ class PipelineView extends React.Component<Props, State> {
         <ModuleParametersEditor
           pipelineIDToShow={this.state.pipelineIDToShow}
           moduleIDToShow={this.state.moduleIDToShow}
+          onModuleParametersChange={this.onModuleParametersChange}
         />
         <SeismicPlot
           pipelineIDToShow={this.state.pipelineIDToShow}

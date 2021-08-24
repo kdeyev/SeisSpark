@@ -1,4 +1,5 @@
 import { Paper } from '@material-ui/core'
+import { ISubmitEvent } from '@rjsf/core'
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import React from 'react'
@@ -13,6 +14,7 @@ interface State {
 interface Props {
   pipelineIDToShow: string | undefined
   moduleIDToShow: string | undefined
+  onModuleParametersChange: (pipelineID: string, moduleID: string) => void
 }
 
 class ModuleParametersEditor extends React.Component<Props, State> {
@@ -26,6 +28,27 @@ class ModuleParametersEditor extends React.Component<Props, State> {
     }
     this.loadSchema()
     this.loadParameters()
+  }
+
+  onParametersSubmit = (e: ISubmitEvent<any>) => {
+    if (this.props.pipelineIDToShow && this.props.moduleIDToShow) {
+      PipelinesService.setPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersPut(
+        this.props.pipelineIDToShow,
+        this.props.moduleIDToShow,
+        e.formData
+      )
+        .then(() => {
+          if (this.props.pipelineIDToShow && this.props.moduleIDToShow) {
+            this.props.onModuleParametersChange(
+              this.props.pipelineIDToShow,
+              this.props.moduleIDToShow
+            )
+          }
+        })
+        .catch((error: string) => {
+          console.error(error)
+        })
+    }
   }
 
   loadSchema = () => {
@@ -73,7 +96,7 @@ class ModuleParametersEditor extends React.Component<Props, State> {
           schema={this.state.schema}
           formData={this.state.parameters}
           // onChange={log('changed')}
-          // onSubmit={log('submitted')}
+          onSubmit={this.onParametersSubmit}
           // onError={log('errors')}
         />
       </Paper>

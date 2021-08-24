@@ -188,6 +188,30 @@ moduleId: string,
     }
 
     /**
+     * Set Pipeline Module Parameters
+     * @param pipelineId 
+     * @param moduleId 
+     * @param requestBody 
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static async setPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersPut(
+pipelineId: string,
+moduleId: string,
+requestBody: any,
+): Promise<any> {
+        const result = await __request({
+            method: 'PUT',
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/parameters`,
+            body: requestBody,
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
      * Get Pipeline Module Schema
      * @param pipelineId 
      * @param moduleId 
