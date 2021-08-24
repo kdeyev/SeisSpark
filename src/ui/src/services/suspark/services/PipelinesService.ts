@@ -188,6 +188,27 @@ moduleId: string,
     }
 
     /**
+     * Get Pipeline Module Schema
+     * @param pipelineId 
+     * @param moduleId 
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static async getPipelineModuleSchemaApiV1PipelinesPipelineIdModulesModuleIdSchemaGet(
+pipelineId: string,
+moduleId: string,
+): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/schema`,
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
      * Get Pipeline Module Data
      * @param pipelineId 
      * @param moduleId 

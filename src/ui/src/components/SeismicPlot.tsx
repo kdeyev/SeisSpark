@@ -1,3 +1,4 @@
+import { Paper } from '@material-ui/core'
 import React from 'react'
 import Plot from 'react-plotly.js'
 
@@ -46,27 +47,29 @@ class SeismicPlot extends React.Component<Props, State> {
 
   public render() {
     return this.state.data ? (
-      <Plot
-        data={[
-          {
-            z: this.state.data,
-            type: 'heatmap',
-            transpose: true,
-            zsmooth: 'best',
-            // zauto: false,
-            // zmin: -zmax,
-            // zmax: zmax,
-            colorscale: [
-              [0, 'rgb(0,0,255)'],
-              [0.5, 'rgb(255,255,255)'],
-              [1, 'rgb(255,0,0)'],
-            ],
-          },
-        ]}
-        layout={{ title: 'A Fancy Plot' }}
-      />
+      <Paper>
+        <Plot
+          data={[
+            {
+              z: this.state.data,
+              type: 'heatmap',
+              transpose: true,
+              zsmooth: 'best',
+              // zauto: false,
+              // zmin: -zmax,
+              // zmax: zmax,
+              colorscale: [
+                [0, 'rgb(0,0,255)'],
+                [0.5, 'rgb(255,255,255)'],
+                [1, 'rgb(255,0,0)'],
+              ],
+            },
+          ]}
+          layout={{ title: 'A Fancy Plot' }}
+        />
+      </Paper>
     ) : (
-      <div />
+      <Paper />
     )
   }
 }

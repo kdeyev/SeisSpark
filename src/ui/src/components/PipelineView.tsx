@@ -1,5 +1,6 @@
 import React from 'react'
 
+import ModuleParametersEditor from './ModuleParametersEditor'
 import PipelineEditor from './PipelineEditor'
 import SeismicPlot from './SeismicPlot'
 
@@ -26,6 +27,10 @@ class PipelineView extends React.Component<Props, State> {
     return (
       <div>
         <PipelineEditor pipelineID={this.props.pipelineID} onShowMudule={this.onShowMudule} />
+        <ModuleParametersEditor
+          pipelineIDToShow={this.state.pipelineIDToShow}
+          moduleIDToShow={this.state.moduleIDToShow}
+        />
         <SeismicPlot
           pipelineIDToShow={this.state.pipelineIDToShow}
           moduleIDToShow={this.state.moduleIDToShow}
