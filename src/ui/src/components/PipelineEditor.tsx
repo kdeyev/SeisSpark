@@ -48,6 +48,7 @@ interface State {
 interface Props {
   pipelineID: string
   onShowMudule: (pipelineID: string, moduleID: string) => void
+  onPipelineModified: (pipelineID: string) => void
 }
 
 class PipelineEditor extends React.Component<Props, State> {
@@ -83,6 +84,7 @@ class PipelineEditor extends React.Component<Props, State> {
       moduleId
     )
       .then(() => {
+        this.props.onPipelineModified(this.props.pipelineID)
         this.loadModules()
       })
       .catch((error: string) => {
@@ -120,6 +122,7 @@ class PipelineEditor extends React.Component<Props, State> {
             request
           )
             .then((moduleDescription: ModuleDescription) => {
+              this.props.onPipelineModified(this.props.pipelineID)
               this.loadModules()
             })
             .catch((error: string) => {
@@ -154,6 +157,7 @@ class PipelineEditor extends React.Component<Props, State> {
             request
           )
             .then((moduleDescription: ModuleDescription) => {
+              this.props.onPipelineModified(this.props.pipelineID)
               this.loadModules()
             })
             .catch((error: string) => {

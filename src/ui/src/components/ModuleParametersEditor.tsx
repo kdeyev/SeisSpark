@@ -43,6 +43,8 @@ class ModuleParametersEditor extends React.Component<Props, State> {
               this.props.pipelineIDToShow,
               this.props.moduleIDToShow
             )
+            this.loadSchema()
+            this.loadParameters()
           }
         })
         .catch((error: string) => {

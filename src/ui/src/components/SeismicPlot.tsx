@@ -15,6 +15,7 @@ interface State {
 interface Props {
   pipelineIDToShow: string | undefined
   moduleIDToShow: string | undefined
+  pipelineRevision: string | undefined
 }
 
 class SeismicPlot extends React.Component<Props, State> {
@@ -74,15 +75,17 @@ class SeismicPlot extends React.Component<Props, State> {
     if (value !== undefined) {
       let key = this.keyValueByIndex(Array.isArray(value) ? value[0] : value)
       this.setState({ currentKey: key })
-      this.loadData()
+      this.loadKeys()
     }
   }
   componentDidUpdate = (prevProps: Props) => {
     if (
       prevProps.pipelineIDToShow !== this.props.pipelineIDToShow ||
-      prevProps.moduleIDToShow !== this.props.moduleIDToShow
+      prevProps.moduleIDToShow !== this.props.moduleIDToShow ||
+      prevProps.pipelineRevision !== this.props.pipelineRevision
     ) {
       this.loadKeys()
+      this.loadData()
     }
   }
 
