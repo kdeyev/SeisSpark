@@ -233,19 +233,42 @@ moduleId: string,
     }
 
     /**
-     * Get Pipeline Module Data
+     * Get Pipeline Module Data Info
      * @param pipelineId 
      * @param moduleId 
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModuleDataApiV1PipelinesPipelineIdModulesModuleIdDataGet(
+    public static async getPipelineModuleDataInfoApiV1PipelinesPipelineIdModulesModuleIdKeysGet(
 pipelineId: string,
 moduleId: string,
 ): Promise<any> {
         const result = await __request({
             method: 'GET',
-            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/data`,
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/keys`,
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * Get Pipeline Module Data
+     * @param pipelineId 
+     * @param moduleId 
+     * @param key 
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static async getPipelineModuleDataApiV1PipelinesPipelineIdModulesModuleIdDataKeyGet(
+pipelineId: string,
+moduleId: string,
+key: number,
+): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/v1/pipelines/${pipelineId}/modules/${moduleId}/data/${key}`,
             errors: {
                 422: `Validation Error`,
             },
