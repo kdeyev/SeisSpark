@@ -11,6 +11,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Paper from '@material-ui/core/Paper'
 import RootRef from '@material-ui/core/RootRef'
 import DeleteIcon from '@material-ui/icons/Delete'
+import ExtensionIcon from '@material-ui/icons/Extension'
+import MemoryIcon from '@material-ui/icons/Memory'
+import ShowChartIcon from '@material-ui/icons/ShowChart'
 import React from 'react'
 import {
   DragDropContext,
@@ -45,6 +48,7 @@ interface State {
 
 interface Props {
   pipelineID: string
+  onShowMudule: (pipelineID: string, moduleID: string) => void
 }
 
 class PipelineEditor extends React.Component<Props, State> {
@@ -85,6 +89,10 @@ class PipelineEditor extends React.Component<Props, State> {
       .catch((error: string) => {
         console.error(error)
       })
+  }
+
+  onModuleShow = (moduleId: string) => {
+    this.props.onShowMudule(this.props.pipelineID, moduleId)
   }
 
   onDragEnd = (result: DropResult, provided: ResponderProvided) => {
@@ -177,7 +185,7 @@ class PipelineEditor extends React.Component<Props, State> {
                             {...provided.dragHandleProps}
                           >
                             <ListItemAvatar>
-                              <Avatar>{/* <ImageIcon /> */}</Avatar>
+                              <Avatar>{<ExtensionIcon />}</Avatar>
                             </ListItemAvatar>
                             <ListItemText
                               primary={moduleType}
@@ -187,7 +195,10 @@ class PipelineEditor extends React.Component<Props, State> {
                           {snapshot.isDragging && (
                             <ListItem>
                               <ListItemAvatar>
-                                <Avatar></Avatar>
+                                <Avatar>
+                                  {' '}
+                                  <ExtensionIcon />
+                                </Avatar>
                               </ListItemAvatar>
                               <ListItemText
                                 primary={moduleType}
@@ -218,7 +229,7 @@ class PipelineEditor extends React.Component<Props, State> {
                             {...provided.dragHandleProps}
                           >
                             <ListItemAvatar>
-                              <Avatar>{/* <ImageIcon /> */}</Avatar>
+                              <Avatar>{<MemoryIcon />}</Avatar>
                             </ListItemAvatar>
                             <ListItemText
                               primary={moduleInfo.name}
@@ -231,6 +242,13 @@ class PipelineEditor extends React.Component<Props, State> {
                                 onClick={(event: any) => this.onModuleDelete(moduleInfo.id)}
                               >
                                 <DeleteIcon />
+                              </IconButton>
+                              <IconButton
+                                edge="end"
+                                aria-label="show"
+                                onClick={(event: any) => this.onModuleShow(moduleInfo.id)}
+                              >
+                                <ShowChartIcon />
                               </IconButton>
                             </ListItemSecondaryAction>
                           </ListItem>
