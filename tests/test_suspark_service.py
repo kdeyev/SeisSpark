@@ -77,5 +77,18 @@ def test_suspark_service_pipeline_module(suspark_service_client) -> None:
     assert module_descr.name == module_name
     module_id = module_descr.id
 
+    response = suspark_service_client.get(f"/api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters")
+    response.raise_for_status()
+    json_parameters = response.json()
+    assert type(json_parameters) == dict
+
+    response = suspark_service_client.get(f"/api/v1/pipelines/{pipeline_id}/modules/{module_id}/data")
+    response.raise_for_status()
+    json_data = response.json()
+    assert type(json_data) == list and type(json_data[0]) == list and type(json_data[0][0]) == float
+
+    response = suspark_service_client.delete(f"/api/v1/pipelines/{pipeline_id}/modules/{module_id}")
+    response.raise_for_status()
+
     response = suspark_service_client.delete(f"/api/v1/pipelines/{pipeline_id}")
     response.raise_for_status()
