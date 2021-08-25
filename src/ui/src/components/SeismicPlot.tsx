@@ -6,10 +6,28 @@ import Plot from 'react-plotly.js'
 
 import { PipelinesService } from '../services/suspark/services/PipelinesService'
 
+let findMinMax = (data: Array<Array<number>>) => {
+  var max = +Infinity
+  var min = -Infinity
+
+  for (let i = 0; i < data.length; i++) {
+    const elementArray = data[i]
+    if (max < Math.max.apply(Math, elementArray)) {
+      max = Math.max.apply(Math, elementArray)
+    }
+    if (min > Math.min.apply(Math, elementArray)) {
+      min = Math.min.apply(Math, elementArray)
+    }
+  }
+  return { min: min, max: max }
+}
+
 interface State {
   keys: Array<number> | undefined
   data: Array<Array<number>> | undefined
   currentKey: number | undefined
+  minValue: number
+  maxValue: number
 }
 
 interface Props {
@@ -26,6 +44,8 @@ class SeismicPlot extends React.Component<Props, State> {
       keys: undefined,
       data: undefined,
       currentKey: undefined,
+      minValue: 0,
+      maxValue: 0,
     }
   }
 
@@ -64,7 +84,8 @@ class SeismicPlot extends React.Component<Props, State> {
         this.state.currentKey
       )
         .then((data: Array<Array<number>>) => {
-          this.setState({ data: data })
+          const minMax = findMinMax(data)
+          this.setState({ data: data, minValue: minMax.min, maxValue: minMax.max })
         })
         .catch((error: string) => {
           console.error(error)
@@ -101,6 +122,8 @@ class SeismicPlot extends React.Component<Props, State> {
     return this.keyValueByIndex(value).toString()
   }
   public render() {
+    const norm = Math.max(-this.state.minValue, this.state.maxValue)
+
     let slider = <div></div>
     if (this.state.keys !== undefined)
       slider = (
@@ -129,16 +152,22 @@ class SeismicPlot extends React.Component<Props, State> {
               transpose: true,
               zsmooth: 'best',
               // zauto: false,
-              // zmin: -zmax,
-              // zmax: zmax,
+              //   zmin: -norm,
+              //   zmax: norm,
               colorscale: [
                 [0, 'rgb(0,0,255)'],
                 [0.5, 'rgb(255,255,255)'],
                 [1, 'rgb(255,0,0)'],
               ],
+              //   colorbar: { symmetric: true },
+              //   colorbar: { symmetric: true } as ColorBar,
             },
           ]}
-          layout={{ title: 'A Fancy Plot' }}
+          layout={{
+            title: 'A Fancy Plot',
+            yaxis: { title: 'Time', autorange: 'reversed' },
+            showlegend: false,
+          }}
         />
       </Paper>
     ) : (
