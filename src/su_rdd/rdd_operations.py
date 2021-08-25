@@ -3,7 +3,7 @@ from typing import List, Optional
 import pyspark
 
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
-from su_rdd.kv_operations import AssignTraceHeaderKey, SUProcess
+from su_rdd.kv_operations import AssignTraceHeaderKey, SegyRead, SUProcess
 
 # class RDD_SetKeyByHeader:
 
@@ -46,3 +46,11 @@ def get_gather_keys(rdd: pyspark.RDD) -> List[int]:
 def get_gather_by_key(rdd: pyspark.RDD, key: int) -> List[bytes]:
     value = rdd.lookup(key)[0]
     return value
+
+
+def import_segy_to_rdd(context: pyspark.SparkContext, file_path: str, chunk_size: int) -> pyspark.RDD:
+    segy_reader = SegyRead(file_path=file_path, chunk_size=chunk_size)
+    kv = segy_reader.get_kv_chunks()
+    rdd = context.parallelize(kv)
+    rdd = rdd.map(segy_reader.operation)
+    return rdd

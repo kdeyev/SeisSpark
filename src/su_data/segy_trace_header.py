@@ -332,3 +332,8 @@ SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.SourceMeasurementUnit] = SEGY
 #     6: "Kilograms (kg))}
 SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.UnassignedInt1] = SEGYTraceHeaderEntry(position=232, type=SEGYTraceHeaderEntryType.int32)  # 'int32');  %232
 SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.UnassignedInt2] = SEGYTraceHeaderEntry(position=236, type=SEGYTraceHeaderEntryType.int32)  # 'int32');  %236
+
+
+DATA_SAMPLE_FORMAT_HEADER = SEGYTraceHeaderEntry(position=3224, type=SEGYTraceHeaderEntryType.int16)  # default 5
+
+DATA_SAMPLE_FORMAT_MAPPING = {1: SEGYTraceHeaderEntryType.ibm, 2: SEGYTraceHeaderEntryType.int32, 3: SEGYTraceHeaderEntryType.int16, 5: SEGYTraceHeaderEntryType.float}

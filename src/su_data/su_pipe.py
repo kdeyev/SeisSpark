@@ -11,6 +11,21 @@ def concatenate_buffers(buffers: List[bytes]) -> bytes:
     return out
 
 
+def split_su_buffer(buffer: bytes) -> List[bytes]:
+    out_trace_header = SUTraceHeader(buffer)
+    ns = out_trace_header.num_samples
+    bps = 4
+    trace_len = 240 + bps * ns
+    trace_count = int(len(buffer) / trace_len)
+    assert trace_len * trace_count == len(buffer)
+
+    out_buffers: List[bytes] = []
+    for i in range(trace_count):
+        b = buffer[i * trace_len : (i + 1) * trace_len]
+        out_buffers.append(b)
+    return out_buffers
+
+
 def su_process_pipe(args: List[str], buffers: List[bytes]) -> List[bytes]:
     # if self._p == None:
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
@@ -22,16 +37,4 @@ def su_process_pipe(args: List[str], buffers: List[bytes]) -> List[bytes]:
         raise Exception(f"su_process_pipe: {err}")
     out_data_array = bytes(out)
 
-    out_trace_header = SUTraceHeader(out_data_array)
-    ns = out_trace_header.num_samples
-    bps = 4
-    trace_len = 240 + bps * ns
-    trace_count = int(len(out_data_array) / trace_len)
-    assert trace_len * trace_count == len(out_data_array)
-
-    out_buffers: List[bytes] = []
-    for i in range(trace_count):
-        buffer = out_data_array[i * trace_len : (i + 1) * trace_len]
-        out_buffers.append(buffer)
-
-    return out_buffers
+    return split_su_buffer(out_data_array)
