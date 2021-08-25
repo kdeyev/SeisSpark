@@ -3,7 +3,7 @@ from typing import List, Optional
 import pyspark
 
 from su_data.segy_trace_header import SEGYTraceHeaderEntry
-from su_rdd.kv_operations import AssignTraceHeaderKey, SegyRead, SUProcess
+from su_rdd.kv_operations import AssignTraceHeaderKey, ConvertToFlatList, SegyRead, SelectTraceHeaderKey, SUProcess
 
 # class RDD_SetKeyByHeader:
 
@@ -21,14 +21,20 @@ from su_rdd.kv_operations import AssignTraceHeaderKey, SegyRead, SUProcess
 #         self._sk = RDD_SetKeyByHeader(THN)
 
 
-# def convert_to_flat_map(rdd: pyspark.RDD) -> pyspark.RDD:
-#     return rdd.flatMap(ConvertToFlatList().operation)
+def convert_to_flat_map(rdd: pyspark.RDD) -> pyspark.RDD:
+    return rdd.flatMap(ConvertToFlatList().operation)
 
 
 def group_by_trace_header(rdd: pyspark.RDD, header_entry: SEGYTraceHeaderEntry) -> pyspark.RDD:
     # rdd = convert_to_flat_map(rdd)
     rdd = rdd.flatMap(AssignTraceHeaderKey(header_entry).operation).mapValues(list)
     rdd = rdd.reduceByKey(lambda a, b: a + b).mapValues(list)
+    return rdd
+
+
+def select_by_trace_header(rdd: pyspark.RDD, header_entry: SEGYTraceHeaderEntry, value: int) -> pyspark.RDD:
+    rdd = convert_to_flat_map(rdd)
+    rdd = rdd.filter(SelectTraceHeaderKey(header_entry, value).operation)
     return rdd
 
 

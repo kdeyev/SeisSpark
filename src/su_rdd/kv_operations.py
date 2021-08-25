@@ -30,11 +30,11 @@ def type_check(gather_tuple: GatherTuple) -> GatherTuple:
     return gather_tuple
 
 
-# class ConvertToFlatList:
-#     def operation(self, gather_tuple: GatherTuple) -> List[GatherTuple]:
-#         gather_tuple = type_check(gather_tuple)
+class ConvertToFlatList:
+    def operation(self, gather_tuple: GatherTuple) -> List[GatherTuple]:
+        gather_tuple = type_check(gather_tuple)
 
-#         return [GatherTuple(gather_tuple.key, [buffer]) for buffer in gather_tuple.buffers]
+        return [GatherTuple(gather_tuple.key, [buffer]) for buffer in gather_tuple.buffers]
 
 
 class SegyRead:
@@ -87,6 +87,19 @@ class AssignTraceHeaderKey:
         gather_tuple = type_check(gather_tuple)
 
         return [GatherTuple(get_header_value(buffer, self.header_entry), [buffer]) for buffer in gather_tuple.buffers]
+
+
+class SelectTraceHeaderKey:
+    def __init__(self, header_entry: SEGYTraceHeaderEntry, value: int):
+        self._header_entry = header_entry
+        self._valuse = value
+
+    def operation(self, gather_tuple: GatherTuple) -> bool:
+        gather_tuple = type_check(gather_tuple)
+        if len(gather_tuple.buffers) > 1:
+            raise Exception("Need to flat")
+
+        return get_header_value(gather_tuple.buffers[0], self._header_entry) == self._valuse
 
 
 class SUProcess:
