@@ -26,6 +26,7 @@ interface State {
   keys: Array<number> | undefined
   data: Array<Array<number>> | undefined
   currentKey: number | undefined
+  currentIndex: number
   minValue: number
   maxValue: number
 }
@@ -44,6 +45,7 @@ class SeismicPlot extends React.Component<Props, State> {
       keys: undefined,
       data: undefined,
       currentKey: undefined,
+      currentIndex: 0,
       minValue: 0,
       maxValue: 0,
     }
@@ -56,14 +58,15 @@ class SeismicPlot extends React.Component<Props, State> {
         this.props.moduleIDToShow
       )
         .then((keys: Array<number>) => {
-          let currentKey = undefined
+          let currentIndex = 0
           if (this.state.currentKey && keys.includes(this.state.currentKey)) {
-            currentKey = this.state.currentKey
+            currentIndex = keys.findIndex((i: number) => {
+              return i === this.state.currentKey
+            })
           }
-          if (currentKey === undefined) {
-            currentKey = keys[0]
-          }
-          this.setState({ keys: keys, currentKey: currentKey })
+          let currentKey = keys[currentIndex]
+
+          this.setState({ keys, currentKey, currentIndex })
           this.loadData()
         })
         .catch((error: string) => {
@@ -128,12 +131,12 @@ class SeismicPlot extends React.Component<Props, State> {
     if (this.state.keys !== undefined)
       slider = (
         <Slider
-          defaultValue={30}
+          defaultValue={this.state.currentIndex}
           valueLabelDisplay="on"
           step={1}
           marks
           min={0}
-          max={this.state.keys?.length - 1}
+          max={this.state.keys.length - 1}
           getAriaValueText={this.keyValueByIndexString}
           valueLabelFormat={this.keyValueByIndexString}
           onChangeCommitted={this.onKeyChange}
