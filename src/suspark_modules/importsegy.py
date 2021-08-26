@@ -3,6 +3,7 @@ from typing import Optional, cast
 import pydantic
 import pyspark
 
+from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import import_segy_to_rdd
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -21,7 +22,7 @@ class ImportSegy(BaseModule):
     def importsegy_params(self) -> ImpotSegyParams:
         return cast(ImpotSegyParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if input_rdd:
             raise Exception("input RDD is not used")
 

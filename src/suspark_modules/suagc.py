@@ -3,6 +3,7 @@ from typing import Optional, cast
 import pydantic
 import pyspark
 
+from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import su_process_rdd
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -20,7 +21,7 @@ class SUagc(BaseModule):
     def suagc_params(self) -> SUagcParams:
         return cast(SUagcParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:
             raise Exception("input RDD should be specified")
 

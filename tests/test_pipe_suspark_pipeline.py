@@ -4,7 +4,7 @@ from suspark.suspark_modules_factory import ModulesFactory
 from suspark.suspark_pipeline import Pipeline
 
 
-def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factory: ModulesFactory):
+def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
     pipeline = Pipeline(suspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")
@@ -27,7 +27,7 @@ def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factor
     print(first_gather.traces[0].buffer)
 
 
-def test_build_and_run_pipeline2(suspark_context: SusparkContext, modules_factory: ModulesFactory):
+def test_build_and_run_pipeline2(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
     pipeline = Pipeline(suspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")

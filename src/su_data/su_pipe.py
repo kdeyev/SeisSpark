@@ -34,7 +34,7 @@ def su_process_pipe(args: List[str], buffers: List[bytes]) -> List[bytes]:
     in_data = concatenate_buffers(buffers)
     out, err = p.communicate(input=in_data)
     if err:
-        raise Exception(f"su_process_pipe: {err}")
+        raise Exception(f"su_process_pipe: {err.decode()}")
     out_data_array = bytes(out)
 
     return split_su_buffer(out_data_array)

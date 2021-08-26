@@ -4,7 +4,7 @@ import pydantic
 from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 
-from su_rdd.kv_operations import GatherTuple, gather_from_rdd_gather_tuple
+from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from su_rdd.rdd_operations import get_gather_by_key, get_gather_keys
 from suspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
 from suspark.suspark_module import BaseModule
@@ -93,7 +93,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
     def move_pipeline_module(
         pipeline_id: str = Path(...),
         module_request: MoveModuleRequest = Body(...),
-    ) -> ModuleDescription:
+    ) -> JSONResponse:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
         item.pipeline.move_module(module_id=module_request.module_id, prev_module_id=module_request.prev_module_id)
         return JSONResponse({"status": "Ok"})
@@ -157,7 +157,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
         module: BaseModule = item.pipeline.get_module(module_id=module_id)
         value = get_gather_by_key(module.rdd, key)
-        first_gather = gather_from_rdd_gather_tuple(GatherTuple(key, value))
+        first_gather = gather_from_rdd_gather_tuple((key, value))
         gather_data = first_gather.get_data_array()
         return JSONResponse(gather_data)
 
