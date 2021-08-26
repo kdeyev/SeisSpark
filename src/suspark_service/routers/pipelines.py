@@ -1,8 +1,7 @@
-from os import name
 from typing import Any, Dict, List, Optional
 
 import pydantic
-from fastapi import APIRouter, Body, Path
+from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 
 from su_rdd.kv_operations import GatherTuple, gather_from_rdd_gather_tuple

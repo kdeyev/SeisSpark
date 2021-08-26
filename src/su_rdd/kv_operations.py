@@ -1,8 +1,8 @@
 import os
 from collections import namedtuple
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
-from su_data.encoding import get_bytes_per_sample, get_data_sample_format
+from su_data.encoding import get_data_sample_format
 from su_data.segy_trace_header import SEGYTraceHeaderEntry, SEGYTraceHeaderEntryType
 from su_data.su_gather import SUGather
 from su_data.su_pipe import split_su_buffer, su_process_pipe

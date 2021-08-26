@@ -20,7 +20,7 @@ export class ModulesService {
 
     /**
      * Get Module Schema
-     * @param moduleType 
+     * @param moduleType
      * @returns any Successful Response
      * @throws ApiError
      */

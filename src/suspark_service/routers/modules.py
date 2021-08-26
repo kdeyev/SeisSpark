@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from fastapi import APIRouter, Path
+from fastapi import Path
 
 from suspark.suspark_modules_factory import ModulesFactory
 from suspark_service.inferring_router import InferringRouter

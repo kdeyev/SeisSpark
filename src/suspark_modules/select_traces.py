@@ -4,7 +4,7 @@ import pydantic
 import pyspark
 
 from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
-from su_rdd.rdd_operations import group_by_trace_header, select_by_trace_header
+from su_rdd.rdd_operations import select_by_trace_header
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
 

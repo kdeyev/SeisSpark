@@ -1,5 +1,3 @@
-from os import name
-
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from suspark.suspark_context import SusparkContext
 from suspark_modules.sufilter import SUfilter

@@ -26,7 +26,7 @@ export class PipelinesService {
 
     /**
      * Create Pipelines
-     * @param requestBody 
+     * @param requestBody
      * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
@@ -46,7 +46,7 @@ requestBody: CreatePipelineRequest,
 
     /**
      * Get Pipeline
-     * @param pipelineId 
+     * @param pipelineId
      * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
@@ -65,7 +65,7 @@ pipelineId: string,
 
     /**
      * Delete Pipeline
-     * @param pipelineId 
+     * @param pipelineId
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -84,7 +84,7 @@ pipelineId: string,
 
     /**
      * Get Pipeline Modules
-     * @param pipelineId 
+     * @param pipelineId
      * @returns ModuleInfo Successful Response
      * @throws ApiError
      */
@@ -103,8 +103,8 @@ pipelineId: string,
 
     /**
      * Move Pipeline Module
-     * @param pipelineId 
-     * @param requestBody 
+     * @param pipelineId
+     * @param requestBody
      * @returns ModuleDescription Successful Response
      * @throws ApiError
      */
@@ -125,8 +125,8 @@ requestBody: MoveModuleRequest,
 
     /**
      * Create Pipeline Module
-     * @param pipelineId 
-     * @param requestBody 
+     * @param pipelineId
+     * @param requestBody
      * @returns ModuleDescription Successful Response
      * @throws ApiError
      */
@@ -147,8 +147,8 @@ requestBody: CreateModuleRequest,
 
     /**
      * Delete Pipeline Module
-     * @param pipelineId 
-     * @param moduleId 
+     * @param pipelineId
+     * @param moduleId
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -168,8 +168,8 @@ moduleId: string,
 
     /**
      * Get Pipeline Module Parameters
-     * @param pipelineId 
-     * @param moduleId 
+     * @param pipelineId
+     * @param moduleId
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -189,9 +189,9 @@ moduleId: string,
 
     /**
      * Set Pipeline Module Parameters
-     * @param pipelineId 
-     * @param moduleId 
-     * @param requestBody 
+     * @param pipelineId
+     * @param moduleId
+     * @param requestBody
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -213,8 +213,8 @@ requestBody: any,
 
     /**
      * Get Pipeline Module Schema
-     * @param pipelineId 
-     * @param moduleId 
+     * @param pipelineId
+     * @param moduleId
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -234,8 +234,8 @@ moduleId: string,
 
     /**
      * Get Pipeline Module Data Info
-     * @param pipelineId 
-     * @param moduleId 
+     * @param pipelineId
+     * @param moduleId
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -255,9 +255,9 @@ moduleId: string,
 
     /**
      * Get Pipeline Module Data
-     * @param pipelineId 
-     * @param moduleId 
-     * @param key 
+     * @param pipelineId
+     * @param moduleId
+     * @param key
      * @returns any Successful Response
      * @throws ApiError
      */

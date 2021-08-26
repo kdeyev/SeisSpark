@@ -1,10 +1,9 @@
-from os import name
 from typing import List
 
 import pydantic
 
 from suspark.pipeline_repository import PipelineInfo
-from suspark_service.routers.pipelines import CreateModuleRequest, CreatePipelineRequest, ModuleDescription, ModuleInfo, PipelineDescription
+from suspark_service.routers.pipelines import CreateModuleRequest, CreatePipelineRequest, ModuleDescription, PipelineDescription
 
 
 def test_suspark_service_modules(suspark_service_client) -> None:

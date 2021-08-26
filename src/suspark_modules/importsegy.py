@@ -3,9 +3,6 @@ from typing import Optional, cast
 import pydantic
 import pyspark
 
-from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
-from su_data.su_pipe import su_process_pipe
-from su_rdd.kv_operations import GatherTuple, SegyRead, gather_from_rdd_gather_tuple, rdd_gather_tuple_from_gather
 from su_rdd.rdd_operations import import_segy_to_rdd
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 
 import suspark_service.routers.modules as modules
 import suspark_service.routers.pipelines as pipelines

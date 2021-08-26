@@ -1,4 +1,4 @@
-from typing import List, Optional, cast
+from typing import Optional
 
 import pydantic
 import pyspark

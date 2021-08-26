@@ -1,10 +1,8 @@
 import collections
 import uuid
-from contextlib import contextmanager
-from typing import Dict, Generator, Iterator, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Union
 
 import pyspark
-from pydantic.main import BaseModel
 
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -74,8 +72,7 @@ class Pipeline:
         self._modules = BaseModuleList()
 
     def modules(self) -> Iterator[BaseModule]:
-        for module in self._modules:
-            yield module
+        yield from self._modules
 
     def add_module(self, module_type: str, name: Optional[str] = None, prev_module_id: Optional[str] = None) -> BaseModule:
         index: Optional[int] = None
