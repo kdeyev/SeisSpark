@@ -1,4 +1,3 @@
-import { Paper } from '@material-ui/core'
 import Slider from '@material-ui/core/Slider'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
@@ -144,7 +143,7 @@ class SeismicPlot extends React.Component<Props, State> {
       )
 
     return this.state.data ? (
-      <Paper>
+      <div>
         <Typography>Key: {this.state.currentKey}</Typography>
         {slider}
         <Plot
@@ -167,14 +166,14 @@ class SeismicPlot extends React.Component<Props, State> {
             },
           ]}
           layout={{
-            title: 'A Fancy Plot',
+            // title: 'A Fancy Plot',
             yaxis: { title: 'Time', autorange: 'reversed' },
             showlegend: false,
           }}
         />
-      </Paper>
+      </div>
     ) : (
-      <Paper />
+      <div />
     )
   }
 }

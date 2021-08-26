@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Paper from '@material-ui/core/Paper'
 import RootRef from '@material-ui/core/RootRef'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ExtensionIcon from '@material-ui/icons/Extension'
@@ -218,7 +217,7 @@ class PipelineEditor extends React.Component<Props, State> {
             </RootRef>
           )}
         </Droppable>
-        <Paper>
+        <div>
           <Droppable droppableId="pipeline">
             {(provided, snapshot) => (
               <RootRef rootRef={provided.innerRef}>
@@ -263,7 +262,7 @@ class PipelineEditor extends React.Component<Props, State> {
               </RootRef>
             )}
           </Droppable>
-        </Paper>
+        </div>
       </DragDropContext>
       //   </Drawer>
     )
