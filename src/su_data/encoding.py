@@ -1,8 +1,9 @@
 import struct
+from typing import Tuple
 
 import numpy as np
 
-from .segy_trace_header import SEGYTraceHeaderEntryType
+from .segy_trace_header import DATA_SAMPLE_FORMAT_HEADER, DATA_SAMPLE_FORMAT_MAPPING, SEGYTraceHeaderEntryType
 
 endian = ">"  # Big Endian  # modified by A Squelch
 # endian='<' # Little Endian
@@ -71,7 +72,7 @@ def get_value(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: s
     return value[0]
 
 
-def get_values(data, index, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1):
+def get_ctype_and_size(type: SEGYTraceHeaderEntryType) -> Tuple[str, int]:
     ctype: str
     size: int
     if type == SEGYTraceHeaderEntryType.int32:
@@ -100,6 +101,14 @@ def get_values(data, index, type: SEGYTraceHeaderEntryType, endian: str = ">", n
         ctype = "ibm"
     else:
         raise Exception(f"Wrong type: {type}")
+
+    return ctype, size
+
+
+def get_values(data, index, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1):
+    ctype: str
+    size: int
+    ctype, size = get_ctype_and_size(type)
 
     index_end = index + size * number
 
@@ -156,3 +165,16 @@ def ibm2ieee2(ibm_float):
         sign = 1.0
     mant = float(a << 16) + float(b << 8) + float(c)
     return sign * 16 ** (istic - 64) * (mant / dividend)
+
+
+def get_data_sample_format(buffer: bytes) -> SEGYTraceHeaderEntryType:
+    value = get_value(buffer, index=DATA_SAMPLE_FORMAT_HEADER.position, type=DATA_SAMPLE_FORMAT_HEADER.type)
+    if value == 0:
+        value = 5
+    return DATA_SAMPLE_FORMAT_MAPPING[value]
+
+
+def get_bytes_per_sample(buffer: bytes) -> int:
+    type = get_data_sample_format(buffer)
+    ctype, size = get_ctype_and_size(type)
+    return size

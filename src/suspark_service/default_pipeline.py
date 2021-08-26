@@ -5,7 +5,7 @@ from suspark_modules.susort import SUsortParams
 
 
 def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
-    id = pipeline_repository.add_pipeline(name="Demo")
+    id = pipeline_repository.add_pipeline(name="Synch demo")
     item = pipeline_repository.get_pipeline(id)
     suimp2d = item.pipeline.add_module("SUimp2d")
     suimp2d.set_paramters(SUimp2dParams(nshot=50, nrec=50))
@@ -17,3 +17,10 @@ def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
     sort = item.pipeline.add_module("SUsort")
     sort.set_paramters(SUsortParams(key=SEGYTraceHeaderEntryName.Crossline3D))
     filter = item.pipeline.add_module("SUfilter")
+
+    id = pipeline_repository.add_pipeline(name="2D Line demo")
+    item = pipeline_repository.get_pipeline(id)
+    importsegy = item.pipeline.add_module("ImportSegy")
+    selsect = item.pipeline.add_module("SelectTraces")
+    sort = item.pipeline.add_module("SUsort")
+    agc = item.pipeline.add_module("SUagc")
