@@ -171,6 +171,13 @@ class SeismicPlot extends React.Component<Props, State> {
           useResizeHandler={true}
           style={{ width: '100%', height: '100%' }}
           layout={{
+            margin: {
+              l: 50,
+              r: 50,
+              // b: 50,
+              t: 50,
+              pad: 4,
+            },
             // title: 'A Fancy Plot',
             yaxis: { title: 'Time', autorange: 'reversed' },
             showlegend: false,
