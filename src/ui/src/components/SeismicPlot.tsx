@@ -142,8 +142,10 @@ class SeismicPlot extends React.Component<Props, State> {
         />
       )
 
+    var config = { responsive: true, autosizable: true }
+
     return this.state.data ? (
-      <div>
+      <div style={{ width: '100%', height: '100%' }}>
         <Typography>Key: {this.state.currentKey}</Typography>
         {slider}
         <Plot
@@ -165,10 +167,14 @@ class SeismicPlot extends React.Component<Props, State> {
               //   colorbar: { symmetric: true } as ColorBar,
             },
           ]}
+          config={config}
+          useResizeHandler={true}
+          style={{ width: '100%', height: '100%' }}
           layout={{
             // title: 'A Fancy Plot',
             yaxis: { title: 'Time', autorange: 'reversed' },
             showlegend: false,
+            autosize: true,
           }}
         />
       </div>
