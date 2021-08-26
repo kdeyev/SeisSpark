@@ -54,6 +54,7 @@ class PipelineView extends React.Component<Props, State> {
                   id: 'PipelineEditor',
                 },
               ],
+              size: 40,
             },
             {
               tabs: [
@@ -73,7 +74,7 @@ class PipelineView extends React.Component<Props, State> {
                   id: 'ModuleParametersEditor',
                 },
               ],
-              x: 300,
+              x: 600,
               y: 600,
               w: 500,
               h: 400,
