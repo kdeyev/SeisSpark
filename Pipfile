@@ -15,6 +15,7 @@ configargparse = "*"
 fastapi = "*"
 uvicorn = "*"
 requests = "*"
+aiofiles = "*"
 
 [dev-packages]
 pytest = "*"

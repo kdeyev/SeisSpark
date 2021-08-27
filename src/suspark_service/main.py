@@ -13,8 +13,7 @@ from suspark_service.suspark_service_app import create_suspark_service_app
 
 os.environ["PYTHONHASHSEED"] = str(232)
 
-# from fastapi.staticfiles import StaticFiles
-
+from fastapi.staticfiles import StaticFiles
 
 defaults = {"port": 9091}
 
@@ -34,7 +33,7 @@ pipeline_repository = PiplineRepository(suspark_context=suspark_context, modules
 create_default_pipeline(pipeline_repository)
 app = create_suspark_service_app(modules_factory=modules_factory, pipeline_repository=pipeline_repository)
 
-# app.mount("/", StaticFiles(directory="src/ui/dist", html=True), name="static")
+app.mount("/", StaticFiles(directory="src/ui/build", html=True), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

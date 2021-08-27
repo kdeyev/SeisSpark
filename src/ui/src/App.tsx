@@ -1,12 +1,11 @@
 import React from 'react'
-
 import './App.css'
 import PipelineTable from './components/PipelineTable'
 import PipelineView from './components/PipelineView'
-import { OpenAPI } from './services/suspark/core/OpenAPI'
+
 
 // FIXME: remove before release
-OpenAPI.BASE = 'http://localhost:9091'
+// OpenAPI.BASE = 'http://localhost:9091'
 
 interface State {}
 
