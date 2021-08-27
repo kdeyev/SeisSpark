@@ -2,8 +2,8 @@ import Slider from '@material-ui/core/Slider'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import Plot from 'react-plotly.js'
-
 import { PipelinesService } from '../services/suspark/services/PipelinesService'
+
 
 let findMinMax = (data: Array<Array<number>>) => {
   var max = -Infinity
@@ -156,8 +156,8 @@ class SeismicPlot extends React.Component<Props, State> {
               transpose: true,
               zsmooth: 'best',
               // zauto: false,
-              zmin: -norm,
-              zmax: norm,
+              // zmin: -norm,
+              // zmax: norm,
               colorscale: [
                 [0, 'rgb(0,0,255)'],
                 [0.5, 'rgb(255,255,255)'],
