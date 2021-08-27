@@ -76,7 +76,7 @@ def test_rdd_flat_gather_tuple_from_gather(suspark_context: SusparkContext) -> N
 
 
 def test_rdd_import_segy_to_rdd_file(suspark_context: SusparkContext) -> None:
-    rdd = import_segy_to_rdd(suspark_context.context, "/root/SeisSpark/Line_001.sgy", 1000)
+    rdd = import_segy_to_rdd(suspark_context.context, "/root/SeisSpark/Line_001_ieee.sgy", 1000)
 
     first_gather = gather_from_rdd_gather_tuple(rdd.first())
     print(first_gather.traces[0].buffer)

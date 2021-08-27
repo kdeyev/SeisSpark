@@ -10,7 +10,7 @@ from suspark.suspark_module import BaseModule
 
 
 class ImpotSegyParams(pydantic.BaseModel):
-    filepath: str = "/root/SeisSpark/Line_001.sgy"
+    filepath: str = "/root/SeisSpark/Line_001_ieee.sgy"
     chunk_size: int = 100
 
 
