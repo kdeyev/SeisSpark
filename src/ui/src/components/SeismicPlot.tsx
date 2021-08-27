@@ -6,8 +6,8 @@ import Plot from 'react-plotly.js'
 import { PipelinesService } from '../services/suspark/services/PipelinesService'
 
 let findMinMax = (data: Array<Array<number>>) => {
-  var max = +Infinity
-  var min = -Infinity
+  var max = -Infinity
+  var min = +Infinity
 
   for (let i = 0; i < data.length; i++) {
     const elementArray = data[i]
@@ -156,8 +156,8 @@ class SeismicPlot extends React.Component<Props, State> {
               transpose: true,
               zsmooth: 'best',
               // zauto: false,
-              //   zmin: -norm,
-              //   zmax: norm,
+              zmin: -norm,
+              zmax: norm,
               colorscale: [
                 [0, 'rgb(0,0,255)'],
                 [0.5, 'rgb(255,255,255)'],
