@@ -67,8 +67,8 @@ l_float = struct.calcsize("f")
 #     return 1
 
 
-def get_value(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">") -> Any:
-    value, index_end = get_values(data, index, type, endian, 1)
+def get_value(buffer: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">") -> Any:
+    value, index_end = get_values(buffer, index, type, endian, 1)
     return value[0]
 
 
@@ -105,7 +105,7 @@ def get_ctype_and_size(type: SEGYTraceHeaderEntryType) -> Tuple[str, int]:
     return ctype, size
 
 
-def get_values(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1) -> Tuple[List[Any], int]:
+def get_values(buffer: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1) -> Tuple[List[Any], int]:
     ctype: str
     size: int
     ctype, size = get_ctype_and_size(type)
@@ -121,7 +121,7 @@ def get_values(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: 
         for i in np.arange(number):
             index_ibm_start = i * 4 + index
             index_ibm_end = index_ibm_start + 4
-            ibm_val = ibm2ieee2(data[index_ibm_start:index_ibm_end])
+            ibm_val = ibm2ieee2(buffer[index_ibm_start:index_ibm_end])
             value[i] = ibm_val
         # this resturn an array as opposed to a tuple
         return value, index_end
@@ -130,8 +130,16 @@ def get_values(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: 
         cformat = "f" * number
         cformat = endian + ctype * number
 
-        Value: Tuple[Any, ...] = struct.unpack(cformat, data[index:index_end])
+        Value: Tuple[Any, ...] = struct.unpack(cformat, buffer[index:index_end])
         return list(Value), index_end
+
+
+def set_values(value: List[Any], buffer: bytearray, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1) -> None:
+    ctype, size = get_ctype_and_size(type)
+
+    cformat = endian + ctype * number
+
+    struct.pack_into(cformat, buffer, index, *value)
 
 
 def ibm2ieee2(ibm_float: bytes) -> float:

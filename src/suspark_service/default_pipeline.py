@@ -5,7 +5,7 @@ from suspark_modules.susort import SUsortParams
 
 
 def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
-    id = pipeline_repository.add_pipeline(name="Synch demo")
+    id = pipeline_repository.add_pipeline(name="Syntetic demo")
     item = pipeline_repository.get_pipeline(id)
     suimp2d = item.pipeline.add_module("SUimp2d")
     suimp2d.set_paramters(SUimp2dParams(nshot=50, nrec=50))

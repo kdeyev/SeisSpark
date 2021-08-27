@@ -48,8 +48,8 @@ class SegyRead:
             out = file.read(240)
             out_trace_header = SUTraceHeader(out)
 
-        type = get_data_sample_format(binary_header)
-        if type != SEGYTraceHeaderEntryType.ibm:
+        self._type = get_data_sample_format(binary_header)
+        if self._type != SEGYTraceHeaderEntryType.ibm and self._type != SEGYTraceHeaderEntryType.float:
             raise Exception("Sample format is not supported")
         self._bps = 4
 
@@ -76,7 +76,7 @@ class SegyRead:
             file.seek(3600 + start_trace * self._trace_size)
             data = file.read(to_read * self._trace_size)
 
-        buffers = split_su_buffer(data)
+        buffers = split_su_buffer(data, sample_type=self._type)
         return (chunk_num, buffers)
 
 
