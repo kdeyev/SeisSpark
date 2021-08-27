@@ -80,3 +80,5 @@ def test_rdd_import_segy_to_rdd_file(suspark_context: SusparkContext) -> None:
 
     first_gather = gather_from_rdd_gather_tuple(rdd.first())
     print(first_gather.traces[0].buffer)
+
+    # rdd.saveAsSequenceFile("/root/SeisSpark/Line_001_ieee.seq")

@@ -33,6 +33,7 @@ def group_by_trace_header(rdd: "pyspark.RDD[GatherTuple]", header_entry: SEGYTra
 
 
 def select_by_trace_header(rdd: "pyspark.RDD[GatherTuple]", header_entry: SEGYTraceHeaderEntry, value: int) -> "pyspark.RDD[GatherTuple]":
+    # TODO: we can optimize this operation by skipping convert_to_flat_map
     rdd = convert_to_flat_map(rdd)
     rdd = rdd.filter(SelectTraceHeaderKey(header_entry, value).operation)
     return rdd
