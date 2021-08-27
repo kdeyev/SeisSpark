@@ -23,14 +23,14 @@ class SUimp2d(BaseModule):
     def suimp2d_params(self) -> SUimp2dParams:
         return cast(SUimp2dParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if input_rdd:
             raise Exception("input RDD is not used")
         gather_count_to_produce = self.suimp2d_params.nshot
         trace_count_per_gather = self.suimp2d_params.nrec
 
         buffers = su_process_pipe(["suimp2d", f"nshot={gather_count_to_produce}", f"nrec={trace_count_per_gather}"], [])
-        input_gather = gather_from_rdd_gather_tuple(GatherTuple(0, buffers))
+        input_gather = gather_from_rdd_gather_tuple((0, buffers))
 
         header_entries = input_gather.get_header_entry_values(SEGY_TRACE_HEADER_ENTRIES[SEGYTraceHeaderEntryName.FieldRecord])
         expected = []

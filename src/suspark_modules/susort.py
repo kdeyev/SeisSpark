@@ -4,6 +4,7 @@ import pydantic
 import pyspark
 
 from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
+from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import group_by_trace_header
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -21,7 +22,7 @@ class SUsort(BaseModule):
     def susort_params(self) -> SUsortParams:
         return cast(SUsortParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:
             raise Exception("input RDD should be specified")
         key: SEGYTraceHeaderEntryName = self.susort_params.key

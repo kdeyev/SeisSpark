@@ -26,6 +26,7 @@ flake8 = "*"
 autoflake = "*"
 black = "*"
 pylint = "*"
+types-dataclasses = "*"
 
 [pipenv]
 allow_prereleases = true

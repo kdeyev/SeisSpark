@@ -1,25 +1,24 @@
 import collections
 import uuid
-from contextlib import contextmanager
-from typing import Dict, Generator, Iterator, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Union
 
 import pyspark
-from pydantic.main import BaseModel
 
+from su_rdd.kv_operations import GatherTuple
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
 from suspark.suspark_modules_factory import ModulesFactory
 
 
 class BaseModuleList(collections.MutableSequence):
-    def __init__(self):
+    def __init__(self) -> None:
         self._l: List[BaseModule] = []
         self._d: Dict[str, BaseModule] = {}
 
     def __len__(self) -> int:
         return len(self._l)
 
-    def __getitem__(self, i: Union[str, int]) -> BaseModule:
+    def __getitem__(self, i: Union[str, int]) -> BaseModule:  # type: ignore
         if type(i) is int:
             return self._l[i]
         elif type(i) is str:
@@ -27,7 +26,7 @@ class BaseModuleList(collections.MutableSequence):
         else:
             raise Exception(f"Wrong key type {type(i)}")
 
-    def __delitem__(self, i: Union[str, int]) -> None:
+    def __delitem__(self, i: Union[str, int]) -> None:  # type: ignore
         if type(i) is int:
             item: BaseModule = self._l[i]
             del self._d[item.id]
@@ -40,7 +39,7 @@ class BaseModuleList(collections.MutableSequence):
         else:
             raise Exception(f"Wrong key type {type(i)}")
 
-    def __setitem__(self, i: int, v: BaseModule) -> None:
+    def __setitem__(self, i: int, v: BaseModule) -> None:  # type: ignore
         if type(i) is int:
             self._l[i] = v
             self._d[v.id] = v
@@ -74,8 +73,7 @@ class Pipeline:
         self._modules = BaseModuleList()
 
     def modules(self) -> Iterator[BaseModule]:
-        for module in self._modules:
-            yield module
+        yield from self._modules
 
     def add_module(self, module_type: str, name: Optional[str] = None, prev_module_id: Optional[str] = None) -> BaseModule:
         index: Optional[int] = None
@@ -112,7 +110,7 @@ class Pipeline:
         self._init_rdd()
 
     def _init_rdd(self) -> None:
-        rdd: Optional[pyspark.RDD] = None
+        rdd: Optional["pyspark.RDD[GatherTuple]"] = None
         for module in self._modules:
             module.init_rdd(self._suspark_context, rdd)
             rdd = module.rdd

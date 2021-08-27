@@ -3,6 +3,7 @@ from typing import List, Optional, cast
 import pydantic
 import pyspark
 
+from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import su_process_rdd
 from suspark.suspark_context import SusparkContext
 from suspark.suspark_module import BaseModule
@@ -25,7 +26,7 @@ class SUfilter(BaseModule):
     def sufilter_params(self) -> SUFilterParams:
         return cast(SUFilterParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:
             raise Exception("input RDD should be specified")
         # key: SEGYTraceHeaderEntryName = self.sufilter_params.key

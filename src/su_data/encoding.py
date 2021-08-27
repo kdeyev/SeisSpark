@@ -1,5 +1,5 @@
 import struct
-from typing import Tuple
+from typing import Any, List, Tuple, cast
 
 import numpy as np
 
@@ -67,8 +67,8 @@ l_float = struct.calcsize("f")
 #     return 1
 
 
-def get_value(data: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">"):
-    value, index_end = get_values(data, index, type, endian, 1)
+def get_value(buffer: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">") -> Any:
+    value, index_end = get_values(buffer, index, type, endian, 1)
     return value[0]
 
 
@@ -105,7 +105,7 @@ def get_ctype_and_size(type: SEGYTraceHeaderEntryType) -> Tuple[str, int]:
     return ctype, size
 
 
-def get_values(data, index, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1):
+def get_values(buffer: bytes, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1) -> Tuple[List[Any], int]:
     ctype: str
     size: int
     ctype, size = get_ctype_and_size(type)
@@ -117,36 +117,32 @@ def get_values(data, index, type: SEGYTraceHeaderEntryType, endian: str = ">", n
 
     if ctype == "ibm":
         # ASSUME IBM FLOAT DATA
-        Value = list(range(int(number)))
+        value: List[float] = list(range(int(number)))
         for i in np.arange(number):
             index_ibm_start = i * 4 + index
             index_ibm_end = index_ibm_start + 4
-            ibm_val = ibm2ieee2(data[index_ibm_start:index_ibm_end])
-            Value[i] = ibm_val
+            ibm_val = ibm2ieee2(buffer[index_ibm_start:index_ibm_end])
+            value[i] = ibm_val
         # this resturn an array as opposed to a tuple
+        return value, index_end
     else:
         # ALL OTHER TYPES OF DATA
         cformat = "f" * number
         cformat = endian + ctype * number
 
-        # printverbose("getValue : cformat : '" + cformat + "'", 11)
-
-        Value = struct.unpack(cformat, data[index:index_end])
-
-    # if (ctype == 'B'):
-    #     # printverbose('getValue : Ineficient use of 1byte Integer...', -1)
-
-    #     vtxt = 'getValue : ' + 'start=' + str(index) + ' size=' + str(size) + ' number=' + str(
-    #         number) + ' Value=' + str(Value) + ' cformat=' + str(cformat)
-    #     # printverbose(vtxt, 20)
-
-    # if number == 1:
-    #     return Value[0], index_end
-    # else:
-    return Value, index_end
+        Value: Tuple[Any, ...] = struct.unpack(cformat, buffer[index:index_end])
+        return list(Value), index_end
 
 
-def ibm2ieee2(ibm_float):
+def set_values(value: List[Any], buffer: bytearray, index: int, type: SEGYTraceHeaderEntryType, endian: str = ">", number: int = 1) -> None:
+    ctype, size = get_ctype_and_size(type)
+
+    cformat = endian + ctype * number
+
+    struct.pack_into(cformat, buffer, index, *value)
+
+
+def ibm2ieee2(ibm_float: bytes) -> float:
     """
     ibm2ieee2(ibm_float)
     Used by permission
@@ -155,8 +151,8 @@ def ibm2ieee2(ibm_float):
     """
     dividend = float(16 ** 6)
 
-    if ibm_float == 0:
-        return 0.0
+    # if ibm_float == 0:
+    #     return 0.0
     istic, a, b, c = struct.unpack(">BBBB", ibm_float)
     if istic >= 128:
         sign = -1.0
@@ -164,7 +160,7 @@ def ibm2ieee2(ibm_float):
     else:
         sign = 1.0
     mant = float(a << 16) + float(b << 8) + float(c)
-    return sign * 16 ** (istic - 64) * (mant / dividend)
+    return cast(float, sign * 16 ** (istic - 64) * (mant / dividend))
 
 
 def get_data_sample_format(buffer: bytes) -> SEGYTraceHeaderEntryType:

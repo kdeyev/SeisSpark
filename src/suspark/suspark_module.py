@@ -1,20 +1,20 @@
 import json
-import uuid
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Type, cast
 
 import pydantic
 import pyspark
 
+from su_rdd.kv_operations import GatherTuple
 from suspark.suspark_context import SusparkContext
 
 
 class BaseModule:
-    def __init__(self, id: str, name: str, paramsModel: Type[pydantic.BaseModel], params: Optional[pydantic.BaseModel] = None) -> None:
+    def __init__(self, id: str, name: str, paramsModel: Type[pydantic.BaseModel] = pydantic.BaseModel, params: Optional[pydantic.BaseModel] = None) -> None:
         self._id = id  # str(uuid.uuid4())
         self._name = name
         self._paramsModel = paramsModel
         self._params = params
-        self._rdd: Optional[pyspark.RDD] = None
+        self._rdd: Optional["pyspark.RDD[GatherTuple]"] = None
 
     @property
     def id(self) -> str:
@@ -25,7 +25,7 @@ class BaseModule:
         return self._name
 
     @property
-    def rdd(self) -> pyspark.RDD:
+    def rdd(self) -> "pyspark.RDD[GatherTuple]":
         if not self._rdd:
             raise Exception("RDD is not initialized")
         return self._rdd
@@ -34,11 +34,11 @@ class BaseModule:
         self._rdd = None
 
     @property
-    def params_schema(self) -> Any:
-        return json.loads(self._paramsModel.schema_json())
+    def params_schema(self) -> Dict[str, Any]:
+        return cast(Dict[str, Any], json.loads(self._paramsModel.schema_json()))
 
     @property
-    def parameters(self) -> Any:
+    def parameters(self) -> pydantic.BaseModel:
         if not self._params:
             raise Exception("params are not initialized")
         return self._params
@@ -51,8 +51,8 @@ class BaseModule:
     def set_json_parameters(self, json: Dict[str, Any]) -> None:
         self._params = self._paramsModel(**json)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> pyspark.RDD:
+    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         raise Exception("Not implemented")
 
-    def init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional[pyspark.RDD]) -> None:
+    def init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> None:
         self._rdd = self._init_rdd(suspark_context, input_rdd)

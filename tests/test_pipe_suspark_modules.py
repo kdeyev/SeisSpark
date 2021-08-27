@@ -1,5 +1,3 @@
-from os import name
-
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from suspark.suspark_context import SusparkContext
 from suspark_modules.sufilter import SUfilter
@@ -7,7 +5,7 @@ from suspark_modules.suimp2d import SUimp2d, SUimp2dParams
 from suspark_modules.susort import SUsort
 
 
-def test_build_and_run_modules(suspark_context: SusparkContext):
+def test_build_and_run_modules(suspark_context: SusparkContext) -> None:
     gather_count_to_produce = 10
     trace_count_per_gather = 5
 

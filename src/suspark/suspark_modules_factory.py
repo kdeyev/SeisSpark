@@ -20,7 +20,7 @@ class ModulesFactory:
     def get_module_types(self) -> List[str]:
         return list(self._factory.keys())
 
-    def get_module_params_json_schema(self, module_type: str) -> Any:
+    def get_module_params_json_schema(self, module_type: str) -> Dict[str, Any]:
         # FIXME: get module schema without building the module
         module = self._factory[module_type](id="dummy", name="dummy")
         return module.params_schema

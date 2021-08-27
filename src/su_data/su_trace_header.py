@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 from .encoding import get_value
 from .segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntry, SEGYTraceHeaderEntryName
@@ -15,7 +15,7 @@ class SUTraceHeader:
 
     @property
     def num_samples(self) -> int:
-        return self.get_header_value(NS_ENTRY)
+        return cast(int, self.get_header_value(NS_ENTRY))
 
 
 def get_header_value(buffer: bytes, entry: SEGYTraceHeaderEntry) -> Any:

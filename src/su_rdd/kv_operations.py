@@ -1,31 +1,32 @@
 import os
-from collections import namedtuple
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
-from su_data.encoding import get_bytes_per_sample, get_data_sample_format
+from su_data.encoding import get_data_sample_format
 from su_data.segy_trace_header import SEGYTraceHeaderEntry, SEGYTraceHeaderEntryType
 from su_data.su_gather import SUGather
 from su_data.su_pipe import split_su_buffer, su_process_pipe
 from su_data.su_trace import SUTrace
 from su_data.su_trace_header import SUTraceHeader, get_header_value
 
-GatherTuple = namedtuple("GatherTuple", "key buffers")
+# GatherTuple = namedtuple("GatherTuple", "key buffers")
+
+GatherTuple = Tuple[int, List[bytes]]
 
 
 def type_check(gather_tuple: GatherTuple) -> GatherTuple:
-    if type(gather_tuple) == tuple:
-        gather_tuple = GatherTuple(gather_tuple[0], gather_tuple[1])
+    # if type(gather_tuple) == tuple:
+    #     gather_tuple = (gather_tuple[0], gather_tuple[1])
     # if type(gather_tuple) != GatherTuple:
     #     raise Exception(f"Wrong type(gather_tuple) {type(gather_tuple)}")
 
-    if type(gather_tuple.key) != int:
-        raise Exception(f"Wrong type(gather_tuple.key) {type(gather_tuple.key)}")
+    if type(gather_tuple[0]) != int:
+        raise Exception(f"Wrong type(gather_tuple[0]) {type(gather_tuple[0])}")
 
-    if type(gather_tuple.buffers) != list:
-        raise Exception(f"Wrong type(gather_tuple.buffers) {type(gather_tuple.buffers)}")
+    if type(gather_tuple[1]) != list:
+        raise Exception(f"Wrong type(gather_tuple[1]) {type(gather_tuple[1])}")
 
-    if type(gather_tuple.buffers[0]) != bytes:
-        raise Exception(f"Wrong type(gather_tuple.buffers) {type(gather_tuple.buffers[0])}")
+    if type(gather_tuple[1][0]) != bytes:
+        raise Exception(f"Wrong type(gather_tuple[1]) {type(gather_tuple[1][0])}")
 
     return gather_tuple
 
@@ -34,7 +35,7 @@ class ConvertToFlatList:
     def operation(self, gather_tuple: GatherTuple) -> List[GatherTuple]:
         gather_tuple = type_check(gather_tuple)
 
-        return [GatherTuple(gather_tuple.key, [buffer]) for buffer in gather_tuple.buffers]
+        return [(gather_tuple[0], [buffer]) for buffer in gather_tuple[1]]
 
 
 class SegyRead:
@@ -47,8 +48,8 @@ class SegyRead:
             out = file.read(240)
             out_trace_header = SUTraceHeader(out)
 
-        type = get_data_sample_format(binary_header)
-        if type != SEGYTraceHeaderEntryType.ibm:
+        self._type = get_data_sample_format(binary_header)
+        if self._type != SEGYTraceHeaderEntryType.ibm and self._type != SEGYTraceHeaderEntryType.float:
             raise Exception("Sample format is not supported")
         self._bps = 4
 
@@ -75,8 +76,8 @@ class SegyRead:
             file.seek(3600 + start_trace * self._trace_size)
             data = file.read(to_read * self._trace_size)
 
-        buffers = split_su_buffer(data)
-        return GatherTuple(chunk_num, buffers)
+        buffers = split_su_buffer(data, sample_type=self._type)
+        return (chunk_num, buffers)
 
 
 class AssignTraceHeaderKey:
@@ -86,20 +87,21 @@ class AssignTraceHeaderKey:
     def operation(self, gather_tuple: GatherTuple) -> List[GatherTuple]:
         gather_tuple = type_check(gather_tuple)
 
-        return [GatherTuple(get_header_value(buffer, self.header_entry), [buffer]) for buffer in gather_tuple.buffers]
+        return [(get_header_value(buffer, self.header_entry), [buffer]) for buffer in gather_tuple[1]]
 
 
 class SelectTraceHeaderKey:
     def __init__(self, header_entry: SEGYTraceHeaderEntry, value: int):
         self._header_entry = header_entry
-        self._valuse = value
+        self._value = value
 
     def operation(self, gather_tuple: GatherTuple) -> bool:
         gather_tuple = type_check(gather_tuple)
-        if len(gather_tuple.buffers) > 1:
+        if len(gather_tuple[1]) > 1:
             raise Exception("Need to flat")
 
-        return get_header_value(gather_tuple.buffers[0], self._header_entry) == self._valuse
+        ret_val: bool = get_header_value(gather_tuple[1][0], self._header_entry) == self._value
+        return ret_val
 
 
 class SUProcess:
@@ -109,21 +111,21 @@ class SUProcess:
 
     def operation(self, gather_tuple: GatherTuple) -> GatherTuple:
         gather_tuple = type_check(gather_tuple)
-        output_buffers = su_process_pipe([self.su_xecutable, *self.parameters], gather_tuple.buffers)
+        output_buffers = su_process_pipe([self.su_xecutable, *self.parameters], gather_tuple[1])
 
-        return GatherTuple(gather_tuple.key, output_buffers)
+        return (gather_tuple[0], output_buffers)
 
 
 def gather_from_rdd_gather_tuple(gather_tuple: GatherTuple) -> SUGather:
     gather_tuple = type_check(gather_tuple)
 
-    traces = [SUTrace(buffer) for buffer in gather_tuple.buffers]
-    return SUGather(gather_tuple.key, traces)
+    traces = [SUTrace(buffer) for buffer in gather_tuple[1]]
+    return SUGather(gather_tuple[0], traces)
 
 
 def rdd_gather_tuple_from_gather(gather: SUGather) -> GatherTuple:
-    return GatherTuple(gather.key, [trace.buffer for trace in gather.traces])
+    return (gather.key, [trace.buffer for trace in gather.traces])
 
 
 def rdd_flat_gather_tuple_from_gather(gather: SUGather) -> List[GatherTuple]:
-    return [GatherTuple(gather.key, [trace.buffer]) for trace in gather.traces]
+    return [(gather.key, [trace.buffer]) for trace in gather.traces]

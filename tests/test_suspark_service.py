@@ -1,13 +1,13 @@
-from os import name
 from typing import List
 
 import pydantic
+from fastapi.testclient import TestClient
 
 from suspark.pipeline_repository import PipelineInfo
-from suspark_service.routers.pipelines import CreateModuleRequest, CreatePipelineRequest, ModuleDescription, ModuleInfo, PipelineDescription
+from suspark_service.routers.pipelines import CreateModuleRequest, CreatePipelineRequest, ModuleDescription, PipelineDescription
 
 
-def test_suspark_service_modules(suspark_service_client) -> None:
+def test_suspark_service_modules(suspark_service_client: TestClient) -> None:
     response = suspark_service_client.get("/api/v1/modules")
     response.raise_for_status()
     module_types: List[str] = pydantic.parse_obj_as(List[str], response.json())
@@ -24,7 +24,7 @@ def test_suspark_service_modules(suspark_service_client) -> None:
     }
 
 
-def test_suspark_service_pipelines(suspark_service_client) -> None:
+def test_suspark_service_pipelines(suspark_service_client: TestClient) -> None:
     response = suspark_service_client.get("/api/v1/pipelines")
     response.raise_for_status()
     pipelines: List[PipelineInfo] = pydantic.parse_obj_as(List[PipelineInfo], response.json())
@@ -44,7 +44,7 @@ def test_suspark_service_pipelines(suspark_service_client) -> None:
 
     response = suspark_service_client.get("/api/v1/pipelines")
     response.raise_for_status()
-    pipelines: List[PipelineInfo] = pydantic.parse_obj_as(List[PipelineInfo], response.json())
+    pipelines = pydantic.parse_obj_as(List[PipelineInfo], response.json())
     assert pipelines == [PipelineInfo(id=pipeline_id, name=pipeline_name)]
 
     response = suspark_service_client.delete(f"/api/v1/pipelines/{pipeline_id}")
@@ -52,11 +52,11 @@ def test_suspark_service_pipelines(suspark_service_client) -> None:
 
     response = suspark_service_client.get("/api/v1/pipelines")
     response.raise_for_status()
-    pipelines: List[PipelineInfo] = pydantic.parse_obj_as(List[PipelineInfo], response.json())
+    pipelines = pydantic.parse_obj_as(List[PipelineInfo], response.json())
     assert pipelines == []
 
 
-def test_suspark_service_pipeline_module(suspark_service_client) -> None:
+def test_suspark_service_pipeline_module(suspark_service_client: TestClient) -> None:
     response = suspark_service_client.get("/api/v1/pipelines")
     response.raise_for_status()
     pipelines: List[PipelineInfo] = pydantic.parse_obj_as(List[PipelineInfo], response.json())
