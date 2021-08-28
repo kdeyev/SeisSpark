@@ -15,7 +15,7 @@ os.environ["PYTHONHASHSEED"] = str(232)
 
 from fastapi.staticfiles import StaticFiles
 
-defaults = {"port": 9091}
+defaults = {"port": 9091, "allow_remote":True}
 
 p = configargparse.ArgParser()
 p.add("-c", "--config-file", is_config_file=True, help="config file path")

@@ -1,0 +1,1 @@
+pipenv lock -r > docker/service_requirements.txt
