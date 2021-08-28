@@ -1,3 +1,5 @@
+import os
+
 import pyspark
 from pyspark.sql import SparkSession
 
@@ -6,6 +8,8 @@ class SusparkContext:
     def __init__(self) -> None:
 
         spark_conf = pyspark.SparkConf()
+        if "SPARK_MASTER_URL" in os.environ:
+            spark_conf.setMaster(os.environ["SPARK_MASTER_URL"])
         # spark_conf.setAll([
         #     ('spark.master', ),
         #     ('spark.app.name', 'myApp'),

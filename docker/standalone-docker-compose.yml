@@ -2,12 +2,21 @@
 version: '2'
 
 services:
+  su:
+    image: su
+    build:
+      context: .
+      dockerfile: su.Dockerfile
+    command: /bin/bash
+
   seisspark:
     image: seisspark
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/seisspark.Dockerfile
     command: /bin/bash
+    depends_on:
+      - su
 
   seisspark-standalone:
     image: seisspark-service

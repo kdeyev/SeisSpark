@@ -34,9 +34,6 @@ COPY trampoline.sh /root/cwp/trampoline.sh
 RUN dos2unix /root/cwp/trampoline.sh
 RUN chmod 755 /root/cwp/trampoline.sh
 
-ADD requirements.txt .
-RUN python -m pip install --upgrade pip && python -m pip install --quiet -r requirements.txt && rm -rf requirements.txt
-
 # Symlink the trampoline script for every command in SU to /usr/local/bin
 # Since /usr/local/bin is already in path, it simplifies the commands from the docker command line
 #     docker run <image> segyread
@@ -46,3 +43,4 @@ RUN cd /usr/local/bin/ \
     && for f in /root/cwp/bin/*; do \
          ln -s /root/cwp/trampoline.sh `basename $f`; \
        done
+
