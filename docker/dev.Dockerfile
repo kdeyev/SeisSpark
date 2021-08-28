@@ -14,15 +14,18 @@ ENV PIPENV_VENV_IN_PROJECT=1
 RUN pipenv install --dev
 
 WORKDIR /root/SeisSpark/src/ui
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn
 RUN yarn install --ignore-engines && yarn build
 
 WORKDIR /root/SeisSpark
 ENV PYTHONPATH=/root/SeisSpark/src
 # ENV PATH=/root/SeisSpark/src
 
-COPY bootstrap.sh /root/bootstrap.sh
-RUN dos2unix /root/bootstrap.sh
-RUN chmod 755 /root/bootstrap.sh
+COPY start_dev.sh /root/start_dev.sh
+RUN dos2unix  /root/start_dev.sh
+RUN chmod 755  /root/start_dev.sh
 
 ENTRYPOINT ["/bin/sh"]
-CMD [ "/root/bootstrap.sh" ]
+CMD [ "/root/start_dev.sh" ]
