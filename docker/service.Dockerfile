@@ -19,11 +19,14 @@ RUN yarn install --ignore-engines && yarn build && rm -rf node_modules
 
 WORKDIR $SEISSPARK_HOME
 ENV PYTHONPATH=$SEISSPARK_HOME/src
-# ENV PATH=/root/SeisSpark/src
 
 COPY docker/start_standalone.sh /root/start_standalone.sh
 RUN dos2unix  /root/start_standalone.sh
 RUN chmod 755  /root/start_standalone.sh
 
+COPY docker/start_service.sh /root/start_service.sh
+RUN dos2unix  /root/start_service.sh
+RUN chmod 755  /root/start_service.sh
+
 ENTRYPOINT ["/bin/sh"]
-CMD [ "/root/start_standalone.sh" ]
+CMD [ "/root/start_service.sh" ]
