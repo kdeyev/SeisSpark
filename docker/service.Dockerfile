@@ -1,5 +1,12 @@
 FROM seisspark
 
+RUN mkdir /root/SeisSpark
+ENV SEISSPARK_HOME=/root/SeisSpark
+ADD src $SEISSPARK_HOME/src
+
+WORKDIR $SEISSPARK_HOME
+ENV PYTHONPATH=$SEISSPARK_HOME/src
+
 WORKDIR $SEISSPARK_HOME
 ADD docker/service_requirements.txt .
 RUN python -m pip install --upgrade pip && python -m pip install --quiet -r service_requirements.txt && rm -rf service_requirements.txt
