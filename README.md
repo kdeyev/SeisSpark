@@ -1,12 +1,12 @@
 # SeisSpark
-![Alt text](/images/main_window.jpg?raw=true "Main Window")
+![Alt text](/images/pipeline_viewer.png?raw=true "Main Window")
 
 # Getting started
 1. Start Standalone container
 ```sh
 cd docker
-docker-compose -f docker-compose-standalone.yml build
-docker-compose -f docker-compose-standalone.yml up
+docker-compose build
+docker-compose up
 ```
 2. Open http://localhost:9091
 
