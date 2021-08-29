@@ -1,11 +1,20 @@
+import os
+import shutil
+
 import pyspark
 from pyspark.sql import SparkSession
 
 
 class SusparkContext:
     def __init__(self) -> None:
+        # seisspark_home = os.environ["SEISSPARK_HOME"]
+        # shutil.make_archive("seisspark", "zip", "src")
 
         spark_conf = pyspark.SparkConf()
+        if "SPARK_MASTER_URL" in os.environ:
+            spark_conf.setMaster(os.environ["SPARK_MASTER_URL"])
+            spark_conf.setExecutorEnv("PYTHONPATH", "/root/SeisSpark/src")
+
         # spark_conf.setAll([
         #     ('spark.master', ),
         #     ('spark.app.name', 'myApp'),
@@ -22,6 +31,7 @@ class SusparkContext:
         spark_sess.read
         spark_sess.readStream
         spark_ctxt.setLogLevel("WARN")
+        spark_ctxt.addPyFile("seisspark.zip")
 
         self._spark_ctxt = spark_ctxt
 
