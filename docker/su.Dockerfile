@@ -16,31 +16,35 @@ RUN apt-get update && apt-get install -y \
     libx11-dev \
     libxt6 libxt-dev \
     && curl -o /root/cwp_su_all_44R19.tgz -SL "https://nextcloud.seismic-unix.org/s/LZpzc8jMzbWG9BZ/download?path=%2F&files=cwp_su_all_44R19.tgz" \
-    && mkdir /root/cwp \
-    && tar zxf /root/cwp_su_all_44R19.tgz -C /root/cwp \
+    && mkdir /usr/local/cwp \
+    && tar zxf /root/cwp_su_all_44R19.tgz -C /usr/local/cwp \
     && rm /root/cwp_su_all_44R19.tgz \
     && /bin/bash -c \
-       'echo exit 0 > /root/cwp/src/license.sh \
-       && echo exit 0 > /root/cwp/src/mailhome.sh \
-       && echo exit 0 > /root/cwp/src/chkroot.sh \
-       && CWPROOT=/root/cwp PATH=$PATH:/root/cwp/bin make -C /root/cwp/src install xtinstall' \
-    && rm -rf /root/cwp/src \
+       'echo exit 0 > /usr/local/cwp/src/license.sh \
+       && echo exit 0 > /usr/local/cwp/src/mailhome.sh \
+       && echo exit 0 > /usr/local/cwp/src/chkroot.sh \
+       && CWPROOT=/usr/local/cwp PATH=$PATH:/usr/local/cwp/bin make -C /usr/local/cwp/src install xtinstall' \
+    && rm -rf /usr/local/cwp/src \
     && rm -rf /var/lib/apt/lists \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
 # Add trampoline which will sett CWPROOT for each command being called
-COPY trampoline.sh /root/cwp/trampoline.sh
-RUN dos2unix /root/cwp/trampoline.sh
-RUN chmod 755 /root/cwp/trampoline.sh
+COPY trampoline.sh /usr/local/cwp/trampoline.sh
+RUN dos2unix /usr/local/cwp/trampoline.sh
+RUN chmod 755 /usr/local/cwp/trampoline.sh
+
+ENV CWPROOT=/usr/local/cwp
 
 # Symlink the trampoline script for every command in SU to /usr/local/bin
 # Since /usr/local/bin is already in path, it simplifies the commands from the docker command line
 #     docker run <image> segyread
 # instead of
-#     docker run <image> /root/cwp/bin/segyread
+#     docker run <image> /usr/local/cwp/bin/segyread
 RUN cd /usr/local/bin/ \
-    && for f in /root/cwp/bin/*; do \
-         ln -s /root/cwp/trampoline.sh `basename $f`; \
+    && for f in /usr/local/cwp/bin/*; do \
+         cp $f `basename $f`; \
+         chmod 777 `basename $f`; \
+         chmod +x `basename $f`; \
        done
 
