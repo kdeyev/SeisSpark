@@ -7,7 +7,7 @@ WORKDIR /root
 ENV SEISSPARK_HOME=/root/SeisSpark
 RUN apt-get update && apt-get install -y git
 RUN pip install pipenv
-RUN git clone --branch refactroring  https://github.com/kdeyev/SeisSpark.git
+RUN git clone https://github.com/kdeyev/SeisSpark.git
 WORKDIR $SEISSPARK_HOME
 ENV PIPENV_VENV_IN_PROJECT=1
 RUN pipenv install --dev
