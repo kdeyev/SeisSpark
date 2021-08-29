@@ -1,0 +1,67 @@
+{
+  "editor.formatOnSave": false,
+  "python.sortImports.args": ["--settings-path", "${workspaceFolder}"],
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+
+  // Linter
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.mypyEnabled": true,
+  // "python.testing.pytestPath": "${workspaceFolder}/tests/pytests/integration-tests",
+  // "python.envFile": "${workspaceFolder}/.env"
+  "python.pythonPath": "python.exe",
+  // UT
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.outputWindow": "Python Test Log",
+  "python.testing.pytestEnabled": true,
+  // "python.testing.cwd": "./tests/pytests/integration-tests",
+  // Cov
+  "coverage-gutters.showGutterCoverage": true,
+  "coverage-gutters.showLineCoverage": true,
+  "vscode-coverage-highlighter.files": [
+    "cov*.xml",
+    "coverage*.json"
+  ],
+  "vscode-coverage-highlighter.defaultState": "disable",
+  // JS
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "prettier.tslintIntegration": true,
+  "prettier.eslintIntegration": true,
+  "prettier.jsxSingleQuote": false,
+  "prettier.singleQuote": true,
+  // "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
+  "multiCommand.commands": [
+    {
+      "command": "multiCommand.saveFileAndSortImportsWhenPython",
+      "sequence": [
+        "python.sortImports",
+        "workbench.action.files.save"
+      ]
+    }
+  ]
+}

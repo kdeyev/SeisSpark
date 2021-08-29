@@ -1,0 +1,33 @@
+
+version: '2'
+
+services:
+  su:
+    image: su
+    build:
+      context: .
+      dockerfile: su.Dockerfile
+    command: /bin/bash
+
+  seisspark:
+    image: seisspark
+    build:
+      context: ..
+      dockerfile: docker/seisspark.Dockerfile
+    command: /bin/bash
+    depends_on:
+      - su
+
+  seisspark-standalone:
+    image: seisspark-service
+    build:
+      context: ..
+      dockerfile: docker/service.Dockerfile
+    # environment:
+    #   - SPARK_WORKER_MEMORY=1G
+    #   - SPARK_WORKER_CORES=1
+    ports:
+      - '9091:9091'
+    depends_on:
+      - seisspark
+    command: /root/start_standalone.sh
