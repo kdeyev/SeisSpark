@@ -29,7 +29,7 @@ The [wiki page](https://wiki.seismic-unix.org/doku.php) says:
 SeisSpark is actively using [SU commands](https://wiki.seismic-unix.org/tutorials:first_steps) for running the actual data transformation. Also, SeisSpark uses the [SU data format](https://wiki.seismic-unix.org/sudoc:su_data_format) internally.
 
 Additional information regarding the SU can be found in the [SU documentation](https://web.mit.edu/cwpsu_v44r1/sumanual_600dpi_letter.pdf
-) or in the [SU GitHub repo](https://github.com/JohnWStockwellJr/SeisUnix)
+) or in the [SU GitHub repo](https://github.com/JohnWStockwellJr/SeisUnix).
 
 The SU programs are invoked as subprocesses and all the data transferring is done via stdin and stdout. Practically it means that Spark Worker nodes need to have the SU package installed.
 
@@ -38,6 +38,8 @@ The SU programs are invoked as subprocesses and all the data transferring is don
 SeisSpark deployment consist of two major components:
 - SeisSpark service
 - Apache Spark cluster
+
+
 
 
 # Implementation details

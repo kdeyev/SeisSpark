@@ -19,6 +19,6 @@
 /* eslint-disable */
 
 export type ModuleInfo = {
-  id: string
-  name: string
+    id: string;
+    name: string;
 }

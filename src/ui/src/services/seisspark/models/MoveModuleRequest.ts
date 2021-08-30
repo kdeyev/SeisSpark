@@ -19,6 +19,6 @@
 /* eslint-disable */
 
 export type MoveModuleRequest = {
-  module_id: string
-  prev_module_id?: string
+    module_id: string;
+    prev_module_id?: string;
 }

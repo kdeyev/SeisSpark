@@ -19,7 +19,7 @@
 /* eslint-disable */
 
 export type ModuleDescription = {
-  id: string
-  name: string
-  params_schema: any
+    id: string;
+    name: string;
+    params_schema: any;
 }

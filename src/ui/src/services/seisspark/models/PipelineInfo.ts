@@ -19,6 +19,6 @@
 /* eslint-disable */
 
 export type PipelineInfo = {
-  id: string
-  name: string
+    id: string;
+    name: string;
 }

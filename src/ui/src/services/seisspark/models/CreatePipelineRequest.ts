@@ -19,5 +19,5 @@
 /* eslint-disable */
 
 export type CreatePipelineRequest = {
-  name: string
+    name: string;
 }
