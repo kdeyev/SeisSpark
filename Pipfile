@@ -31,5 +31,5 @@ types-dataclasses = "*"
 
 [pipenv]
 allow_prereleases = true
-[scripts]
-generate_openapi = "curl http://localhost:9091/openapi.json -o src\seisspark_service\openapi.json"
+#[scripts]
+#generate_openapi = "curl http://localhost:9091/openapi.json -o src\seisspark_service\openapi.json"

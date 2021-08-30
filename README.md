@@ -2,6 +2,7 @@
   - [Spark](#spark)
   - [Seismic Unix (aka SU)](#seismic-unix-aka-su)
 - [Architecture](#architecture)
+- [API docs](#api-docs)
 - [Implementation details](#implementation-details)
 - [Getting started](#getting-started)
 - [Web UI](#web-ui)
@@ -40,7 +41,9 @@ SeisSpark deployment consist of two major components:
 - Apache Spark cluster
 
 
+# API docs
 
+[FastAPI client documentation](src/seisspark_client/README.md)
 
 # Implementation details
 
