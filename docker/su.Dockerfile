@@ -47,4 +47,3 @@ RUN cd /usr/local/bin/ \
          chmod 777 `basename $f`; \
          chmod +x `basename $f`; \
        done
-

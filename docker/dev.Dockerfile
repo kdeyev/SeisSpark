@@ -27,4 +27,3 @@ RUN chmod 755  /root/start_dev.sh
 
 ENTRYPOINT ["/bin/sh"]
 CMD [ "/root/start_dev.sh" ]
-

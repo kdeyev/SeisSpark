@@ -1,0 +1,4 @@
+{
+  "file_types": [".py", ".ts", ".tsx"],
+  "include_files": []
+}

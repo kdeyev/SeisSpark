@@ -1,27 +1,43 @@
+/*
+ * Copyright (c) 2021 SeisSpark (https://github.com/kdeyev/SeisSpark).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiRequestOptions } from './ApiRequestOptions'
 
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
-type Headers = Record<string, string>;
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>
+type Headers = Record<string, string>
 
 type Config = {
-    BASE: string;
-    VERSION: string;
-    WITH_CREDENTIALS: boolean;
-    TOKEN?: string | Resolver<string>;
-    USERNAME?: string | Resolver<string>;
-    PASSWORD?: string | Resolver<string>;
-    HEADERS?: Headers | Resolver<Headers>;
+  BASE: string
+  VERSION: string
+  WITH_CREDENTIALS: boolean
+  TOKEN?: string | Resolver<string>
+  USERNAME?: string | Resolver<string>
+  PASSWORD?: string | Resolver<string>
+  HEADERS?: Headers | Resolver<Headers>
 }
 
 export const OpenAPI: Config = {
-    BASE: '',
-    VERSION: '0.1.0',
-    WITH_CREDENTIALS: false,
-    TOKEN: undefined,
-    USERNAME: undefined,
-    PASSWORD: undefined,
-    HEADERS: undefined,
-};
+  BASE: '',
+  VERSION: '0.1.0',
+  WITH_CREDENTIALS: false,
+  TOKEN: undefined,
+  USERNAME: undefined,
+  PASSWORD: undefined,
+  HEADERS: undefined,
+}

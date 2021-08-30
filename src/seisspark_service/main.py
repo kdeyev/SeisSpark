@@ -1,8 +1,24 @@
+# =============================================================================
+# Copyright (c) 2021 SeisSpark (https://github.com/kdeyev/SeisSpark).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# =============================================================================
 import os
 
 import configargparse
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from seisspark.pipeline_repository import PiplineRepository
 from seisspark.seisspark_context import SeisSparkContext
@@ -13,9 +29,8 @@ from seisspark_service.seisspark_service_app import create_seisspark_service_app
 
 os.environ["PYTHONHASHSEED"] = str(232)
 
-from fastapi.staticfiles import StaticFiles
 
-defaults = {"port": 9091, "allow_remote":True}
+defaults = {"port": 9091, "allow_remote": True}
 
 p = configargparse.ArgParser()
 p.add("-c", "--config-file", is_config_file=True, help="config file path")

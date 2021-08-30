@@ -26,10 +26,7 @@
   // Cov
   "coverage-gutters.showGutterCoverage": true,
   "coverage-gutters.showLineCoverage": true,
-  "vscode-coverage-highlighter.files": [
-    "cov*.xml",
-    "coverage*.json"
-  ],
+  "vscode-coverage-highlighter.files": ["cov*.xml", "coverage*.json"],
   "vscode-coverage-highlighter.defaultState": "disable",
   // JS
   "[javascript]": {
@@ -58,10 +55,7 @@
   "multiCommand.commands": [
     {
       "command": "multiCommand.saveFileAndSortImportsWhenPython",
-      "sequence": [
-        "python.sortImports",
-        "workbench.action.files.save"
-      ]
+      "sequence": ["python.sortImports", "workbench.action.files.save"]
     }
   ]
 }

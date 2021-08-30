@@ -1,8 +1,8 @@
 {
-    "trailingComma": "es5",
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": true,
-    "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-    "importOrderSeparation": true
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "semi": false,
+  "singleQuote": true,
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true
 }
