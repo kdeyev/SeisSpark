@@ -1,11 +1,11 @@
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark.suspark_pipeline import Pipeline
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark.seisspark_pipeline import Pipeline
 
 
-def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
-    pipeline = Pipeline(suspark_context, modules_factory)
+def test_build_and_run_pipeline1(seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
+    pipeline = Pipeline(seisspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")
     pipeline.add_module(module_type="SUsort", name="SUsort1")
@@ -27,8 +27,8 @@ def test_build_and_run_pipeline1(suspark_context: SusparkContext, modules_factor
     print(first_gather.traces[0].buffer)
 
 
-def test_build_and_run_pipeline2(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
-    pipeline = Pipeline(suspark_context, modules_factory)
+def test_build_and_run_pipeline2(seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
+    pipeline = Pipeline(seisspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")
     sufilter = pipeline.add_module(module_type="SUfilter")

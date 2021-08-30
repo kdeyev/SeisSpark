@@ -12,7 +12,7 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), os.path.join(path, "..")))
 
 
-class SusparkContext:
+class SeisSparkContext:
     def __init__(self) -> None:
         seisspark_home = os.environ["SEISSPARK_HOME"]
         seisspark_zip_pile = "seisspark.zip"
@@ -23,8 +23,8 @@ class SusparkContext:
         with ZipFile(seisspark_zip_pile, mode="a") as myzipfile:
             zipdir(f"{seisspark_home}/src/su_data", myzipfile)
             zipdir(f"{seisspark_home}/src/su_rdd", myzipfile)
-            zipdir(f"{seisspark_home}/src/suspark", myzipfile)
-            zipdir(f"{seisspark_home}/src/suspark_modules", myzipfile)
+            zipdir(f"{seisspark_home}/src/seisspark", myzipfile)
+            zipdir(f"{seisspark_home}/src/seisspark_modules", myzipfile)
 
         spark_conf = pyspark.SparkConf()
         if "SPARK_MASTER_URL" in os.environ:

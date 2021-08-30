@@ -5,7 +5,7 @@ import pydantic
 import pyspark
 
 from su_rdd.kv_operations import GatherTuple
-from suspark.suspark_context import SusparkContext
+from seisspark.seisspark_context import SeisSparkContext
 
 
 class BaseModule:
@@ -51,8 +51,8 @@ class BaseModule:
     def set_json_parameters(self, json: Dict[str, Any]) -> None:
         self._params = self._paramsModel(**json)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
+    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         raise Exception("Not implemented")
 
-    def init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> None:
-        self._rdd = self._init_rdd(suspark_context, input_rdd)
+    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> None:
+        self._rdd = self._init_rdd(seisspark_context, input_rdd)

@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Type
 
-from suspark.suspark_module import BaseModule
+from seisspark.seisspark_module import BaseModule
 
 
 class ModulesFactory:

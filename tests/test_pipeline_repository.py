@@ -1,10 +1,10 @@
-from suspark.pipeline_repository import PipelineInfo, PiplineRepository
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory
+from seisspark.pipeline_repository import PipelineInfo, PiplineRepository
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_modules_factory import ModulesFactory
 
 
-def test_pipeline_registry(suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
-    pipeline_repo = PiplineRepository(suspark_context=suspark_context, modules_factory=modules_factory)
+def test_pipeline_registry(seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
+    pipeline_repo = PiplineRepository(seisspark_context=seisspark_context, modules_factory=modules_factory)
 
     name = "my pipe"
     id = pipeline_repo.add_pipeline(name)

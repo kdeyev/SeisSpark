@@ -1,18 +1,18 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from suspark.pipeline_repository import PiplineRepository
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark_modules.suspark_test_modules import register_test_modules
-from suspark_service.suspark_service_app import create_suspark_service_app
+from seisspark.pipeline_repository import PiplineRepository
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark_modules.seisspark_test_modules import register_test_modules
+from seisspark_service.seisspark_service_app import create_seisspark_service_app
 
 
 @pytest.fixture(scope="session")
-def suspark_context() -> SusparkContext:
+def seisspark_context() -> SeisSparkContext:
 
-    suspark_context = SusparkContext()
-    return suspark_context
+    seisspark_context = SeisSparkContext()
+    return seisspark_context
 
 
 @pytest.fixture()
@@ -23,14 +23,14 @@ def modules_factory() -> ModulesFactory:
 
 
 @pytest.fixture()
-def suspark_service_client(
+def seisspark_service_client(
     modules_factory: ModulesFactory,
-    suspark_context: SusparkContext,
+    seisspark_context: SeisSparkContext,
 ) -> TestClient:
 
-    pipeline_repository = PiplineRepository(suspark_context=suspark_context, modules_factory=modules_factory)
+    pipeline_repository = PiplineRepository(seisspark_context=seisspark_context, modules_factory=modules_factory)
 
-    app = create_suspark_service_app(modules_factory=modules_factory, pipeline_repository=pipeline_repository)
+    app = create_seisspark_service_app(modules_factory=modules_factory, pipeline_repository=pipeline_repository)
 
     client = TestClient(app)
     return client

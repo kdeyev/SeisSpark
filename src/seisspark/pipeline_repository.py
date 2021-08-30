@@ -3,9 +3,9 @@ from typing import Dict, List
 
 import pydantic
 
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark.suspark_pipeline import Pipeline
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark.seisspark_pipeline import Pipeline
 
 
 class PipelineInfo(pydantic.BaseModel):
@@ -33,15 +33,15 @@ class PiplineRepositoryItem:
 
 
 class PiplineRepository:
-    def __init__(self, suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
-        self._suspark_context = suspark_context
+    def __init__(self, seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
+        self._seisspark_context = seisspark_context
         self._modules_factory = modules_factory
         self._items: Dict[str, PiplineRepositoryItem] = {}
 
     def add_pipeline(self, name: str) -> str:
         id = str(uuid.uuid4())
 
-        pipeline = Pipeline(suspark_context=self._suspark_context, modules_factory=self._modules_factory)
+        pipeline = Pipeline(seisspark_context=self._seisspark_context, modules_factory=self._modules_factory)
         item = PiplineRepositoryItem(id=id, name=name, pipeline=pipeline)
         self._items[id] = item
 

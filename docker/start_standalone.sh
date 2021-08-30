@@ -5,4 +5,4 @@ cd /opt/bitnami/spark/sbin
 ./start-slave.sh spark://localhost:7077
 
 cd $SEISSPARK_HOME
-python src/suspark_service/main.py 
+python src/seisspark_service/main.py 

@@ -5,9 +5,9 @@ from typing import Dict, Iterator, List, Optional, Union
 import pyspark
 
 from su_rdd.kv_operations import GatherTuple
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_module import BaseModule
-from suspark.suspark_modules_factory import ModulesFactory
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_module import BaseModule
+from seisspark.seisspark_modules_factory import ModulesFactory
 
 
 class BaseModuleList(collections.MutableSequence):
@@ -67,9 +67,9 @@ class BaseModuleList(collections.MutableSequence):
 
 
 class Pipeline:
-    def __init__(self, suspark_context: SusparkContext, modules_factory: ModulesFactory) -> None:
+    def __init__(self, seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
         self._modules_factory = modules_factory
-        self._suspark_context = suspark_context
+        self._seisspark_context = seisspark_context
         self._modules = BaseModuleList()
 
     def modules(self) -> Iterator[BaseModule]:
@@ -112,5 +112,5 @@ class Pipeline:
     def _init_rdd(self) -> None:
         rdd: Optional["pyspark.RDD[GatherTuple]"] = None
         for module in self._modules:
-            module.init_rdd(self._suspark_context, rdd)
+            module.init_rdd(self._seisspark_context, rdd)
             rdd = module.rdd

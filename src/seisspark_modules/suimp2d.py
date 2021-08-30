@@ -6,8 +6,8 @@ import pyspark
 from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
 from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import GatherTuple, gather_from_rdd_gather_tuple, rdd_gather_tuple_from_gather
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_module import BaseModule
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_module import BaseModule
 
 
 class SUimp2dParams(pydantic.BaseModel):
@@ -23,7 +23,7 @@ class SUimp2d(BaseModule):
     def suimp2d_params(self) -> SUimp2dParams:
         return cast(SUimp2dParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
+    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if input_rdd:
             raise Exception("input RDD is not used")
         gather_count_to_produce = self.suimp2d_params.nshot
@@ -39,6 +39,6 @@ class SUimp2d(BaseModule):
         assert header_entries == expected
 
         # Create an RDD from in memory buffers
-        rdd = suspark_context.context.parallelize([rdd_gather_tuple_from_gather(input_gather)])
+        rdd = seisspark_context.context.parallelize([rdd_gather_tuple_from_gather(input_gather)])
         # rdd = rdd.mapValues(list)
         return rdd

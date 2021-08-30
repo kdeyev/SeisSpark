@@ -23,12 +23,12 @@ import {
   ResponderProvided,
 } from 'react-beautiful-dnd'
 
-import { CreateModuleRequest } from '../services/suspark/models/CreateModuleRequest'
-import { ModuleDescription } from '../services/suspark/models/ModuleDescription'
-import { ModuleInfo } from '../services/suspark/models/ModuleInfo'
-import { MoveModuleRequest } from '../services/suspark/models/MoveModuleRequest'
-import { ModulesService } from '../services/suspark/services/ModulesService'
-import { PipelinesService } from '../services/suspark/services/PipelinesService'
+import { CreateModuleRequest } from '../services/seisspark/models/CreateModuleRequest'
+import { ModuleDescription } from '../services/seisspark/models/ModuleDescription'
+import { ModuleInfo } from '../services/seisspark/models/ModuleInfo'
+import { MoveModuleRequest } from '../services/seisspark/models/MoveModuleRequest'
+import { ModulesService } from '../services/seisspark/services/ModulesService'
+import { PipelinesService } from '../services/seisspark/services/PipelinesService'
 
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
   // styles we need to apply on draggables

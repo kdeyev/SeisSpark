@@ -1,13 +1,13 @@
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark_modules.importsegy import ImportSegy
-from suspark_modules.select_traces import SelectTraces
-from suspark_modules.suagc import SUagc
-from suspark_modules.sucdp import SUcdp
-from suspark_modules.sufilter import SUfilter
-from suspark_modules.suimp2d import SUimp2d
-from suspark_modules.sunmo import SUnmo
-from suspark_modules.susort import SUsort
-from suspark_modules.sustack import SUstack
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark_modules.importsegy import ImportSegy
+from seisspark_modules.select_traces import SelectTraces
+from seisspark_modules.suagc import SUagc
+from seisspark_modules.sucdp import SUcdp
+from seisspark_modules.sufilter import SUfilter
+from seisspark_modules.suimp2d import SUimp2d
+from seisspark_modules.sunmo import SUnmo
+from seisspark_modules.susort import SUsort
+from seisspark_modules.sustack import SUstack
 
 
 def register_test_modules(factory: ModulesFactory) -> None:

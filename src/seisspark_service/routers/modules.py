@@ -2,8 +2,8 @@ from typing import Any, Dict, List
 
 from fastapi import Path
 
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark_service.inferring_router import InferringRouter
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark_service.inferring_router import InferringRouter
 
 
 def init_router(modules_factory: ModulesFactory) -> InferringRouter:

@@ -2,8 +2,7 @@ import Slider from '@material-ui/core/Slider'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import Plot from 'react-plotly.js'
-import { PipelinesService } from '../services/suspark/services/PipelinesService'
-
+import { PipelinesService } from '../services/seisspark/services/PipelinesService'
 
 let findMinMax = (data: Array<Array<number>>) => {
   var max = -Infinity

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd $SEISSPARK_HOME
-python src/suspark_service/main.py 
+python src/seisspark_service/main.py 

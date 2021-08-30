@@ -1,7 +1,7 @@
 from su_data.segy_trace_header import SEGYTraceHeaderEntryName
-from suspark.pipeline_repository import PiplineRepository
-from suspark_modules.suimp2d import SUimp2dParams
-from suspark_modules.susort import SUsortParams
+from seisspark.pipeline_repository import PiplineRepository
+from seisspark_modules.suimp2d import SUimp2dParams
+from seisspark_modules.susort import SUsortParams
 
 
 def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:

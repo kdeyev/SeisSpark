@@ -5,8 +5,8 @@ import pyspark
 
 from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import su_process_rdd
-from suspark.suspark_context import SusparkContext
-from suspark.suspark_module import BaseModule
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark.seisspark_module import BaseModule
 
 
 class SUFilterFA(pydantic.BaseModel):
@@ -26,7 +26,7 @@ class SUfilter(BaseModule):
     def sufilter_params(self) -> SUFilterParams:
         return cast(SUFilterParams, self.parameters)
 
-    def _init_rdd(self, suspark_context: SusparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
+    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:
             raise Exception("input RDD should be specified")
         # key: SEGYTraceHeaderEntryName = self.sufilter_params.key

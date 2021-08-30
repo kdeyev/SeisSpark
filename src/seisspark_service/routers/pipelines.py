@@ -6,9 +6,9 @@ from fastapi.responses import JSONResponse
 
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from su_rdd.rdd_operations import get_gather_by_key, get_gather_keys
-from suspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
-from suspark.suspark_module import BaseModule
-from suspark_service.inferring_router import InferringRouter
+from seisspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
+from seisspark.seisspark_module import BaseModule
+from seisspark_service.inferring_router import InferringRouter
 
 
 class CreatePipelineRequest(pydantic.BaseModel):

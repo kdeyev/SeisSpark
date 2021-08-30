@@ -17,9 +17,9 @@ import ViewColumn from '@material-ui/icons/ViewColumn'
 import MaterialTable, { Icons, Query, QueryResult } from 'material-table'
 import React, { forwardRef } from 'react'
 
-import { PipelineInfo } from '../services/suspark'
-import { CreatePipelineRequest } from '../services/suspark/models/CreatePipelineRequest'
-import { PipelinesService } from '../services/suspark/services/PipelinesService'
+import { PipelineInfo } from '../services/seisspark'
+import { CreatePipelineRequest } from '../services/seisspark/models/CreatePipelineRequest'
+import { PipelinesService } from '../services/seisspark/services/PipelinesService'
 
 interface TableRef {
   onQueryChange: () => void

@@ -1,11 +1,11 @@
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
-from suspark.suspark_context import SusparkContext
-from suspark_modules.sufilter import SUfilter
-from suspark_modules.suimp2d import SUimp2d, SUimp2dParams
-from suspark_modules.susort import SUsort
+from seisspark.seisspark_context import SeisSparkContext
+from seisspark_modules.sufilter import SUfilter
+from seisspark_modules.suimp2d import SUimp2d, SUimp2dParams
+from seisspark_modules.susort import SUsort
 
 
-def test_build_and_run_modules(suspark_context: SusparkContext) -> None:
+def test_build_and_run_modules(seisspark_context: SeisSparkContext) -> None:
     gather_count_to_produce = 10
     trace_count_per_gather = 5
 
@@ -17,9 +17,9 @@ def test_build_and_run_modules(suspark_context: SusparkContext) -> None:
     filter_schema = filter.params_schema
     print(filter_schema)
 
-    input_module.init_rdd(suspark_context, None)
-    sort.init_rdd(suspark_context, input_module.rdd)
-    filter.init_rdd(suspark_context, sort.rdd)
+    input_module.init_rdd(seisspark_context, None)
+    sort.init_rdd(seisspark_context, input_module.rdd)
+    filter.init_rdd(seisspark_context, sort.rdd)
 
     first_gather = gather_from_rdd_gather_tuple(filter.rdd.first())
     assert len(first_gather.traces) == trace_count_per_gather

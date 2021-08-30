@@ -4,7 +4,7 @@ import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import React from 'react'
 
-import { PipelinesService } from '../services/suspark/services/PipelinesService'
+import { PipelinesService } from '../services/seisspark/services/PipelinesService'
 
 interface State {
   schema: JSONSchema7

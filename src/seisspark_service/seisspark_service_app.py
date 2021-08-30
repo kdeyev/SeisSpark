@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 
-import suspark_service.routers.modules as modules
-import suspark_service.routers.pipelines as pipelines
-from suspark.pipeline_repository import PiplineRepository
-from suspark.suspark_modules_factory import ModulesFactory
-from suspark_service.inferring_router import InferringRouter
+import seisspark_service.routers.modules as modules
+import seisspark_service.routers.pipelines as pipelines
+from seisspark.pipeline_repository import PiplineRepository
+from seisspark.seisspark_modules_factory import ModulesFactory
+from seisspark_service.inferring_router import InferringRouter
 
 
-def create_suspark_service_app(modules_factory: ModulesFactory, pipeline_repository: PiplineRepository) -> FastAPI:
+def create_seisspark_service_app(modules_factory: ModulesFactory, pipeline_repository: PiplineRepository) -> FastAPI:
 
     app = FastAPI()
 
