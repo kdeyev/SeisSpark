@@ -17,6 +17,7 @@ import Slider from '@material-ui/core/Slider'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import Plot from 'react-plotly.js'
+
 import { PipelinesService } from '../services/seisspark/services/PipelinesService'
 
 let findMinMax = (data: Array<Array<number>>) => {
@@ -66,7 +67,7 @@ class SeismicPlot extends React.Component<Props, State> {
 
   loadKeys = () => {
     if (this.props.pipelineIDToShow && this.props.moduleIDToShow) {
-      PipelinesService.getPipelineModuleDataInfoApiV1PipelinesPipelineIdModulesModuleIdKeysGet(
+      PipelinesService.getPipelineModuleDataInfo(
         this.props.pipelineIDToShow,
         this.props.moduleIDToShow
       )
@@ -94,7 +95,7 @@ class SeismicPlot extends React.Component<Props, State> {
       this.props.moduleIDToShow &&
       this.state.currentKey !== undefined
     )
-      PipelinesService.getPipelineModuleDataApiV1PipelinesPipelineIdModulesModuleIdDataKeyGet(
+      PipelinesService.getPipelineModuleData(
         this.props.pipelineIDToShow,
         this.props.moduleIDToShow,
         this.state.currentKey

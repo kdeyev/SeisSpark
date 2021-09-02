@@ -4,12 +4,12 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_module_schema_api_v1_modules_module_type_get**](ModulesApi.md#get_module_schema_api_v1_modules_module_type_get) | **GET** /api/v1/modules/{module_type} | Get Module Schema
-[**get_modules_api_v1_modules_get**](ModulesApi.md#get_modules_api_v1_modules_get) | **GET** /api/v1/modules | Get Modules
+[**get_module_schema**](ModulesApi.md#get_module_schema) | **GET** /api/v1/modules/{module_type} | Get Module Schema
+[**get_modules**](ModulesApi.md#get_modules) | **GET** /api/v1/modules | Get Modules
 
 
-# **get_module_schema_api_v1_modules_module_type_get**
-> Any get_module_schema_api_v1_modules_module_type_get(module_type)
+# **get_module_schema**
+> Any get_module_schema(module_type)
 
 Get Module Schema
 
@@ -28,10 +28,10 @@ module_type = 'module_type_example' # str |
 
 try:
     # Get Module Schema
-    api_response = api_instance.get_module_schema_api_v1_modules_module_type_get(module_type)
+    api_response = api_instance.get_module_schema(module_type)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ModulesApi->get_module_schema_api_v1_modules_module_type_get: %s\n" % e)
+    print("Exception when calling ModulesApi->get_module_schema: %s\n" % e)
 ```
 
 ### Parameters
@@ -61,8 +61,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_modules_api_v1_modules_get**
-> List[str] get_modules_api_v1_modules_get()
+# **get_modules**
+> List[str] get_modules()
 
 Get Modules
 
@@ -80,10 +80,10 @@ api_instance = seisspark_client.ModulesApi()
 
 try:
     # Get Modules
-    api_response = api_instance.get_modules_api_v1_modules_get()
+    api_response = api_instance.get_modules()
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ModulesApi->get_modules_api_v1_modules_get: %s\n" % e)
+    print("Exception when calling ModulesApi->get_modules: %s\n" % e)
 ```
 
 ### Parameters

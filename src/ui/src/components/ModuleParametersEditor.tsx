@@ -47,7 +47,7 @@ class ModuleParametersEditor extends React.Component<Props, State> {
 
   onParametersSubmit = (e: ISubmitEvent<any>) => {
     if (this.props.pipelineIDToShow && this.props.moduleIDToShow) {
-      PipelinesService.setPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersPut(
+      PipelinesService.setPipelineModuleParameters(
         this.props.pipelineIDToShow,
         this.props.moduleIDToShow,
         e.formData
@@ -70,7 +70,7 @@ class ModuleParametersEditor extends React.Component<Props, State> {
 
   loadSchema = () => {
     if (this.props.pipelineIDToShow && this.props.moduleIDToShow)
-      PipelinesService.getPipelineModuleSchemaApiV1PipelinesPipelineIdModulesModuleIdSchemaGet(
+      PipelinesService.getPipelineModuleSchema(
         this.props.pipelineIDToShow,
         this.props.moduleIDToShow
       )
@@ -84,7 +84,7 @@ class ModuleParametersEditor extends React.Component<Props, State> {
 
   loadParameters = () => {
     if (this.props.pipelineIDToShow && this.props.moduleIDToShow)
-      PipelinesService.getPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersGet(
+      PipelinesService.getPipelineModuleParameters(
         this.props.pipelineIDToShow,
         this.props.moduleIDToShow
       )

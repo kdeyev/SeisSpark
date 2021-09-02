@@ -27,7 +27,7 @@ class _ModulesApi:
     def __init__(self, api_client: "ApiClient"):
         self.api_client = api_client
 
-    def _build_for_get_module_schema_api_v1_modules_module_type_get(self, module_type: str) -> Awaitable[m.Any]:
+    def _build_for_get_module_schema(self, module_type: str) -> Awaitable[m.Any]:
         path_params = {"module_type": str(module_type)}
 
         return self.api_client.request(
@@ -37,7 +37,7 @@ class _ModulesApi:
             path_params=path_params,
         )
 
-    def _build_for_get_modules_api_v1_modules_get(
+    def _build_for_get_modules(
         self,
     ) -> Awaitable[List[str]]:
         return self.api_client.request(
@@ -48,22 +48,22 @@ class _ModulesApi:
 
 
 class AsyncModulesApi(_ModulesApi):
-    async def get_module_schema_api_v1_modules_module_type_get(self, module_type: str) -> m.Any:
-        return await self._build_for_get_module_schema_api_v1_modules_module_type_get(module_type=module_type)
+    async def get_module_schema(self, module_type: str) -> m.Any:
+        return await self._build_for_get_module_schema(module_type=module_type)
 
-    async def get_modules_api_v1_modules_get(
+    async def get_modules(
         self,
     ) -> List[str]:
-        return await self._build_for_get_modules_api_v1_modules_get()
+        return await self._build_for_get_modules()
 
 
 class SyncModulesApi(_ModulesApi):
-    def get_module_schema_api_v1_modules_module_type_get(self, module_type: str) -> m.Any:
-        coroutine = self._build_for_get_module_schema_api_v1_modules_module_type_get(module_type=module_type)
+    def get_module_schema(self, module_type: str) -> m.Any:
+        coroutine = self._build_for_get_module_schema(module_type=module_type)
         return get_event_loop().run_until_complete(coroutine)
 
-    def get_modules_api_v1_modules_get(
+    def get_modules(
         self,
     ) -> List[str]:
-        coroutine = self._build_for_get_modules_api_v1_modules_get()
+        coroutine = self._build_for_get_modules()
         return get_event_loop().run_until_complete(coroutine)

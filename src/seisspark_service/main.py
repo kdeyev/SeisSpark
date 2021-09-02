@@ -17,7 +17,9 @@ import os
 
 import configargparse
 import uvicorn
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 
 from seisspark.pipeline_repository import PiplineRepository
@@ -28,6 +30,18 @@ from seisspark_service.default_pipeline import create_default_pipeline
 from seisspark_service.seisspark_service_app import create_seisspark_service_app
 
 os.environ["PYTHONHASHSEED"] = str(232)
+
+
+def use_route_names_as_operation_id(app: FastAPI) -> None:
+    """
+    Simplify operation IDs so that generated API clients have simpler function
+    names.
+
+    Should be called only after all routes have been added.
+    """
+    for route in app.routes:
+        if isinstance(route, APIRoute):
+            route.operation_id = route.name
 
 
 defaults = {"port": 9091, "allow_remote": True}
@@ -62,5 +76,6 @@ if options.allow_remote:
 else:
     host = "127.0.0.1"
 
+use_route_names_as_operation_id(app)
 
 uvicorn.run(app, host=host, port=options.port)

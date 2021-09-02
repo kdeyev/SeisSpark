@@ -4,23 +4,23 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post**](PipelinesApi.md#create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post) | **POST** /api/v1/pipelines/{pipeline_id}/modules | Create Pipeline Module
-[**create_pipelines_api_v1_pipelines_post**](PipelinesApi.md#create_pipelines_api_v1_pipelines_post) | **POST** /api/v1/pipelines | Create Pipelines
-[**delete_pipeline_api_v1_pipelines_pipeline_id_delete**](PipelinesApi.md#delete_pipeline_api_v1_pipelines_pipeline_id_delete) | **DELETE** /api/v1/pipelines/{pipeline_id} | Delete Pipeline
-[**delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete**](PipelinesApi.md#delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete) | **DELETE** /api/v1/pipelines/{pipeline_id}/modules/{module_id} | Delete Pipeline Module
-[**get_pipeline_api_v1_pipelines_pipeline_id_get**](PipelinesApi.md#get_pipeline_api_v1_pipelines_pipeline_id_get) | **GET** /api/v1/pipelines/{pipeline_id} | Get Pipeline
-[**get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get**](PipelinesApi.md#get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/data/{key} | Get Pipeline Module Data
-[**get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get**](PipelinesApi.md#get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/keys | Get Pipeline Module Data Info
-[**get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get**](PipelinesApi.md#get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Get Pipeline Module Parameters
-[**get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get**](PipelinesApi.md#get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/schema | Get Pipeline Module Schema
-[**get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get**](PipelinesApi.md#get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules | Get Pipeline Modules
-[**get_pipelines_api_v1_pipelines_get**](PipelinesApi.md#get_pipelines_api_v1_pipelines_get) | **GET** /api/v1/pipelines | Get Pipelines
-[**move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put**](PipelinesApi.md#move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put) | **PUT** /api/v1/pipelines/{pipeline_id}/modules | Move Pipeline Module
-[**set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put**](PipelinesApi.md#set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put) | **PUT** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Set Pipeline Module Parameters
+[**create_pipeline_module**](PipelinesApi.md#create_pipeline_module) | **POST** /api/v1/pipelines/{pipeline_id}/modules | Create Pipeline Module
+[**create_pipeline**](PipelinesApi.md#create_pipeline) | **POST** /api/v1/pipelines | Create Pipelines
+[**delete_pipeline**](PipelinesApi.md#delete_pipeline) | **DELETE** /api/v1/pipelines/{pipeline_id} | Delete Pipeline
+[**delete_pipeline_module**](PipelinesApi.md#delete_pipeline_module) | **DELETE** /api/v1/pipelines/{pipeline_id}/modules/{module_id} | Delete Pipeline Module
+[**get_pipeline**](PipelinesApi.md#get_pipeline) | **GET** /api/v1/pipelines/{pipeline_id} | Get Pipeline
+[**get_pipeline_module_data**](PipelinesApi.md#get_pipeline_module_data) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/data/{key} | Get Pipeline Module Data
+[**get_pipeline_module_data_info**](PipelinesApi.md#get_pipeline_module_data_info) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/keys | Get Pipeline Module Data Info
+[**get_pipeline_module_parameters**](PipelinesApi.md#get_pipeline_module_parameters) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Get Pipeline Module Parameters
+[**get_pipeline_module_schema**](PipelinesApi.md#get_pipeline_module_schema) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/schema | Get Pipeline Module Schema
+[**get_pipeline_modules**](PipelinesApi.md#get_pipeline_modules) | **GET** /api/v1/pipelines/{pipeline_id}/modules | Get Pipeline Modules
+[**get_pipelines**](PipelinesApi.md#get_pipelines) | **GET** /api/v1/pipelines | Get Pipelines
+[**move_pipeline_module**](PipelinesApi.md#move_pipeline_module) | **PUT** /api/v1/pipelines/{pipeline_id}/modules | Move Pipeline Module
+[**set_pipeline_module_parameters**](PipelinesApi.md#set_pipeline_module_parameters) | **PUT** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Set Pipeline Module Parameters
 
 
-# **create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post**
-> ModuleDescription create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post(pipeline_id, create_module_request)
+# **create_pipeline_module**
+> ModuleDescription create_pipeline_module(pipeline_id, create_module_request)
 
 Create Pipeline Module
 
@@ -40,10 +40,10 @@ create_module_request = seisspark_client.CreateModuleRequest() # CreateModuleReq
 
 try:
     # Create Pipeline Module
-    api_response = api_instance.create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post(pipeline_id, create_module_request)
+    api_response = api_instance.create_pipeline_module(pipeline_id, create_module_request)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post: %s\n" % e)
+    print("Exception when calling PipelinesApi->create_pipeline_module: %s\n" % e)
 ```
 
 ### Parameters
@@ -74,8 +74,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **create_pipelines_api_v1_pipelines_post**
-> PipelineInfo create_pipelines_api_v1_pipelines_post(create_pipeline_request)
+# **create_pipeline**
+> PipelineInfo create_pipeline(create_pipeline_request)
 
 Create Pipelines
 
@@ -94,10 +94,10 @@ create_pipeline_request = seisspark_client.CreatePipelineRequest() # CreatePipel
 
 try:
     # Create Pipelines
-    api_response = api_instance.create_pipelines_api_v1_pipelines_post(create_pipeline_request)
+    api_response = api_instance.create_pipeline(create_pipeline_request)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->create_pipelines_api_v1_pipelines_post: %s\n" % e)
+    print("Exception when calling PipelinesApi->create_pipeline: %s\n" % e)
 ```
 
 ### Parameters
@@ -127,8 +127,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete_pipeline_api_v1_pipelines_pipeline_id_delete**
-> Any delete_pipeline_api_v1_pipelines_pipeline_id_delete(pipeline_id)
+# **delete_pipeline**
+> Any delete_pipeline(pipeline_id)
 
 Delete Pipeline
 
@@ -147,10 +147,10 @@ pipeline_id = 'pipeline_id_example' # str |
 
 try:
     # Delete Pipeline
-    api_response = api_instance.delete_pipeline_api_v1_pipelines_pipeline_id_delete(pipeline_id)
+    api_response = api_instance.delete_pipeline(pipeline_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->delete_pipeline_api_v1_pipelines_pipeline_id_delete: %s\n" % e)
+    print("Exception when calling PipelinesApi->delete_pipeline: %s\n" % e)
 ```
 
 ### Parameters
@@ -180,8 +180,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete**
-> Any delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete(pipeline_id, module_id)
+# **delete_pipeline_module**
+> Any delete_pipeline_module(pipeline_id, module_id)
 
 Delete Pipeline Module
 
@@ -201,10 +201,10 @@ module_id = 'module_id_example' # str |
 
 try:
     # Delete Pipeline Module
-    api_response = api_instance.delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete(pipeline_id, module_id)
+    api_response = api_instance.delete_pipeline_module(pipeline_id, module_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete: %s\n" % e)
+    print("Exception when calling PipelinesApi->delete_pipeline_module: %s\n" % e)
 ```
 
 ### Parameters
@@ -235,8 +235,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_api_v1_pipelines_pipeline_id_get**
-> PipelineInfo get_pipeline_api_v1_pipelines_pipeline_id_get(pipeline_id)
+# **get_pipeline**
+> PipelineInfo get_pipeline(pipeline_id)
 
 Get Pipeline
 
@@ -255,10 +255,10 @@ pipeline_id = 'pipeline_id_example' # str |
 
 try:
     # Get Pipeline
-    api_response = api_instance.get_pipeline_api_v1_pipelines_pipeline_id_get(pipeline_id)
+    api_response = api_instance.get_pipeline(pipeline_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_api_v1_pipelines_pipeline_id_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline: %s\n" % e)
 ```
 
 ### Parameters
@@ -288,8 +288,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get**
-> Any get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get(pipeline_id, module_id, key)
+# **get_pipeline_module_data**
+> Any get_pipeline_module_data(pipeline_id, module_id, key)
 
 Get Pipeline Module Data
 
@@ -310,10 +310,10 @@ key = 56 # int |
 
 try:
     # Get Pipeline Module Data
-    api_response = api_instance.get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get(pipeline_id, module_id, key)
+    api_response = api_instance.get_pipeline_module_data(pipeline_id, module_id, key)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline_module_data: %s\n" % e)
 ```
 
 ### Parameters
@@ -345,8 +345,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get**
-> Any get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get(pipeline_id, module_id)
+# **get_pipeline_module_data_info**
+> Any get_pipeline_module_data_info(pipeline_id, module_id)
 
 Get Pipeline Module Data Info
 
@@ -366,10 +366,10 @@ module_id = 'module_id_example' # str |
 
 try:
     # Get Pipeline Module Data Info
-    api_response = api_instance.get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get(pipeline_id, module_id)
+    api_response = api_instance.get_pipeline_module_data_info(pipeline_id, module_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline_module_data_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -400,8 +400,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get**
-> Any get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get(pipeline_id, module_id)
+# **get_pipeline_module_parameters**
+> Any get_pipeline_module_parameters(pipeline_id, module_id)
 
 Get Pipeline Module Parameters
 
@@ -421,10 +421,10 @@ module_id = 'module_id_example' # str |
 
 try:
     # Get Pipeline Module Parameters
-    api_response = api_instance.get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get(pipeline_id, module_id)
+    api_response = api_instance.get_pipeline_module_parameters(pipeline_id, module_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline_module_parameters: %s\n" % e)
 ```
 
 ### Parameters
@@ -455,8 +455,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get**
-> Any get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get(pipeline_id, module_id)
+# **get_pipeline_module_schema**
+> Any get_pipeline_module_schema(pipeline_id, module_id)
 
 Get Pipeline Module Schema
 
@@ -476,10 +476,10 @@ module_id = 'module_id_example' # str |
 
 try:
     # Get Pipeline Module Schema
-    api_response = api_instance.get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get(pipeline_id, module_id)
+    api_response = api_instance.get_pipeline_module_schema(pipeline_id, module_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline_module_schema: %s\n" % e)
 ```
 
 ### Parameters
@@ -510,8 +510,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get**
-> List[ModuleInfo] get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get(pipeline_id)
+# **get_pipeline_modules**
+> List[ModuleInfo] get_pipeline_modules(pipeline_id)
 
 Get Pipeline Modules
 
@@ -530,10 +530,10 @@ pipeline_id = 'pipeline_id_example' # str |
 
 try:
     # Get Pipeline Modules
-    api_response = api_instance.get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get(pipeline_id)
+    api_response = api_instance.get_pipeline_modules(pipeline_id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipeline_modules: %s\n" % e)
 ```
 
 ### Parameters
@@ -563,8 +563,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_pipelines_api_v1_pipelines_get**
-> List[PipelineInfo] get_pipelines_api_v1_pipelines_get()
+# **get_pipelines**
+> List[PipelineInfo] get_pipelines()
 
 Get Pipelines
 
@@ -582,10 +582,10 @@ api_instance = seisspark_client.PipelinesApi()
 
 try:
     # Get Pipelines
-    api_response = api_instance.get_pipelines_api_v1_pipelines_get()
+    api_response = api_instance.get_pipelines()
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->get_pipelines_api_v1_pipelines_get: %s\n" % e)
+    print("Exception when calling PipelinesApi->get_pipelines: %s\n" % e)
 ```
 
 ### Parameters
@@ -611,8 +611,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put**
-> Any move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put(pipeline_id, move_module_request)
+# **move_pipeline_module**
+> Any move_pipeline_module(pipeline_id, move_module_request)
 
 Move Pipeline Module
 
@@ -632,10 +632,10 @@ move_module_request = seisspark_client.MoveModuleRequest() # MoveModuleRequest |
 
 try:
     # Move Pipeline Module
-    api_response = api_instance.move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put(pipeline_id, move_module_request)
+    api_response = api_instance.move_pipeline_module(pipeline_id, move_module_request)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put: %s\n" % e)
+    print("Exception when calling PipelinesApi->move_pipeline_module: %s\n" % e)
 ```
 
 ### Parameters
@@ -666,8 +666,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put**
-> Any set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put(pipeline_id, module_id, body)
+# **set_pipeline_module_parameters**
+> Any set_pipeline_module_parameters(pipeline_id, module_id, body)
 
 Set Pipeline Module Parameters
 
@@ -688,10 +688,10 @@ body = seisspark_client.Any() # Any |
 
 try:
     # Set Pipeline Module Parameters
-    api_response = api_instance.set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put(pipeline_id, module_id, body)
+    api_response = api_instance.set_pipeline_module_parameters(pipeline_id, module_id, body)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling PipelinesApi->set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put: %s\n" % e)
+    print("Exception when calling PipelinesApi->set_pipeline_module_parameters: %s\n" % e)
 ```
 
 ### Parameters

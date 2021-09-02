@@ -26,7 +26,7 @@ export class ModulesService {
      * @returns string Successful Response
      * @throws ApiError
      */
-    public static async getModulesApiV1ModulesGet(): Promise<Array<string>> {
+    public static async getModules(): Promise<Array<string>> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/modules`,
@@ -40,7 +40,7 @@ export class ModulesService {
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getModuleSchemaApiV1ModulesModuleTypeGet(
+    public static async getModuleSchema(
 moduleType: string,
 ): Promise<any> {
         const result = await __request({

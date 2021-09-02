@@ -85,7 +85,7 @@ class PipelineTable extends React.Component<Props, State> {
 
   private queryData(query: Query<PipelineInfo>): Promise<QueryResult<PipelineInfo>> {
     return new Promise((resolve, reject) => {
-      PipelinesService.getPipelinesApiV1PipelinesGet()
+      PipelinesService.getPipelines()
         .then((pipelines: Array<PipelineInfo>) => {
           resolve({
             data: pipelines,
@@ -124,7 +124,7 @@ class PipelineTable extends React.Component<Props, State> {
             new Promise((resolve, reject) => {
               let request = { name: newData.name } as CreatePipelineRequest
 
-              PipelinesService.createPipelinesApiV1PipelinesPost(request)
+              PipelinesService.createPipeline(request)
                 .then((pipelineInfo: PipelineInfo) => {
                   resolve(pipelineInfo)
                   this.onRawSelected(pipelineInfo)
@@ -139,7 +139,7 @@ class PipelineTable extends React.Component<Props, State> {
           //     }),
           onRowDelete: (oldData) =>
             new Promise((resolve, reject) => {
-              PipelinesService.deletePipelineApiV1PipelinesPipelineIdDelete(oldData.id)
+              PipelinesService.deletePipeline(oldData.id)
                 .then((some: any) => {
                   resolve(some)
                 })

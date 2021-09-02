@@ -17,13 +17,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import { request as __request } from '../core/request';
 import type { CreateModuleRequest } from '../models/CreateModuleRequest';
 import type { CreatePipelineRequest } from '../models/CreatePipelineRequest';
 import type { ModuleDescription } from '../models/ModuleDescription';
 import type { ModuleInfo } from '../models/ModuleInfo';
 import type { MoveModuleRequest } from '../models/MoveModuleRequest';
 import type { PipelineInfo } from '../models/PipelineInfo';
-import { request as __request } from '../core/request';
 
 export class PipelinesService {
 
@@ -32,7 +32,7 @@ export class PipelinesService {
      * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
-    public static async getPipelinesApiV1PipelinesGet(): Promise<Array<PipelineInfo>> {
+    public static async getPipelines(): Promise<Array<PipelineInfo>> {
         const result = await __request({
             method: 'GET',
             path: `/api/v1/pipelines`,
@@ -46,7 +46,7 @@ export class PipelinesService {
      * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
-    public static async createPipelinesApiV1PipelinesPost(
+    public static async createPipeline(
 requestBody: CreatePipelineRequest,
 ): Promise<PipelineInfo> {
         const result = await __request({
@@ -66,7 +66,7 @@ requestBody: CreatePipelineRequest,
      * @returns PipelineInfo Successful Response
      * @throws ApiError
      */
-    public static async getPipelineApiV1PipelinesPipelineIdGet(
+    public static async getPipeline(
 pipelineId: string,
 ): Promise<PipelineInfo> {
         const result = await __request({
@@ -85,7 +85,7 @@ pipelineId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async deletePipelineApiV1PipelinesPipelineIdDelete(
+    public static async deletePipeline(
 pipelineId: string,
 ): Promise<any> {
         const result = await __request({
@@ -104,7 +104,7 @@ pipelineId: string,
      * @returns ModuleInfo Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModulesApiV1PipelinesPipelineIdModulesGet(
+    public static async getPipelineModules(
 pipelineId: string,
 ): Promise<Array<ModuleInfo>> {
         const result = await __request({
@@ -124,7 +124,7 @@ pipelineId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async movePipelineModuleApiV1PipelinesPipelineIdModulesPut(
+    public static async movePipelineModule(
 pipelineId: string,
 requestBody: MoveModuleRequest,
 ): Promise<any> {
@@ -146,7 +146,7 @@ requestBody: MoveModuleRequest,
      * @returns ModuleDescription Successful Response
      * @throws ApiError
      */
-    public static async createPipelineModuleApiV1PipelinesPipelineIdModulesPost(
+    public static async createPipelineModule(
 pipelineId: string,
 requestBody: CreateModuleRequest,
 ): Promise<ModuleDescription> {
@@ -168,7 +168,7 @@ requestBody: CreateModuleRequest,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async deletePipelineModuleApiV1PipelinesPipelineIdModulesModuleIdDelete(
+    public static async deletePipelineModule(
 pipelineId: string,
 moduleId: string,
 ): Promise<any> {
@@ -189,7 +189,7 @@ moduleId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersGet(
+    public static async getPipelineModuleParameters(
 pipelineId: string,
 moduleId: string,
 ): Promise<any> {
@@ -211,7 +211,7 @@ moduleId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async setPipelineModuleParametersApiV1PipelinesPipelineIdModulesModuleIdParametersPut(
+    public static async setPipelineModuleParameters(
 pipelineId: string,
 moduleId: string,
 requestBody: any,
@@ -234,7 +234,7 @@ requestBody: any,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModuleSchemaApiV1PipelinesPipelineIdModulesModuleIdSchemaGet(
+    public static async getPipelineModuleSchema(
 pipelineId: string,
 moduleId: string,
 ): Promise<any> {
@@ -255,7 +255,7 @@ moduleId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModuleDataInfoApiV1PipelinesPipelineIdModulesModuleIdKeysGet(
+    public static async getPipelineModuleDataInfo(
 pipelineId: string,
 moduleId: string,
 ): Promise<any> {
@@ -277,7 +277,7 @@ moduleId: string,
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static async getPipelineModuleDataApiV1PipelinesPipelineIdModulesModuleIdDataKeyGet(
+    public static async getPipelineModuleData(
 pipelineId: string,
 moduleId: string,
 key: number,

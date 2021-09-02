@@ -6,7 +6,8 @@
     - [SeisSpark data model](#seisspark-data-model)
     - [SeisSpark's RDD](#seissparks-rdd)
 - [Architecture](#architecture)
-  - [SeisSpark service](#seisspark-service)
+  - [SeisSpark Service](#seisspark-service)
+    - [SeisSpark Service client](#seisspark-service-client)
 - [API docs](#api-docs)
 - [Implementation details](#implementation-details)
 - [Getting started](#getting-started)
@@ -41,7 +42,7 @@ The SU programs are invoked as subprocesses and all the data transferring is don
 
 ## SeisSpark pipeline
 
-SeisSpark pipeline is a chain of SU programs wrapped by Python and executed in Spark. The translation of the SeisSpark pipeline into Spark RDD is done by the SeisSpark service. Currently, only sequential chains are supported, but there are plans to extend SeisSpark for DAG support.
+SeisSpark pipeline is a chain of SU programs wrapped by Python and executed in Spark. The translation of the SeisSpark pipeline into Spark RDD is done by the SeisSpark Service. Currently, only sequential chains are supported, but there are plans to extend SeisSpark for DAG support.
 
 ### SeisSpark module
 SeisSpark module is the node in SeisSpark pipeline. Each SeisSpark module is translated to at least one Spark transformation. Most of the SeisSpark modules are using SU programs for data transformation, but several of the modules are implemented directly with pyspark for performance needs.
@@ -58,16 +59,22 @@ SeisSpark's RDD value is a list of seismic traces. SeisSpark's RDD key is a gath
 # Architecture
 
 SeisSpark deployment consist of two major components:
-- SeisSpark service
+- SeisSpark Service
 - Apache Spark cluster
 
-## SeisSpark service
+## SeisSpark Service
 
-SeisSpark service is HTTP (mostly RESTful) service, which allows the building and management o SeisSpark pipelines.
+SeisSpark Service is HTTP (mostly RESTful) service, which allows the building and management of SeisSpark pipelines.
+The gathers data can be requested from SeisSpark Service by the gather key - the Spark calculation will be triggered internally.
+
+### SeisSpark Python Client
+
+There's auto-generated Python client for SeisSpark Service.
+[see api documentation](src/seisspark_client/README.md)
 
 # API docs
 
-[FastAPI client documentation](src/seisspark_client/README.md)
+
 
 # Implementation details
 

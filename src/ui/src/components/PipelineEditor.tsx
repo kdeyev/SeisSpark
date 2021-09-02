@@ -73,7 +73,7 @@ class PipelineEditor extends React.Component<Props, State> {
     this.loadModules()
   }
   private loadModuleTypes() {
-    ModulesService.getModulesApiV1ModulesGet()
+    ModulesService.getModules()
       .then((moduleTypes: Array<string>) => {
         this.setState({ moduleTypes: moduleTypes })
       })
@@ -83,7 +83,7 @@ class PipelineEditor extends React.Component<Props, State> {
   }
 
   loadModules = () => {
-    PipelinesService.getPipelineModulesApiV1PipelinesPipelineIdModulesGet(this.props.pipelineID)
+    PipelinesService.getPipelineModules(this.props.pipelineID)
       .then((modules: Array<ModuleInfo>) => {
         this.setState({ modules: modules })
       })
@@ -93,10 +93,7 @@ class PipelineEditor extends React.Component<Props, State> {
   }
 
   onModuleDelete = (moduleId: string) => {
-    PipelinesService.deletePipelineModuleApiV1PipelinesPipelineIdModulesModuleIdDelete(
-      this.props.pipelineID,
-      moduleId
-    )
+    PipelinesService.deletePipelineModule(this.props.pipelineID, moduleId)
       .then(() => {
         this.props.onPipelineModified(this.props.pipelineID)
         this.loadModules()
@@ -131,10 +128,7 @@ class PipelineEditor extends React.Component<Props, State> {
             name: moduleType,
             prev_module_id: prevModuleID,
           } as CreateModuleRequest
-          PipelinesService.createPipelineModuleApiV1PipelinesPipelineIdModulesPost(
-            this.props.pipelineID,
-            request
-          )
+          PipelinesService.createPipelineModule(this.props.pipelineID, request)
             .then((moduleDescription: ModuleDescription) => {
               this.props.onPipelineModified(this.props.pipelineID)
               this.loadModules()
@@ -166,10 +160,7 @@ class PipelineEditor extends React.Component<Props, State> {
             prev_module_id: prevModuleID,
           } as MoveModuleRequest
 
-          PipelinesService.movePipelineModuleApiV1PipelinesPipelineIdModulesPut(
-            this.props.pipelineID,
-            request
-          )
+          PipelinesService.movePipelineModule(this.props.pipelineID, request)
             .then((moduleDescription: ModuleDescription) => {
               this.props.onPipelineModified(this.props.pipelineID)
               this.loadModules()

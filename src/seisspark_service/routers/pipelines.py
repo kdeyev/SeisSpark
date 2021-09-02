@@ -66,7 +66,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         return pipeline_repository.get_pipeline_ids()
 
     @router.post("/pipelines", tags=["pipelines"])
-    def create_pipelines(pipeline: CreatePipelineRequest) -> PipelineInfo:
+    def create_pipeline(pipeline: CreatePipelineRequest) -> PipelineInfo:
         id = pipeline_repository.add_pipeline(name=pipeline.name)
         return PipelineInfo(id=id, name=pipeline.name)
 

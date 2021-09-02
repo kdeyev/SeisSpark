@@ -43,10 +43,10 @@ module_type = 'module_type_example' # str |
 
 try:
     # Get Module Schema
-    api_response = api_instance.get_module_schema_api_v1_modules_module_type_get(module_type)
+    api_response = api_instance.get_module_schema(module_type)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ModulesApi->get_module_schema_api_v1_modules_module_type_get: %s\n" % e)
+    print("Exception when calling ModulesApi->get_module_schema: %s\n" % e)
 
 ```
 
@@ -56,21 +56,21 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ModulesApi* | [**get_module_schema_api_v1_modules_module_type_get**](docs/ModulesApi.md#get_module_schema_api_v1_modules_module_type_get) | **GET** /api/v1/modules/{module_type} | Get Module Schema
-*ModulesApi* | [**get_modules_api_v1_modules_get**](docs/ModulesApi.md#get_modules_api_v1_modules_get) | **GET** /api/v1/modules | Get Modules
-*PipelinesApi* | [**create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post**](docs/PipelinesApi.md#create_pipeline_module_api_v1_pipelines_pipeline_id_modules_post) | **POST** /api/v1/pipelines/{pipeline_id}/modules | Create Pipeline Module
-*PipelinesApi* | [**create_pipelines_api_v1_pipelines_post**](docs/PipelinesApi.md#create_pipelines_api_v1_pipelines_post) | **POST** /api/v1/pipelines | Create Pipelines
-*PipelinesApi* | [**delete_pipeline_api_v1_pipelines_pipeline_id_delete**](docs/PipelinesApi.md#delete_pipeline_api_v1_pipelines_pipeline_id_delete) | **DELETE** /api/v1/pipelines/{pipeline_id} | Delete Pipeline
-*PipelinesApi* | [**delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete**](docs/PipelinesApi.md#delete_pipeline_module_api_v1_pipelines_pipeline_id_modules_module_id_delete) | **DELETE** /api/v1/pipelines/{pipeline_id}/modules/{module_id} | Delete Pipeline Module
-*PipelinesApi* | [**get_pipeline_api_v1_pipelines_pipeline_id_get**](docs/PipelinesApi.md#get_pipeline_api_v1_pipelines_pipeline_id_get) | **GET** /api/v1/pipelines/{pipeline_id} | Get Pipeline
-*PipelinesApi* | [**get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get**](docs/PipelinesApi.md#get_pipeline_module_data_api_v1_pipelines_pipeline_id_modules_module_id_data_key_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/data/{key} | Get Pipeline Module Data
-*PipelinesApi* | [**get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get**](docs/PipelinesApi.md#get_pipeline_module_data_info_api_v1_pipelines_pipeline_id_modules_module_id_keys_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/keys | Get Pipeline Module Data Info
-*PipelinesApi* | [**get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get**](docs/PipelinesApi.md#get_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Get Pipeline Module Parameters
-*PipelinesApi* | [**get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get**](docs/PipelinesApi.md#get_pipeline_module_schema_api_v1_pipelines_pipeline_id_modules_module_id_schema_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/schema | Get Pipeline Module Schema
-*PipelinesApi* | [**get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get**](docs/PipelinesApi.md#get_pipeline_modules_api_v1_pipelines_pipeline_id_modules_get) | **GET** /api/v1/pipelines/{pipeline_id}/modules | Get Pipeline Modules
-*PipelinesApi* | [**get_pipelines_api_v1_pipelines_get**](docs/PipelinesApi.md#get_pipelines_api_v1_pipelines_get) | **GET** /api/v1/pipelines | Get Pipelines
-*PipelinesApi* | [**move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put**](docs/PipelinesApi.md#move_pipeline_module_api_v1_pipelines_pipeline_id_modules_put) | **PUT** /api/v1/pipelines/{pipeline_id}/modules | Move Pipeline Module
-*PipelinesApi* | [**set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put**](docs/PipelinesApi.md#set_pipeline_module_parameters_api_v1_pipelines_pipeline_id_modules_module_id_parameters_put) | **PUT** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Set Pipeline Module Parameters
+*ModulesApi* | [**get_module_schema**](docs/ModulesApi.md#get_module_schema) | **GET** /api/v1/modules/{module_type} | Get Module Schema
+*ModulesApi* | [**get_modules**](docs/ModulesApi.md#get_modules) | **GET** /api/v1/modules | Get Modules
+*PipelinesApi* | [**create_pipeline_module**](docs/PipelinesApi.md#create_pipeline_module) | **POST** /api/v1/pipelines/{pipeline_id}/modules | Create Pipeline Module
+*PipelinesApi* | [**create_pipeline**](docs/PipelinesApi.md#create_pipeline) | **POST** /api/v1/pipelines | Create Pipelines
+*PipelinesApi* | [**delete_pipeline**](docs/PipelinesApi.md#delete_pipeline) | **DELETE** /api/v1/pipelines/{pipeline_id} | Delete Pipeline
+*PipelinesApi* | [**delete_pipeline_module**](docs/PipelinesApi.md#delete_pipeline_module) | **DELETE** /api/v1/pipelines/{pipeline_id}/modules/{module_id} | Delete Pipeline Module
+*PipelinesApi* | [**get_pipeline**](docs/PipelinesApi.md#get_pipeline) | **GET** /api/v1/pipelines/{pipeline_id} | Get Pipeline
+*PipelinesApi* | [**get_pipeline_module_data**](docs/PipelinesApi.md#get_pipeline_module_data) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/data/{key} | Get Pipeline Module Data
+*PipelinesApi* | [**get_pipeline_module_data_info**](docs/PipelinesApi.md#get_pipeline_module_data_info) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/keys | Get Pipeline Module Data Info
+*PipelinesApi* | [**get_pipeline_module_parameters**](docs/PipelinesApi.md#get_pipeline_module_parameters) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Get Pipeline Module Parameters
+*PipelinesApi* | [**get_pipeline_module_schema**](docs/PipelinesApi.md#get_pipeline_module_schema) | **GET** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/schema | Get Pipeline Module Schema
+*PipelinesApi* | [**get_pipeline_modules**](docs/PipelinesApi.md#get_pipeline_modules) | **GET** /api/v1/pipelines/{pipeline_id}/modules | Get Pipeline Modules
+*PipelinesApi* | [**get_pipelines**](docs/PipelinesApi.md#get_pipelines) | **GET** /api/v1/pipelines | Get Pipelines
+*PipelinesApi* | [**move_pipeline_module**](docs/PipelinesApi.md#move_pipeline_module) | **PUT** /api/v1/pipelines/{pipeline_id}/modules | Move Pipeline Module
+*PipelinesApi* | [**set_pipeline_module_parameters**](docs/PipelinesApi.md#set_pipeline_module_parameters) | **PUT** /api/v1/pipelines/{pipeline_id}/modules/{module_id}/parameters | Set Pipeline Module Parameters
 
 
 ## Documentation For Models
