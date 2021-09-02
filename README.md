@@ -1,7 +1,12 @@
 - [SeisSpark](#seisspark)
   - [Spark](#spark)
   - [Seismic Unix (aka SU)](#seismic-unix-aka-su)
+  - [SeisSpark pipeline](#seisspark-pipeline)
+    - [SeisSpark module](#seisspark-module)
+    - [SeisSpark data model](#seisspark-data-model)
+    - [SeisSpark's RDD](#seissparks-rdd)
 - [Architecture](#architecture)
+  - [SeisSpark service](#seisspark-service)
 - [API docs](#api-docs)
 - [Implementation details](#implementation-details)
 - [Getting started](#getting-started)
@@ -34,12 +39,31 @@ Additional information regarding the SU can be found in the [SU documentation](h
 
 The SU programs are invoked as subprocesses and all the data transferring is done via stdin and stdout. Practically it means that Spark Worker nodes need to have the SU package installed.
 
+## SeisSpark pipeline
+
+SeisSpark pipeline is a chain of SU programs wrapped by Python and executed in Spark. The translation of the SeisSpark pipeline into Spark RDD is done by the SeisSpark service. Currently, only sequential chains are supported, but there are plans to extend SeisSpark for DAG support.
+
+### SeisSpark module
+SeisSpark module is the node in SeisSpark pipeline. Each SeisSpark module is translated to at least one Spark transformation. Most of the SeisSpark modules are using SU programs for data transformation, but several of the modules are implemented directly with pyspark for performance needs.
+Each module describes its own parameters schema (JSON Schema was used), and parameters can be modified which is supposed to modify the module results.
+
+### SeisSpark data model
+
+SeisSpark uses Spark's RDDs for the representation of the data state at each step of the pipeline. To say it simpler each SeisSpark module receives an RDD and produces another one, each RDD is a list of key-value pairs.
+
+### SeisSpark's RDD
+
+SeisSpark's RDD value is a list of seismic traces. SeisSpark's RDD key is a gather id (or ensemble id). In most cases, the key is a trace header value, common in the list of traces.
+
 # Architecture
 
 SeisSpark deployment consist of two major components:
 - SeisSpark service
 - Apache Spark cluster
 
+## SeisSpark service
+
+SeisSpark service is HTTP (mostly RESTful) service, which allows the building and management o SeisSpark pipelines.
 
 # API docs
 
