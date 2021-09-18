@@ -15,10 +15,10 @@
       "name": "Run Service",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/src/suspark_service/main.py",
+      "program": "${workspaceFolder}/src/seisspark_service/main.py",
       // "console": "integratedTerminal",
       // "args": [
-      //     "--config-file", "${workspaceFolder}/src/suspark_service/suspark_service.cfg",
+      //     "--config-file", "${workspaceFolder}/src/seisspark_service/seisspark_service.cfg",
       // ],
       "env": {
         "PYTHONASYNCIODEBUG": "1",
