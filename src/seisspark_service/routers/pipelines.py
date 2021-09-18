@@ -76,7 +76,7 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         return JSONResponse({"status": "Ok"})
 
     @router.get("/pipelines/{pipeline_id}", tags=["pipelines"])
-    def get_pipeline(pipeline_id: str = Path(...)) -> PipelineInfo:
+    def get_pipeline(pipeline_id: str = Path(...)) -> PipelineDescription:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
         pipeline_modules: List[ModuleInfo] = []
         for module in item.pipeline.modules():

@@ -26,15 +26,23 @@ def test_seisspark_service_modules(seisspark_service_client: TestClient) -> None
     response = seisspark_service_client.get("/api/v1/modules")
     response.raise_for_status()
     module_types: List[str] = pydantic.parse_obj_as(List[str], response.json())
-    assert module_types == ["SUfilter", "SUsort", "SUimp2d"]
+    assert "SUfilter" in module_types and "SUsort" in module_types and "SUimp2d" in module_types
 
     response = seisspark_service_client.get("/api/v1/modules/SUfilter")
     response.raise_for_status()
     module_schema = response.json()
+    print(module_schema)
     assert module_schema == {
         "title": "SUFilterParams",
         "type": "object",
-        "properties": {"filter": {"title": "Filter", "default": [], "type": "array", "items": {"$ref": "#/definitions/SUFilterFA"}}},
+        "properties": {
+            "filter": {
+                "title": "Filter",
+                "default": [{"f": 10.0, "a": 0.0}, {"f": 20.0, "a": 1.0}, {"f": 30.0, "a": 1.0}, {"f": 40.0, "a": 0.0}],
+                "type": "array",
+                "items": {"$ref": "#/definitions/SUFilterFA"},
+            }
+        },
         "definitions": {"SUFilterFA": {"title": "SUFilterFA", "type": "object", "properties": {"f": {"title": "F", "type": "number"}, "a": {"title": "A", "type": "number"}}, "required": ["f", "a"]}},
     }
 
@@ -97,7 +105,7 @@ def test_seisspark_service_pipeline_module(seisspark_service_client: TestClient)
     json_parameters = response.json()
     assert type(json_parameters) == dict
 
-    response = seisspark_service_client.get(f"/api/v1/pipelines/{pipeline_id}/modules/{module_id}/data")
+    response = seisspark_service_client.get(f"/api/v1/pipelines/{pipeline_id}/modules/{module_id}/data/0")
     response.raise_for_status()
     json_data = response.json()
     assert type(json_data) == list and type(json_data[0]) == list and type(json_data[0][0]) == float
