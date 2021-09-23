@@ -38,6 +38,12 @@ class GraphNode:
         self.producers: List[Optional[GraphNodeConnection]] = [None for input_socket in self.module.input_sockets]
         self.consumers: List[Optional[GraphNodeConnection]] = [None for input_socket in self.module.output_sockets]
 
+    def is_producer(self) -> bool:
+        return all(producer is None for producer in self.producers)
+
+    def is_consumer(self) -> bool:
+        return all(consumer is None for consumer in self.consumers)
+
     def disconnect_producer(self, socket_index: int) -> None:
         self.producers[socket_index] = None
 
@@ -125,6 +131,20 @@ class Graph:
             self._nodes[prev_producer.id].consumers[prev_producer.socket_index] = None
 
         return True
+
+    def get_producers(self) -> List[str]:
+        producers: List[str] = []
+        for id, node in self._nodes.items():
+            if node.is_producer():
+                producers.append(id)
+        return producers
+
+    def get_consumers(self) -> List[str]:
+        consumers: List[str] = []
+        for id, node in self._nodes.items():
+            if node.is_consumer():
+                consumers.append(id)
+        return consumers
 
 
 class Pipeline:

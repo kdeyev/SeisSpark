@@ -48,3 +48,16 @@ def test_pipiline_graph_connect() -> None:
     del graph["2"]
     node1 = graph.get_node("1")
     assert node1.consumers == [None, None]
+
+
+def test_pipiline_graph_traverse() -> None:
+    graph = Graph()
+    graph["1"] = Dummy2Input2Output("1", "1")
+    graph["2"] = Dummy2Input2Output("2", "2")
+    graph.connect_sockets("1", 0, "2", 0)
+
+    producers = graph.get_producers()
+    assert len(producers) == 1 and producers[0] == "1"
+
+    consumers = graph.get_consumers()
+    assert len(consumers) == 1 and consumers[0] == "2"
