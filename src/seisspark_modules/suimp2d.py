@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =============================================================================
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 import pydantic
 import pyspark
 
 from seisspark.seisspark_context import SeisSparkContext
-from seisspark.seisspark_module import BaseModule
+from seisspark.seisspark_module import BaseModule, SocketDescription
 from su_data.segy_trace_header import SEGY_TRACE_HEADER_ENTRIES, SEGYTraceHeaderEntryName
 from su_data.su_pipe import su_process_pipe
 from su_rdd.kv_operations import GatherTuple, gather_from_rdd_gather_tuple, rdd_gather_tuple_from_gather
@@ -32,15 +32,19 @@ class SUimp2dParams(pydantic.BaseModel):
 
 class SUimp2d(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, params_model=SUimp2dParams, params=SUimp2dParams())
+        super().__init__(
+            id=id,
+            name=name,
+            params_model=SUimp2dParams,
+            params=SUimp2dParams(),
+            output_sockets=[SocketDescription("output")],
+        )
 
     @property
     def suimp2d_params(self) -> SUimp2dParams:
         return cast(SUimp2dParams, self.parameters)
 
-    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
-        if input_rdd:
-            raise Exception("input RDD is not used")
+    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]]) -> List[Optional["pyspark.RDD[GatherTuple]"]]:
         gather_count_to_produce = self.suimp2d_params.nshot
         trace_count_per_gather = self.suimp2d_params.nrec
 
@@ -56,4 +60,4 @@ class SUimp2d(BaseModule):
         # Create an RDD from in memory buffers
         rdd = seisspark_context.context.parallelize([rdd_gather_tuple_from_gather(input_gather)])
         # rdd = rdd.mapValues(list)
-        return rdd
+        return [rdd]

@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =============================================================================
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 import pydantic
 import pyspark
 
 from seisspark.seisspark_context import SeisSparkContext
-from seisspark.seisspark_module import BaseModule
+from seisspark.seisspark_module import BaseModule, SocketDescription
 from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import import_segy_to_rdd
 
@@ -31,15 +31,18 @@ class ImpotSegyParams(pydantic.BaseModel):
 
 class ImportSegy(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, params_model=ImpotSegyParams, params=ImpotSegyParams())
+        super().__init__(
+            id=id,
+            name=name,
+            params_model=ImpotSegyParams,
+            params=ImpotSegyParams(),
+            output_sockets=[SocketDescription("output")],
+        )
 
     @property
     def importsegy_params(self) -> ImpotSegyParams:
         return cast(ImpotSegyParams, self.parameters)
 
-    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
-        if input_rdd:
-            raise Exception("input RDD is not used")
-
+    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]]) -> List[Optional["pyspark.RDD[GatherTuple]"]]:
         rdd = import_segy_to_rdd(seisspark_context.context, file_path=self.importsegy_params.filepath, chunk_size=self.importsegy_params.chunk_size)
-        return rdd
+        return [rdd]

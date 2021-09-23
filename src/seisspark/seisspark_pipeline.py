@@ -13,10 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =============================================================================
-import collections
 import uuid
 from dataclasses import dataclass
-from typing import Dict, Iterator, List, Optional, Union
+from typing import Dict, Generator, List, Optional
 
 import pyspark
 
@@ -80,6 +79,24 @@ class Graph:
 
     def __setitem__(self, id: str, v: BaseModule) -> None:
         self._nodes[id] = GraphNode(v)
+
+    def modules(self) -> Generator[BaseModule, None, None]:
+        for node in self._nodes.values():
+            yield node.module
+
+    def topology_sort(self) -> Generator[str, None, None]:
+        producers: List[str] = self.get_producers()
+        already_travsersed: List[str] = []
+        while producers:
+            producer_id = producers.pop(0)
+            yield producer_id
+
+            already_travsersed.append(producer_id)
+
+            producer_node = self.get_node(producer_id)
+            for consumer in producer_node.consumers:
+                if consumer and consumer.id not in already_travsersed:
+                    producers.append(consumer.id)
 
     def connect_sockets(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
         producer_node = self._nodes[prodicer_id]
@@ -151,47 +168,47 @@ class Pipeline:
     def __init__(self, seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
         self._modules_factory = modules_factory
         self._seisspark_context = seisspark_context
-        self._modules = Graph()
+        self._graph = Graph()
+        self._module_rdds: Dict[str, List[Optional["pyspark.RDD[GatherTuple]"]]] = {}
 
-    def modules(self) -> Iterator[BaseModule]:
-        yield from self._modules
+    # def modules(self) -> Iterator[BaseModule]:
+    #     yield from self._graph
 
-    def add_module(self, module_type: str, name: Optional[str] = None, prev_module_id: Optional[str] = None) -> BaseModule:
-        index: Optional[int] = None
-        if prev_module_id:
-            index = self._modules.find_index(prev_module_id) + 1
-
+    def add_module(self, module_type: str, name: Optional[str] = None) -> BaseModule:
         id: str = str(uuid.uuid4())
 
         module = self._modules_factory.create_module(module_type, id, name if name else module_type)
-        if index is not None:
-            self._modules.insert(index, module)
-        else:
-            self._modules.append(module)
+        self._graph[id] = module
         self._init_rdd()
         return module
 
-    def move_module(self, module_id: str, prev_module_id: Optional[str] = None) -> None:
-        if module_id == prev_module_id:
-            raise Exception("module_id == prev_module_id")
-        module = self._modules[module_id]
-        del self._modules[module_id]
-        index = 0
-        if prev_module_id:
-            index = self._modules.find_index(prev_module_id) + 1
+    def connect_modules(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        self._graph.connect_sockets(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index)
 
-        self._modules.insert(index, module)
-        self._init_rdd()
+    def disconnect_modules(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        self._graph.disconnect_sockets(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index)
 
     def get_module(self, module_id: str) -> BaseModule:
-        return self._modules[module_id]
+        return self._graph[module_id]
 
     def delete_module(self, module_id: str) -> None:
-        del self._modules[module_id]
+        del self._graph[module_id]
         self._init_rdd()
 
     def _init_rdd(self) -> None:
-        rdd: Optional["pyspark.RDD[GatherTuple]"] = None
-        for module in self._modules:
-            module.init_rdd(self._seisspark_context, rdd)
-            rdd = module.rdd
+        module_rdds: Dict[str, List[Optional["pyspark.RDD[GatherTuple]"]]] = {}
+        for module_id in self._graph.topology_sort():
+            node = self._graph.get_node(module_id)
+            input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]] = []
+            for producer in node.producers:
+                produced_rdd: Optional["pyspark.RDD[GatherTuple]"] = None
+                if producer and producer.id in module_rdds:
+                    produced_rdd = module_rdds[producer.id][producer.socket_index]
+                input_rdds.append(produced_rdd)
+
+            output_rdds = node.module.init_rdd(self._seisspark_context, input_rdds)
+            if len(output_rdds) != len(node.consumers):
+                raise Exception(f"Module {module_id} produced {len(output_rdds)} RDDs when it has {len(node.consumers)} output sockets")
+            module_rdds[module_id] = output_rdds
+
+        self._module_rdds = module_rdds

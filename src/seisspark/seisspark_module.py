@@ -63,14 +63,14 @@ class BaseModule:
     def output_sockets(self) -> List[SocketDescription]:
         return self._output_sockets
 
-    @property
-    def rdd(self) -> "pyspark.RDD[GatherTuple]":
-        if not self._rdd:
-            raise Exception("RDD is not initialized")
-        return self._rdd
+    # @property
+    # def rdd(self) -> "pyspark.RDD[GatherTuple]":
+    #     if not self._rdd:
+    #         raise Exception("RDD is not initialized")
+    #     return self._rdd
 
-    def invalidate_rdd(self) -> None:
-        self._rdd = None
+    # def invalidate_rdd(self) -> None:
+    #     self._rdd = None
 
     @property
     def params_schema(self) -> Dict[str, Any]:
@@ -90,8 +90,8 @@ class BaseModule:
     def set_json_parameters(self, json: Dict[str, Any]) -> None:
         self._params = self._params_model(**json)
 
-    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
+    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]]) -> List[Optional["pyspark.RDD[GatherTuple]"]]:
         raise Exception("Not implemented")
 
-    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> None:
-        self._rdd = self._init_rdd(seisspark_context, input_rdd)
+    # def init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> None:
+    #     self._rdd = self._init_rdd(seisspark_context, input_rdd)

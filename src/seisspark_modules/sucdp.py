@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =============================================================================
-from typing import Optional
+from typing import List, Optional
 
 import pydantic
 import pyspark
 
 from seisspark.seisspark_context import SeisSparkContext
-from seisspark.seisspark_module import BaseModule
+from seisspark.seisspark_module import BaseModule, SocketDescription
 from su_rdd.kv_operations import GatherTuple
 from su_rdd.rdd_operations import su_process_rdd
 
@@ -30,11 +30,18 @@ class SUcdpParams(pydantic.BaseModel):
 
 class SUcdp(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, params_model=SUcdpParams, params=SUcdpParams())
+        super().__init__(
+            id=id,
+            name=name,
+            params_model=SUcdpParams,
+            params=SUcdpParams(),
+            input_sockets=[SocketDescription("input")],
+            output_sockets=[SocketDescription("output")],
+        )
 
-    def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
-        if not input_rdd:
+    def init_rdd(self, seisspark_context: SeisSparkContext, input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]]) -> List[Optional["pyspark.RDD[GatherTuple]"]]:
+        if input_rdds[0] is None:
             raise Exception("input RDD should be specified")
 
-        rdd = su_process_rdd(input_rdd, "suchw", ["key1=cdp", "key2=gx", "key3=sx", "b=1", "c=1", "d=2"])
-        return rdd
+        rdd = su_process_rdd(input_rdds[0], "suchw", ["key1=cdp", "key2=gx", "key3=sx", "b=1", "c=1", "d=2"])
+        return [rdd]
