@@ -79,3 +79,12 @@ def test_pipiline_graph_traverse() -> None:
 
     topo_sort = list(graph.topology_sort())
     assert topo_sort == ["1", "2"]
+
+
+def test_pipiline_graph_cycle() -> None:
+    graph = Graph()
+    graph["1"] = Dummy2Input2Output("1", "1")
+    graph["2"] = Dummy2Input2Output("2", "2")
+    graph.connect_sockets("1", 0, "2", 0)
+    with pytest.raises(Exception):
+        graph.connect_sockets("2", 0, "1", 0)

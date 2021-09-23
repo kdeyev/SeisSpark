@@ -98,7 +98,23 @@ class Graph:
                 if consumer and consumer.id not in already_travsersed:
                     producers.append(consumer.id)
 
+    def all_producers(self, id: str) -> Generator[str, None, None]:
+        to_traverse = [id]
+        already_travsersed: List[str] = []
+        while to_traverse:
+            id = to_traverse.pop(0)
+            yield id
+
+            already_travsersed.append(id)
+
+            node = self.get_node(id)
+            for producer in node.producers:
+                if producer and producer.id not in already_travsersed:
+                    to_traverse.append(producer.id)
+
     def connect_sockets(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        if consumer_id in self.all_producers(producer_id):
+            raise Exception("Cyclic dependency detected")
         producer_node = self._nodes[producer_id]
         prev_consumer = producer_node.consumers[producer_socket_index]
         consumer_node = self._nodes[consumer_id]
