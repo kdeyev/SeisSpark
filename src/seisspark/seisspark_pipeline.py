@@ -98,8 +98,8 @@ class Graph:
                 if consumer and consumer.id not in already_travsersed:
                     producers.append(consumer.id)
 
-    def connect_sockets(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
-        producer_node = self._nodes[prodicer_id]
+    def connect_sockets(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        producer_node = self._nodes[producer_id]
         prev_consumer = producer_node.consumers[producer_socket_index]
         consumer_node = self._nodes[consumer_id]
         prev_producer = consumer_node.producers[consumer_socket_index]
@@ -111,13 +111,13 @@ class Graph:
             self._nodes[prev_producer.id].consumers[prev_producer.socket_index] = None
 
         producer_node.consumers[producer_socket_index] = GraphNodeConnection(consumer_id, consumer_socket_index)
-        consumer_node.producers[consumer_socket_index] = GraphNodeConnection(prodicer_id, producer_socket_index)
+        consumer_node.producers[consumer_socket_index] = GraphNodeConnection(producer_id, producer_socket_index)
 
     def get_node(self, id: str) -> GraphNode:
         return self._nodes[id]
 
-    def is_connected(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
-        producer_node = self._nodes[prodicer_id]
+    def is_connected(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
+        producer_node = self._nodes[producer_id]
         prev_consumer = producer_node.consumers[producer_socket_index]
         consumer_node = self._nodes[consumer_id]
         prev_producer = consumer_node.producers[consumer_socket_index]
@@ -128,15 +128,15 @@ class Graph:
         if prev_consumer.id != consumer_id or prev_consumer.socket_index != consumer_socket_index:
             return False
 
-        if prev_producer.id != prodicer_id or prev_producer.socket_index != producer_socket_index:
+        if prev_producer.id != producer_id or prev_producer.socket_index != producer_socket_index:
             return False
 
         return True
 
-    def disconnect_sockets(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
-        if not self.is_connected(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index):
+    def disconnect_sockets(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
+        if not self.is_connected(producer_id, producer_socket_index, consumer_id, consumer_socket_index):
             return False
-        producer_node = self._nodes[prodicer_id]
+        producer_node = self._nodes[producer_id]
         prev_consumer = producer_node.consumers[producer_socket_index]
         consumer_node = self._nodes[consumer_id]
         prev_producer = consumer_node.producers[consumer_socket_index]
@@ -170,23 +170,35 @@ class Pipeline:
         self._seisspark_context = seisspark_context
         self._graph = Graph()
         self._module_rdds: Dict[str, List[Optional["pyspark.RDD[GatherTuple]"]]] = {}
+        self._valid = False
+        self._error_message = ""
 
     # def modules(self) -> Iterator[BaseModule]:
     #     yield from self._graph
 
-    def add_module(self, module_type: str, name: Optional[str] = None) -> BaseModule:
+    def add_module(self, module_type: str, name: Optional[str] = None, producers: Optional[List[GraphNodeConnection]] = None) -> BaseModule:
         id: str = str(uuid.uuid4())
 
         module = self._modules_factory.create_module(module_type, id, name if name else module_type)
         self._graph[id] = module
+        if producers is not None:
+            try:
+                if len(producers) != len(module.input_sockets):
+                    raise Exception(f"{len(producers)} producers was provided, but {len(module.input_sockets)} are required")
+                for consumer_socket_index in range(len(module.input_sockets)):
+                    producer = producers[consumer_socket_index]
+                    self._graph.connect_sockets(producer.id, producer.socket_index, id, consumer_socket_index)
+            except Exception as e:
+                del self._graph[id]
+                raise e
         self._init_rdd()
         return module
 
-    def connect_modules(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
-        self._graph.connect_sockets(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index)
+    def connect_modules(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        self._graph.connect_sockets(producer_id, producer_socket_index, consumer_id, consumer_socket_index)
 
-    def disconnect_modules(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
-        self._graph.disconnect_sockets(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index)
+    def disconnect_modules(self, producer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        self._graph.disconnect_sockets(producer_id, producer_socket_index, consumer_id, consumer_socket_index)
 
     def get_module(self, module_id: str) -> BaseModule:
         return self._graph[module_id]
@@ -196,19 +208,27 @@ class Pipeline:
         self._init_rdd()
 
     def _init_rdd(self) -> None:
-        module_rdds: Dict[str, List[Optional["pyspark.RDD[GatherTuple]"]]] = {}
-        for module_id in self._graph.topology_sort():
-            node = self._graph.get_node(module_id)
-            input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]] = []
-            for producer in node.producers:
-                produced_rdd: Optional["pyspark.RDD[GatherTuple]"] = None
-                if producer and producer.id in module_rdds:
-                    produced_rdd = module_rdds[producer.id][producer.socket_index]
-                input_rdds.append(produced_rdd)
+        try:
+            self._valid = True
+            self._error_message = ""
 
-            output_rdds = node.module.init_rdd(self._seisspark_context, input_rdds)
-            if len(output_rdds) != len(node.consumers):
-                raise Exception(f"Module {module_id} produced {len(output_rdds)} RDDs when it has {len(node.consumers)} output sockets")
-            module_rdds[module_id] = output_rdds
+            module_rdds: Dict[str, List[Optional["pyspark.RDD[GatherTuple]"]]] = {}
+            for module_id in self._graph.topology_sort():
+                node = self._graph.get_node(module_id)
+                input_rdds: List[Optional["pyspark.RDD[GatherTuple]"]] = []
+                for producer in node.producers:
+                    produced_rdd: Optional["pyspark.RDD[GatherTuple]"] = None
+                    if producer and producer.id in module_rdds:
+                        produced_rdd = module_rdds[producer.id][producer.socket_index]
+                    input_rdds.append(produced_rdd)
 
-        self._module_rdds = module_rdds
+                output_rdds = node.module.init_rdd(self._seisspark_context, input_rdds)
+                if len(output_rdds) != len(node.consumers):
+                    raise Exception(f"Module {module_id} produced {len(output_rdds)} RDDs when it has {len(node.consumers)} output sockets")
+                module_rdds[module_id] = output_rdds
+
+            self._module_rdds = module_rdds
+        except Exception as e:
+            self._module_rdds = {}
+            self._valid = False
+            self._error_message = str(e)

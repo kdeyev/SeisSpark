@@ -14,6 +14,7 @@
 # limitations under the License.
 # =============================================================================
 from seisspark.pipeline_repository import PiplineRepository
+from seisspark.seisspark_pipeline import GraphNodeConnection
 from seisspark_modules.suimp2d import SUimp2dParams
 from seisspark_modules.susort import SUsortParams
 from su_data.segy_trace_header import SEGYTraceHeaderEntryName
@@ -24,14 +25,14 @@ def create_default_pipeline(pipeline_repository: PiplineRepository) -> None:
     item = pipeline_repository.get_pipeline(id)
     suimp2d = item.pipeline.add_module("SUimp2d")
     suimp2d.set_paramters(SUimp2dParams(nshot=50, nrec=50))
-    item.pipeline.add_module("SUcdp")
-    sort = item.pipeline.add_module("SUsort")
+    sucdp = item.pipeline.add_module("SUcdp", producers=[GraphNodeConnection(suimp2d.id, 0)])
+    sort = item.pipeline.add_module("SUsort", producers=[GraphNodeConnection(sucdp.id, 0)])
     sort.set_paramters(SUsortParams(key=SEGYTraceHeaderEntryName.cdp))
-    item.pipeline.add_module("SUnmo")
-    item.pipeline.add_module("SUstack")
-    sort = item.pipeline.add_module("SUsort")
+    sunmo = item.pipeline.add_module("SUnmo", producers=[GraphNodeConnection(sort.id, 0)])
+    sustack = item.pipeline.add_module("SUstack", producers=[GraphNodeConnection(sunmo.id, 0)])
+    sort = item.pipeline.add_module("SUsort", producers=[GraphNodeConnection(sustack.id, 0)])
     sort.set_paramters(SUsortParams(key=SEGYTraceHeaderEntryName.Crossline3D))
-    item.pipeline.add_module("SUfilter")
+    item.pipeline.add_module("SUfilter", producers=[GraphNodeConnection(sort.id, 0)])
 
     # id = pipeline_repository.add_pipeline(name="2D Line demo")
     # item = pipeline_repository.get_pipeline(id)
