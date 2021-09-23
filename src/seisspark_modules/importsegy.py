@@ -31,7 +31,7 @@ class ImpotSegyParams(pydantic.BaseModel):
 
 class ImportSegy(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=ImpotSegyParams, params=ImpotSegyParams())
+        super().__init__(id=id, name=name, params_model=ImpotSegyParams, params=ImpotSegyParams())
 
     @property
     def importsegy_params(self) -> ImpotSegyParams:

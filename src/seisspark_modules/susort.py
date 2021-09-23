@@ -31,7 +31,7 @@ class SUsortParams(pydantic.BaseModel):
 
 class SUsort(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SUsortParams, params=SUsortParams())
+        super().__init__(id=id, name=name, params_model=SUsortParams, params=SUsortParams())
 
     @property
     def susort_params(self) -> SUsortParams:

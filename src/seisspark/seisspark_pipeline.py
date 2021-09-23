@@ -15,6 +15,7 @@
 # =============================================================================
 import collections
 import uuid
+from dataclasses import dataclass
 from typing import Dict, Iterator, List, Optional, Union
 
 import pyspark
@@ -25,67 +26,112 @@ from seisspark.seisspark_modules_factory import ModulesFactory
 from su_rdd.kv_operations import GatherTuple
 
 
-class BaseModuleList(collections.MutableSequence):
+@dataclass
+class GraphNodeConnection:
+    id: str
+    socket_index: int
+
+
+class GraphNode:
+    def __init__(self, module: BaseModule) -> None:
+        self.module = module
+        self.producers: List[Optional[GraphNodeConnection]] = [None for input_socket in self.module.input_sockets]
+        self.consumers: List[Optional[GraphNodeConnection]] = [None for input_socket in self.module.output_sockets]
+
+    def disconnect_producer(self, socket_index: int) -> None:
+        self.producers[socket_index] = None
+
+    def disconnect_consumer(self, socket_index: int) -> None:
+        self.consumers[socket_index] = None
+
+    # def connect_producer(self, my_index: int, ) -> None:
+    #     self.producers[my_index] = None
+
+    # def disconnect_consumer(self, index: int) -> None:
+    #     self.consumers[index] = None
+
+
+class Graph:
     def __init__(self) -> None:
-        self._l: List[BaseModule] = []
-        self._d: Dict[str, BaseModule] = {}
+        self._nodes: Dict[str, GraphNode] = {}
 
-    def __len__(self) -> int:
-        return len(self._l)
+    def __getitem__(self, id: str) -> BaseModule:
+        return self._nodes[id].module
 
-    def __getitem__(self, i: Union[str, int]) -> BaseModule:  # type: ignore
-        if type(i) is int:
-            return self._l[i]
-        elif type(i) is str:
-            return self._d[i]
-        else:
-            raise Exception(f"Wrong key type {type(i)}")
+    def __delitem__(self, id: str) -> None:
+        node = self._nodes[id]
+        for consumer in node.consumers:
+            if consumer:
+                consumer_node = self._nodes[consumer.id]
+                consumer_node.disconnect_producer(consumer.socket_index)
 
-    def __delitem__(self, i: Union[str, int]) -> None:  # type: ignore
-        if type(i) is int:
-            item: BaseModule = self._l[i]
-            del self._d[item.id]
-            del self._l[i]
-        elif type(i) is str:
-            item = self._d[i]
-            j = next(j for j in range(len(self._l)) if self._l[j].id == i)
-            del self._d[i]
-            del self._l[j]
-        else:
-            raise Exception(f"Wrong key type {type(i)}")
+        for producer in node.producers:
+            if producer:
+                producer_node = self._nodes[producer.id]
+                producer_node.disconnect_consumer(producer.socket_index)
 
-    def __setitem__(self, i: int, v: BaseModule) -> None:  # type: ignore
-        if type(i) is int:
-            self._l[i] = v
-            self._d[v.id] = v
-        else:
-            raise Exception(f"Wrong key type {type(i)}")
+        del self._nodes[id]
 
-    def insert(self, i: int, v: BaseModule) -> None:
-        if type(i) is int:
-            self._l.insert(i, v)
-            self._d[v.id] = v
-        else:
-            raise Exception(f"Wrong key type {type(i)}")
+    def __setitem__(self, id: str, v: BaseModule) -> None:
+        self._nodes[id] = GraphNode(v)
 
-    def find_index(self, i: str) -> int:
-        if type(i) is str:
-            j = next(j for j in range(len(self._l)) if self._l[j].id == i)
-            if j is None:
-                raise ValueError()
-            return j
-        else:
-            raise Exception(f"Wrong key type {type(i)}")
+    def connect_sockets(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> None:
+        producer_node = self._nodes[prodicer_id]
+        prev_consumer = producer_node.consumers[producer_socket_index]
+        consumer_node = self._nodes[consumer_id]
+        prev_producer = consumer_node.producers[consumer_socket_index]
 
-    def __str__(self) -> str:
-        return str(self._l)
+        if prev_consumer:
+            self._nodes[prev_consumer.id].producers[prev_consumer.socket_index] = None
+
+        if prev_producer:
+            self._nodes[prev_producer.id].consumers[prev_producer.socket_index] = None
+
+        producer_node.consumers[producer_socket_index] = GraphNodeConnection(consumer_id, consumer_socket_index)
+        consumer_node.producers[consumer_socket_index] = GraphNodeConnection(prodicer_id, producer_socket_index)
+
+    def get_node(self, id: str) -> GraphNode:
+        return self._nodes[id]
+
+    def is_connected(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
+        producer_node = self._nodes[prodicer_id]
+        prev_consumer = producer_node.consumers[producer_socket_index]
+        consumer_node = self._nodes[consumer_id]
+        prev_producer = consumer_node.producers[consumer_socket_index]
+
+        if not prev_consumer or not prev_producer:
+            return False
+
+        if prev_consumer.id != consumer_id or prev_consumer.socket_index != consumer_socket_index:
+            return False
+
+        if prev_producer.id != prodicer_id or prev_producer.socket_index != producer_socket_index:
+            return False
+
+        return True
+
+    def disconnect_sockets(self, prodicer_id: str, producer_socket_index: int, consumer_id: str, consumer_socket_index: int) -> bool:
+        if not self.is_connected(prodicer_id, producer_socket_index, consumer_id, consumer_socket_index):
+            return False
+        producer_node = self._nodes[prodicer_id]
+        prev_consumer = producer_node.consumers[producer_socket_index]
+        consumer_node = self._nodes[consumer_id]
+        prev_producer = consumer_node.producers[consumer_socket_index]
+
+        if prev_consumer:
+            self._nodes[prev_consumer.id].producers[prev_consumer.socket_index] = None
+
+        if prev_producer:
+            self._nodes[prev_producer.id].consumers[prev_producer.socket_index] = None
+
+        return True
 
 
 class Pipeline:
     def __init__(self, seisspark_context: SeisSparkContext, modules_factory: ModulesFactory) -> None:
         self._modules_factory = modules_factory
         self._seisspark_context = seisspark_context
-        self._modules = BaseModuleList()
+        self._modules = Graph()
 
     def modules(self) -> Iterator[BaseModule]:
         yield from self._modules

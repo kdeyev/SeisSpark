@@ -32,7 +32,7 @@ class SelectTracesParams(pydantic.BaseModel):
 
 class SelectTraces(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SelectTracesParams, params=SelectTracesParams())
+        super().__init__(id=id, name=name, params_model=SelectTracesParams, params=SelectTracesParams())
 
     @property
     def select_traces_params(self) -> SelectTracesParams:

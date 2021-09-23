@@ -30,7 +30,7 @@ class SUagcParams(pydantic.BaseModel):
 
 class SUagc(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SUagcParams, params=SUagcParams())
+        super().__init__(id=id, name=name, params_model=SUagcParams, params=SUagcParams())
 
     @property
     def suagc_params(self) -> SUagcParams:

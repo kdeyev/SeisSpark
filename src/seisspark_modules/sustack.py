@@ -30,7 +30,7 @@ class SUstackParams(pydantic.BaseModel):
 
 class SUstack(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SUstackParams, params=SUstackParams())
+        super().__init__(id=id, name=name, params_model=SUstackParams, params=SUstackParams())
 
     def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:

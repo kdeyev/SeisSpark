@@ -35,7 +35,7 @@ class SUFilterParams(pydantic.BaseModel):
 
 class SUfilter(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SUFilterParams, params=SUFilterParams())
+        super().__init__(id=id, name=name, params_model=SUFilterParams, params=SUFilterParams())
 
     @property
     def sufilter_params(self) -> SUFilterParams:

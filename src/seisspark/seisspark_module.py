@@ -14,7 +14,8 @@
 # limitations under the License.
 # =============================================================================
 import json
-from typing import Any, Dict, Optional, Type, cast
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Type, cast
 
 import pydantic
 import pyspark
@@ -23,11 +24,26 @@ from seisspark.seisspark_context import SeisSparkContext
 from su_rdd.kv_operations import GatherTuple
 
 
+@dataclass
+class SocketDescription:
+    name: str
+
+
 class BaseModule:
-    def __init__(self, id: str, name: str, paramsModel: Type[pydantic.BaseModel] = pydantic.BaseModel, params: Optional[pydantic.BaseModel] = None) -> None:
-        self._id = id  # str(uuid.uuid4())
+    def __init__(
+        self,
+        id: str,
+        name: str,
+        input_sockets: List[SocketDescription] = [],
+        output_sockets: List[SocketDescription] = [],
+        params_model: Type[pydantic.BaseModel] = pydantic.BaseModel,
+        params: Optional[pydantic.BaseModel] = None,
+    ) -> None:
+        self._id = id
         self._name = name
-        self._paramsModel = paramsModel
+        self._input_sockets = input_sockets
+        self._output_sockets = output_sockets
+        self._params_model = params_model
         self._params = params
         self._rdd: Optional["pyspark.RDD[GatherTuple]"] = None
 
@@ -40,6 +56,14 @@ class BaseModule:
         return self._name
 
     @property
+    def input_sockets(self) -> List[SocketDescription]:
+        return self._input_sockets
+
+    @property
+    def output_sockets(self) -> List[SocketDescription]:
+        return self._output_sockets
+
+    @property
     def rdd(self) -> "pyspark.RDD[GatherTuple]":
         if not self._rdd:
             raise Exception("RDD is not initialized")
@@ -50,7 +74,7 @@ class BaseModule:
 
     @property
     def params_schema(self) -> Dict[str, Any]:
-        return cast(Dict[str, Any], json.loads(self._paramsModel.schema_json()))
+        return cast(Dict[str, Any], json.loads(self._params_model.schema_json()))
 
     @property
     def parameters(self) -> pydantic.BaseModel:
@@ -59,12 +83,12 @@ class BaseModule:
         return self._params
 
     def set_paramters(self, params: pydantic.BaseModel) -> None:
-        if type(params) != self._paramsModel:
+        if type(params) != self._params_model:
             raise Exception("Wrong parameters type")
         self._params = params
 
     def set_json_parameters(self, json: Dict[str, Any]) -> None:
-        self._params = self._paramsModel(**json)
+        self._params = self._params_model(**json)
 
     def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         raise Exception("Not implemented")

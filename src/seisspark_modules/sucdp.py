@@ -30,7 +30,7 @@ class SUcdpParams(pydantic.BaseModel):
 
 class SUcdp(BaseModule):
     def __init__(self, id: str, name: str) -> None:
-        super().__init__(id=id, name=name, paramsModel=SUcdpParams, params=SUcdpParams())
+        super().__init__(id=id, name=name, params_model=SUcdpParams, params=SUcdpParams())
 
     def _init_rdd(self, seisspark_context: SeisSparkContext, input_rdd: Optional["pyspark.RDD[GatherTuple]"]) -> "pyspark.RDD[GatherTuple]":
         if not input_rdd:
