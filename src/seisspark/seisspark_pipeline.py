@@ -248,3 +248,6 @@ class Pipeline:
             self._module_rdds = {}
             self._valid = False
             self._error_message = str(e)
+
+    def get_output_rdds(self, id: str) -> List[Optional["pyspark.RDD[GatherTuple]"]]:
+        return self._module_rdds[id]

@@ -15,7 +15,7 @@
 # =============================================================================
 from seisspark.seisspark_context import SeisSparkContext
 from seisspark.seisspark_modules_factory import ModulesFactory
-from seisspark.seisspark_pipeline import Pipeline
+from seisspark.seisspark_pipeline import GraphNodeConnection, Pipeline
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 
 
@@ -23,8 +23,8 @@ def test_build_and_run_pipeline1(seisspark_context: SeisSparkContext, modules_fa
     pipeline = Pipeline(seisspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")
-    pipeline.add_module(module_type="SUsort", name="SUsort1")
-    sufilter = pipeline.add_module(module_type="SUfilter")
+    susort = pipeline.add_module(module_type="SUsort", name="SUsort1", producers=[GraphNodeConnection(id=suimp2d.id, socket_index=0)])
+    sufilter = pipeline.add_module(module_type="SUfilter", producers=[GraphNodeConnection(id=susort.id, socket_index=0)])
 
     gather_count_to_produce = 10
     trace_count_per_gather = 5
@@ -34,9 +34,10 @@ def test_build_and_run_pipeline1(seisspark_context: SeisSparkContext, modules_fa
 
     # FIXME: make it automatically after parameters change
     pipeline._init_rdd()
+    rdds = pipeline.get_output_rdds(sufilter.id)
 
     sufilter = pipeline.get_module(sufilter.id)
-    first_gather = gather_from_rdd_gather_tuple(sufilter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(rdds[0].first())
 
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)
@@ -46,8 +47,8 @@ def test_build_and_run_pipeline2(seisspark_context: SeisSparkContext, modules_fa
     pipeline = Pipeline(seisspark_context, modules_factory)
 
     suimp2d = pipeline.add_module(module_type="SUimp2d")
-    sufilter = pipeline.add_module(module_type="SUfilter")
-    pipeline.add_module(module_type="SUsort", prev_module_id=suimp2d.id)
+    susort = pipeline.add_module(module_type="SUsort", name="SUsort1", producers=[GraphNodeConnection(id=suimp2d.id, socket_index=0)])
+    sufilter = pipeline.add_module(module_type="SUfilter", producers=[GraphNodeConnection(id=susort.id, socket_index=0)])
 
     gather_count_to_produce = 10
     trace_count_per_gather = 5
@@ -57,9 +58,10 @@ def test_build_and_run_pipeline2(seisspark_context: SeisSparkContext, modules_fa
 
     # FIXME: make it automatically after parameters change
     pipeline._init_rdd()
+    rdds = pipeline.get_output_rdds(sufilter.id)
 
     sufilter = pipeline.get_module(sufilter.id)
-    first_gather = gather_from_rdd_gather_tuple(sufilter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(rdds[0].first())
 
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)

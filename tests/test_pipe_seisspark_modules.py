@@ -32,10 +32,10 @@ def test_build_and_run_modules(seisspark_context: SeisSparkContext) -> None:
     filter_schema = filter.params_schema
     print(filter_schema)
 
-    input_module.init_rdd(seisspark_context, None)
-    sort.init_rdd(seisspark_context, input_module.rdd)
-    filter.init_rdd(seisspark_context, sort.rdd)
+    rdds = input_module.init_rdd(seisspark_context, [])
+    rdds = sort.init_rdd(seisspark_context, rdds)
+    rdds = filter.init_rdd(seisspark_context, rdds)
 
-    first_gather = gather_from_rdd_gather_tuple(filter.rdd.first())
+    first_gather = gather_from_rdd_gather_tuple(rdds[0].first())
     assert len(first_gather.traces) == trace_count_per_gather
     print(first_gather.traces[0].buffer)
