@@ -20,7 +20,8 @@ from fastapi import Body, Path
 from fastapi.responses import JSONResponse
 
 from seisspark.pipeline_repository import PipelineInfo, PiplineRepository, PiplineRepositoryItem
-from seisspark.seisspark_module import BaseModule
+from seisspark.seisspark_module import BaseModule, SocketDescription
+from seisspark.seisspark_pipeline import GraphEdge, GraphNodeConnection
 from seisspark_service.inferring_router import InferringRouter
 from su_rdd.kv_operations import gather_from_rdd_gather_tuple
 from su_rdd.rdd_operations import get_gather_by_key, get_gather_keys
@@ -37,6 +38,8 @@ class CreatePipelineRequest(pydantic.BaseModel):
 class ModuleInfo(pydantic.BaseModel):
     id: str
     name: str
+    inputs: List[SocketDescription]
+    outputs: List[SocketDescription]
 
 
 class ModuleDescription(ModuleInfo):
@@ -45,17 +48,13 @@ class ModuleDescription(ModuleInfo):
 
 class PipelineDescription(PipelineInfo):
     modules: List[ModuleInfo]
+    connections: List[GraphEdge]
 
 
 class CreateModuleRequest(pydantic.BaseModel):
     module_type: str
     name: Optional[str] = None
-    prev_module_id: Optional[str] = None
-
-
-class MoveModuleRequest(pydantic.BaseModel):
-    module_id: str
-    prev_module_id: Optional[str] = None
+    producers: List[GraphNodeConnection] = []
 
 
 def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
@@ -78,18 +77,27 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
     @router.get("/pipelines/{pipeline_id}", tags=["pipelines"])
     def get_pipeline(pipeline_id: str = Path(...)) -> PipelineDescription:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        pipeline_modules: List[ModuleInfo] = []
-        for module in item.pipeline.modules():
-            pipeline_modules.append(ModuleInfo(id=module.id, name=module.name))
-        return PipelineDescription(id=item.id, name=item.name, modules=pipeline_modules)
+        graph = item.pipeline.graph
+        nodes = [
+            ModuleInfo(
+                id=module.id,
+                name=module.name,
+                inputs=module.input_sockets,
+                outputs=module.output_sockets,
+            )
+            for module in graph.modules()
+        ]
+        edges = list(graph.edges())
 
-    @router.get("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
-    def get_pipeline_modules(pipeline_id: str = Path(...)) -> List[ModuleInfo]:
-        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        pipeline_modules: List[ModuleInfo] = []
-        for module in item.pipeline.modules():
-            pipeline_modules.append(ModuleInfo(id=module.id, name=module.name))
-        return pipeline_modules
+        return PipelineDescription(id=item.id, name=item.name, modules=nodes, connections=edges)
+
+    # @router.get("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
+    # def get_pipeline_modules(pipeline_id: str = Path(...)) -> List[ModuleInfo]:
+    #     item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+    #     pipeline_modules: List[ModuleInfo] = []
+    #     for module in item.pipeline.modules():
+    #         pipeline_modules.append(ModuleInfo(id=module.id, name=module.name))
+    #     return pipeline_modules
 
     @router.post("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
     def create_pipeline_module(
@@ -97,21 +105,23 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         module_request: CreateModuleRequest = Body(...),
     ) -> ModuleDescription:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        module: BaseModule = item.pipeline.add_module(module_type=module_request.module_type, name=module_request.name, prev_module_id=module_request.prev_module_id)
+        module: BaseModule = item.pipeline.add_module(module_type=module_request.module_type, name=module_request.name, producers=module_request.producers)
         return ModuleDescription(
             id=module.id,
             name=module.name,
             params_schema=module.params_schema,
+            inputs=module.input_sockets,
+            outputs=module.output_sockets,
         )
 
-    @router.put("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
-    def move_pipeline_module(
-        pipeline_id: str = Path(...),
-        module_request: MoveModuleRequest = Body(...),
-    ) -> JSONResponse:
-        item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        item.pipeline.move_module(module_id=module_request.module_id, prev_module_id=module_request.prev_module_id)
-        return JSONResponse({"status": "Ok"})
+    # @router.put("/pipelines/{pipeline_id}/modules", tags=["pipelines"])
+    # def move_pipeline_module(
+    #     pipeline_id: str = Path(...),
+    #     module_request: MoveModuleRequest = Body(...),
+    # ) -> JSONResponse:
+    #     item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
+    #     item.pipeline.move_module(module_id=module_request.module_id, prev_module_id=module_request.prev_module_id)
+    #     return JSONResponse({"status": "Ok"})
 
     @router.delete("/pipelines/{pipeline_id}/modules/{module_id}", tags=["pipelines"])
     def delete_pipeline_module(
@@ -159,8 +169,12 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         module_id: str = Path(...),
     ) -> JSONResponse:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        module: BaseModule = item.pipeline.get_module(module_id=module_id)
-        keys = get_gather_keys(module.rdd)
+        # module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        rdds = item.pipeline.get_output_rdds(module_id=module_id)
+        rdd = rdds[0]
+        if rdd is None:
+            raise Exception("RDD is empty")
+        keys = get_gather_keys(rdd)
         return JSONResponse(keys)
 
     @router.get("/pipelines/{pipeline_id}/modules/{module_id}/data/{key}", tags=["pipelines"])
@@ -170,8 +184,12 @@ def init_router(pipeline_repository: PiplineRepository) -> InferringRouter:
         key: int = Path(...),
     ) -> JSONResponse:
         item: PiplineRepositoryItem = pipeline_repository.get_pipeline(id=pipeline_id)
-        module: BaseModule = item.pipeline.get_module(module_id=module_id)
-        value = get_gather_by_key(module.rdd, key)
+        # module: BaseModule = item.pipeline.get_module(module_id=module_id)
+        rdds = item.pipeline.get_output_rdds(module_id=module_id)
+        rdd = rdds[0]
+        if rdd is None:
+            raise Exception("RDD is empty")
+        value = get_gather_by_key(rdd, key)
         first_gather = gather_from_rdd_gather_tuple((key, value))
         gather_data = first_gather.get_data_array()
         return JSONResponse(gather_data)

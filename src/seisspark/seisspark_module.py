@@ -14,7 +14,6 @@
 # limitations under the License.
 # =============================================================================
 import json
-from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Type, cast
 
 import pydantic
@@ -24,8 +23,7 @@ from seisspark.seisspark_context import SeisSparkContext
 from su_rdd.kv_operations import GatherTuple
 
 
-@dataclass
-class SocketDescription:
+class SocketDescription(pydantic.BaseModel):
     name: str
 
 
